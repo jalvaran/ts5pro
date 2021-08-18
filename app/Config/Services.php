@@ -4,7 +4,7 @@ namespace Config;
 
 use CodeIgniter\Config\BaseService;
 use App\Libraries\Smarty;
-use App\Libraries\TS5;
+//use App\Modules\TS5\Libraries\Ts5;
 
 /**
  * Services Configuration file.
@@ -27,12 +27,12 @@ class Services extends BaseService
         }
         return(new Smarty());
     }
-
+    /*
     public static function ts5($getShared = true){
         if($getShared){
             return(self::getSharedInstance('ts5'));
         }
         return(new TS5());
     }
-
+    */
 }

@@ -47,10 +47,10 @@
 										<hr/>
 									</div>
 									<div class="form-body">
-										<form action="/login/validate" method="POST" enctype="multipart/form-data" class="row g-3">
+										<form action="/ts5/signin" method="POST" enctype="multipart/form-data" class="row g-3">
 											<div class="col-12">
-												<label for="user_email" class="form-label">{lang('Login.login_title_field_mail')}</label>
-												<input type="email" class="form-control" id="user_email" name="user_email" placeholder="{lang('Login.login_title_field_mail')}">
+												<label for="user_email" class="form-label">{lang('Login.login_title_field_username')}</label>
+												<input type="text" class="form-control" id="user_username" name="user_username" placeholder="{lang('Login.login_title_field_username')}">
 											</div>
 											<div class="col-12">
 												<label for="user_pass" class="form-label">{lang('Login.login_title_field_pass')}</label>

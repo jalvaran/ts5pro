@@ -26,24 +26,29 @@
 
 namespace App\Modules\Login\Controllers;
 
-use App\Config\Services;
 use App\Controllers\BaseController;
-use Login\Models\Users;
+use App\Libraries\Session;
 
 class Login extends BaseController
 {
-    protected $users;
+
+    function __construct(){
+        //Libraries
+        //Models
+        //Helpers
+        //Views
+        //Languages
+        helper('App\Modules\TS5\Helpers\TS5');
+    }
 
     /**
      * Index de la pagina
      */
     public function index()
     {
-
-        $data["lang"] = "es";
+        $ts5=TS5();
+        $data=$ts5->getDataTemplate();
         $data["page"] = "index";
-        $data["favicon"] = "/companies_logos/1/favicon.png";
-        $data["company_logo"] = "/companies_logos/1/header-logo.png";
         $data["message_error"] = 0;
         return (view('App\Modules\Login\Views\index', $data));
     }
@@ -64,9 +69,8 @@ class Login extends BaseController
             if (isset($data_user[0]["id"])) {
                 @session_start();
                 $_SESSION['user'] = $data_user[0]["id"];
-                $ts5=service('ts5');
-                $unique_id=$ts5->getUniqueId();
-                echo("usuario inicia sesion $unique_id");
+
+                echo("usuario inicia sesion");
             } else {
                 $data["error_title"] = lang('Login.error_title');
                 $data["msg_error"] = lang('Login.error_msg_password');
@@ -80,5 +84,9 @@ class Login extends BaseController
             return (view('App\Modules\Login\Views\index', $data));
         }
 
+    }
+    public function logout()
+    {
+        session_destroy();
     }
 }

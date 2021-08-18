@@ -7,9 +7,9 @@
 		{include file="header.tpl"}
 		<!--start page wrapper -->
 		<div class="page-wrapper">
-                    <div class="page-content">
-                        {$page_content}
-                    </div>    
+			<div class="page-content">
+				{$page_content}
+			</div>
 						  
 		</div>
 		<!--end page wrapper -->

@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2021-08-13 20:58:57
+/* Smarty version 3.1.39, created on 2021-08-14 10:34:55
   from 'D:\xampp8\htdocs\ts5pro\app\Views\smarty\synadmin\login.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_61172361cd9db6_67538567',
+  'unifunc' => 'content_6117e29f88dd63_76689063',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_61172361cd9db6_67538567 (Smarty_Internal_Template $_smarty_tpl) {
+function content_6117e29f88dd63_76689063 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!doctype html>
 <html lang="<?php echo $_smarty_tpl->tpl_vars['lang']->value;?>
 ">

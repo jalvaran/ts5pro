@@ -44,6 +44,9 @@ class Autoload extends AutoloadConfig
         'Config' => APPPATH . 'Config',
         'Demo' => APPPATH . 'Modules/Demo',
         'Login' => APPPATH . 'Modules/Login',
+        'Menu' => APPPATH . 'Modules/Menu',
+        'TS5' => APPPATH . 'Modules/TS5',
+        'Access' => APPPATH . 'Modules/Access',
     ];
 
     /**

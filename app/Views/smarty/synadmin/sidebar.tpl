@@ -7,7 +7,7 @@
             <div>
                     <h4 class="logo-text">{$menu_title}</h4>
             </div>
-            <div class="toggle-icon ms-auto"><i class='bx bx-first-page'></i>
+            <div class="toggle-icon ms-auto"><i id="btn_sidebar_menu" class='bx bx-first-page'></i>
             </div>
     </div>
     <!--navigation-->

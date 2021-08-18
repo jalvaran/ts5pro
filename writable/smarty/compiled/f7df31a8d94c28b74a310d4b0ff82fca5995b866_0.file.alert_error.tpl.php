@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2021-08-13 20:56:55
+/* Smarty version 3.1.39, created on 2021-08-13 21:53:19
   from 'D:\xampp8\htdocs\ts5pro\app\Views\smarty\synadmin\alert_error.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_611722e76e36b2_76027375',
+  'unifunc' => 'content_6117301fc70253_49198882',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_611722e76e36b2_76027375 (Smarty_Internal_Template $_smarty_tpl) {
+function content_6117301fc70253_49198882 (Smarty_Internal_Template $_smarty_tpl) {
 ?><div class="alert border-0 border-start border-5 border-danger alert-dismissible fade show py-2">
     <div class="d-flex align-items-center">
         <div class="font-35 text-danger"><i class="bx bxs-message-square-x"></i>
