@@ -62,8 +62,8 @@ class Menu extends BaseController
     }
 
     /**
-     * Muestra las Compañias que tiene asignado el usuario
-     * Index de la pagina
+     * Muestra las Empresas que tiene asignado el usuario
+     * Index de la página
      */
     public function index()
     {
@@ -111,6 +111,11 @@ class Menu extends BaseController
         return ($page_content);
     }
 
+    /**
+     * Muestra los módulos de una empresa
+     * @param $company_id
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     */
     public function show_modules($company_id)
     {
         if (!$this->session->get_LoggedIn()) {
@@ -123,6 +128,11 @@ class Menu extends BaseController
 
     }
 
+    /**
+     * Obtiene el html para mostrar las cards de los modulos de una empresa
+     * @param $company_id
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     */
     public function get_html_modules($company_id)
     {
         if (!$this->session->get_LoggedIn()) {
@@ -138,7 +148,7 @@ class Menu extends BaseController
         $modules = $this->access->get_CompaniesModules($company_id);
         $page_content = "";
         foreach ($modules as $data_module) {
-            $this->data_template["link"] = base_url("/menu/modules/" . $data_module["id"]);
+            $this->data_template["link"] = base_url("/menu/components/$company_id/" . $data_module["id"]);
             $this->data_template["card_title"] = strtoupper($data_module["name"]);
             $this->data_template["card_sub_title"] = $data_module["description"];
             $this->data_template["card_num_cols"] = "3";
@@ -150,6 +160,20 @@ class Menu extends BaseController
             $page_content .= (view($this->views_path . '\card_menu_submenu', $this->data_template));
         }
         return ($page_content);
+
+    }
+
+    public function show_components($company_id,$module_id)
+    {
+        if (!$this->session->get_LoggedIn()) {
+            return (redirect()->to(base_url('/ts5/signin')));
+        }
+        return("Empresa $company_id, modulo: $module_id");
+        /*
+        $this->data_template["page_content"] = $this->get_html_modules($company_id);
+        $this->data_template["data_template"] = $this->data_template;
+        return (view($this->views_path . '\blank', $this->data_template));
+        */
 
     }
 
