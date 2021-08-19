@@ -67,10 +67,13 @@ class Menu extends BaseController
      */
     public function index()
     {
-        if (!$this->session->get_LoggedIn()) {
-            return (redirect()->to(base_url('/ts5/signin')));
+        $validation=$this->access->validate_access_permission($this->user_id);
+        $this->data_template["page_content"] ="";
+        if($validation<>"OK"){
+            $this->data_template["page_content"] = $this->html_errors($validation);
+        }else {
+            $this->data_template["page_content"] = $this->get_html_companies();
         }
-        $this->data_template["page_content"] = $this->get_html_companies();
         $this->data_template["data_template"] = $this->data_template;
         return (view($this->views_path . '\blank', $this->data_template));
     }
@@ -81,32 +84,35 @@ class Menu extends BaseController
      */
     public function get_html_companies()
     {
-        if (!$this->session->get_LoggedIn()) {
-            return (redirect()->to(base_url('/ts5/signin')));
-        }
-        $companies = $this->access->get_UserCompanies($this->user_id);
+        $validation=$this->access->validate_access_permission($this->user_id);
         $page_content = "";
-        if ($this->access->is_super_admin($this->user_id)) {
-            $this->data_template["link"] = base_url("/access/platform_admin/");
-            $this->data_template["card_title"] = lang("Menu.card_super_admin_title");
-            $this->data_template["card_sub_title"] = lang("Menu.card_super_admin_sub_title");
-            $this->data_template["card_num_cols"] = "3";
-            $this->data_template["card_icon_menu"] = "lni lni-cog";
-            $this->data_template["company_nit"] = "001";
-            $page_content .= (view($this->views_path . '\card_menu_submenu', $this->data_template));
-        }
+        if($validation<>"OK"){
+            $this->data_template["page_content"] = $this->html_errors($validation);
+        }else {
+            $companies = $this->access->get_UserCompanies($this->user_id);
 
-        foreach ($companies as $data_company) {
-            $this->data_template["link"] = base_url("/menu/modules/" . $data_company["id"]);
-            $this->data_template["card_title"] = $data_company["name"];
-            $this->data_template["card_sub_title"] = $data_company["description"];
-            $this->data_template["card_num_cols"] = "3";
-            if ($data_company["icon"] == '') {
-                $data_company["icon"] = "bx bx-buildings";
+            if ($this->access->is_super_admin($this->user_id)) {
+                $this->data_template["link"] = base_url("/access/platform_admin/");
+                $this->data_template["card_title"] = lang("Menu.card_super_admin_title");
+                $this->data_template["card_sub_title"] = lang("Menu.card_super_admin_sub_title");
+                $this->data_template["card_num_cols"] = "3";
+                $this->data_template["card_icon_menu"] = "lni lni-cog";
+                $this->data_template["company_nit"] = "001";
+                $page_content .= (view($this->views_path . '\card_menu_submenu', $this->data_template));
             }
-            $this->data_template["card_icon_menu"] = $data_company["icon"];
-            $this->data_template["company_nit"] = $data_company["identification"];
-            $page_content .= (view($this->views_path . '\card_menu_submenu', $this->data_template));
+
+            foreach ($companies as $data_company) {
+                $this->data_template["link"] = base_url("/menu/modules/" . $data_company["id"]);
+                $this->data_template["card_title"] = $data_company["name"];
+                $this->data_template["card_sub_title"] = $data_company["description"];
+                $this->data_template["card_num_cols"] = "3";
+                if ($data_company["icon"] == '') {
+                    $data_company["icon"] = "bx bx-buildings";
+                }
+                $this->data_template["card_icon_menu"] = $data_company["icon"];
+                $this->data_template["company_nit"] = $data_company["identification"];
+                $page_content .= (view($this->views_path . '\card_menu_submenu', $this->data_template));
+            }
         }
         return ($page_content);
     }
@@ -118,11 +124,12 @@ class Menu extends BaseController
      */
     public function show_modules($company_id)
     {
-        if (!$this->session->get_LoggedIn()) {
-            return (redirect()->to(base_url('/ts5/signin')));
+        $validation=$this->access->validate_access_permission($this->user_id,$company_id);
+        if($validation<>"OK"){
+            $this->data_template["page_content"] = $this->html_errors($validation);
+        }else{
+            $this->data_template["page_content"] = $this->get_html_modules($company_id);
         }
-
-        $this->data_template["page_content"] = $this->get_html_modules($company_id);
         $this->data_template["data_template"] = $this->data_template;
         return (view($this->views_path . '\blank', $this->data_template));
 
@@ -135,45 +142,118 @@ class Menu extends BaseController
      */
     public function get_html_modules($company_id)
     {
-        if (!$this->session->get_LoggedIn()) {
-            return (redirect()->to(base_url('/ts5/signin')));
-        }
-
-        if (!$this->access->validate_user_company($this->user_id, $company_id)) {
-            $data_error["error_title"] = lang('Menu.error_title_no_company');
-            $data_error["msg_error"] = lang('Menu.error_text_no_company');
-            return (view($this->views_path . '\alert_error', $data_error));
-        }
-
-        $modules = $this->access->get_CompaniesModules($company_id);
-        $page_content = "";
-        foreach ($modules as $data_module) {
-            $this->data_template["link"] = base_url("/menu/components/$company_id/" . $data_module["id"]);
-            $this->data_template["card_title"] = strtoupper($data_module["name"]);
-            $this->data_template["card_sub_title"] = $data_module["description"];
-            $this->data_template["card_num_cols"] = "3";
-            if ($data_module["icon"] == '') {
-                $data_module["icon"] = "lni lni-indent-increase";
+        $validation=$this->access->validate_access_permission($this->user_id,$company_id);
+        $page_content="";
+        if($validation<>"OK"){
+            $this->data_template["page_content"] = $this->html_errors($validation);
+        }else {
+            $this->session->set("company_id", $company_id);
+            $modules = $this->access->get_CompaniesModules($company_id);
+            $page_content = "";
+            foreach ($modules as $data_module) {
+                $this->data_template["link"] = base_url("/menu/components/$company_id/" . $data_module["id"]);
+                $this->data_template["card_title"] = strtoupper($data_module["name"]);
+                $this->data_template["card_sub_title"] = $data_module["description"];
+                $this->data_template["card_num_cols"] = "3";
+                if ($data_module["icon"] == '') {
+                    $data_module["icon"] = "lni lni-indent-increase";
+                }
+                $this->data_template["card_icon_menu"] = $data_module["icon"];
+                $this->data_template["company_nit"] = '';
+                $page_content .= (view($this->views_path . '\card_menu_submenu', $this->data_template));
             }
-            $this->data_template["card_icon_menu"] = $data_module["icon"];
-            $this->data_template["company_nit"] = '';
-            $page_content .= (view($this->views_path . '\card_menu_submenu', $this->data_template));
         }
         return ($page_content);
 
     }
 
+    /**
+     * Muestra los componentes de un módulo
+     * @param $company_id
+     * @param $module_id
+     * @return string
+     */
     public function show_components($company_id,$module_id)
     {
-        if (!$this->session->get_LoggedIn()) {
-            return (redirect()->to(base_url('/ts5/signin')));
+        $this->data_template["page_title"] = lang('Menu.page_title_module_'.$module_id);
+        $validation=$this->access->validate_access_permission($this->user_id,$company_id,$module_id);
+        if($validation<>"OK"){
+            $this->data_template["page_content"] = $this->html_errors($validation);
+        }else{
+            $this->data_template["page_content"]=$this->get_html_components($company_id,$module_id);
         }
-        return("Empresa $company_id, modulo: $module_id");
-        /*
-        $this->data_template["page_content"] = $this->get_html_modules($company_id);
+
         $this->data_template["data_template"] = $this->data_template;
         return (view($this->views_path . '\blank', $this->data_template));
-        */
+
+
+    }
+
+    public function get_html_components($company_id,$module_id)
+    {
+        $validation=$this->access->validate_access_permission($this->user_id,$company_id,$module_id);
+        $page_content="";
+        if($validation<>"OK"){
+            $this->data_template["page_content"] = $this->html_errors($validation);
+        }else {
+            $components = $this->access->get_ModulesComponents($module_id);
+
+            foreach ($components as $data_module) {
+                $this->data_template["link"] = base_url("/".$data_module["alias"]."/" . $data_module["controller"]);
+                $this->data_template["card_title"] = lang('Menu.card_title_component_'.$data_module["id"]);
+                $this->data_template["card_sub_title"] = lang('Menu.card_sub_title_component_'.$data_module["id"]);
+                $this->data_template["card_num_cols"] = "3";
+                $this->data_template["card_icon_menu"] = "bx bx-shape-square";
+                $this->data_template["company_nit"] = '';
+                $page_content .= (view($this->views_path . '\card_menu_submenu', $this->data_template));
+            }
+        }
+        return ($page_content);
+
+    }
+
+    /**
+     * Retorna el html de un error según su código
+     * @param $validation
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     */
+    public function html_errors($validation){
+        $html="";
+        if($validation=='E1'){//El usuario no ha iniciado sesión
+            return (redirect()->to(base_url('/ts5/signin')));
+        }
+
+        if ($validation=='E2') { //El usuario no tiene asignada esta empresa
+            $data_error["error_title"] = lang('Menu.error_title_no_company');
+            $data_error["msg_error"] = lang('Menu.error_text_no_company');
+            $html.= (view($this->views_path . '\alert_error', $data_error));
+        }
+
+        if ($validation=='E3') { //El usuario no tiene roles asignados
+            $data_error["error_title"] = lang('Menu.error_title_no_roles');
+            $data_error["msg_error"] = lang('Menu.error_text_no_roles');
+            $html.= (view($this->views_path . '\alert_error', $data_error));
+        }
+
+        if ($validation=='E4') { //El Usuario no tiene permitido ingresar a este módulo
+            $data_error["error_title"] = lang('Menu.error_title_no_module');
+            $data_error["msg_error"] = lang('Menu.error_text_no_module');
+            $html.= (view($this->views_path . '\alert_error', $data_error));
+        }
+
+        if ($validation=='E5') { //El Usuario no tiene permitido realizar la acción solicitada
+            $data_error["error_title"] = lang('Menu.error_title_no_action');
+            $data_error["msg_error"] = lang('Menu.error_text_no_action');
+            $html.= (view($this->views_path . '\alert_error', $data_error));
+        }
+
+        if ($validation=='E6') { //El Módulo no está asignado a la empresa
+            $data_error["error_title"] = lang('Menu.error_title_no_module_company');
+            $data_error["msg_error"] = lang('Menu.error_text_no_module_company');
+            $html.= (view($this->views_path . '\alert_error', $data_error));
+        }
+
+        return($html);
 
     }
 

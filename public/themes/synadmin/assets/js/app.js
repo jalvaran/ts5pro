@@ -180,5 +180,5 @@ $(function () {
 });
 
 $(document).ready(function () {
-    $('#btn_sidebar_menu').click();
+    //$('#btn_sidebar_menu').click();
 });

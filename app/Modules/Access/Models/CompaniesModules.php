@@ -67,8 +67,23 @@ class CompaniesModules extends Model
         $result = $this
             ->join('app_modules', 'app_modules.id=app_module_id')
             ->where("app_company_id", $company_id)
+            ->notLike("app_modules.id",1)
             ->findAll();
         return ($result);
+    }
+
+    public function module_in_company($company_id,$module_id){
+        $result=$this
+            ->select("id")
+            ->where("app_company_id", $company_id)
+            ->where("app_module_id", $module_id)
+            ->find();
+        if(isset($result[0]["id"])){
+            return(true);
+        }else{
+            return(false);
+        }
+
     }
 
 }

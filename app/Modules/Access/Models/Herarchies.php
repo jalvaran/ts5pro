@@ -75,5 +75,17 @@ class Herarchies extends Model
 
     }
 
+    /**
+     * Devuelve los roles de un usuario
+     * @param $user_id
+     * @return array
+     */
+    public function get_roles_user($user_id){
+        $result=$this->select('id')
+            ->where("access_control_user_id", $user_id)
+            ->findAll();
+        return($result);
+    }
+
 }
 

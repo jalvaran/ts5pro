@@ -57,5 +57,49 @@ class ModulesComponentsPermissions extends Model
     //protected $cache_time = "10";
     protected $DBGroup = "techno";
 
+    /**
+     * Valida si un role tiene permitido ver un modulo
+     * @param $role_id
+     * @param $module_id
+     * @return bool
+     */
+
+    public function validate_module_role($role_id,$module_id){
+
+        $result=$this
+            ->select("app_modules_components_permissions.id")
+            ->join('app_modules_components','app_modules_components.id=app_module_component_id')
+            ->where("app_modules_components.app_module_id", $module_id)
+            ->where("access_control_role_id", $role_id)
+            ->where("access_control_permissions_id", 1)
+            ->find();
+
+        if(isset($result[0]["id"])){
+            return(true);
+        }else{
+            return(false);
+        }
+    }
+
+
+    public function validate_permission_component($role_id,$module_id,$component_id,$permission_id){
+
+        $result=$this
+            ->select("app_modules_components_permissions.id")
+            ->join('app_modules_components','app_modules_components.id=app_module_component_id')
+            ->where("app_modules_components.app_module_id", $module_id)
+            ->where("access_control_role_id", $role_id)
+            ->where("app_modules_components_permissions.id", $component_id)
+            ->where("access_control_permissions_id", $permission_id)
+            ->find();
+
+        if(isset($result[0]["id"])){
+            return(true);
+        }else{
+            return(false);
+        }
+    }
+
+
 }
 

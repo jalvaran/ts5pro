@@ -28,11 +28,111 @@
 
 namespace App\Modules\Access\Libraries;
 
+use App\Libraries\Session;
 use App\Modules\Access\Models\UsersCompanies;
 use App\Modules\Access\Models\Herarchies;
 use App\Modules\Access\Models\CompaniesModules;
+use App\Modules\Access\Models\ModulesComponentsPermissions;
+use App\Modules\Access\Models\ModulesComponents;
 
 class Access{
+
+    private $session;
+    private $user_id;
+
+    public function __construct(){
+        $this->session = new Session();
+        $this->user_id = $this->session->get('user');
+    }
+
+    public function validate_access_permission($user_id,$company_id='',$module_id='',$component_id='',$permission_id=''){
+        if (!$this->session->get_LoggedIn()) {
+            return ('E1'); //El usuario no tiene una sesión activa
+        }
+        if($company_id<>''){
+            if (!$this->validate_user_company($user_id, $company_id)) {
+                return ('E2'); //E2 el usuario no está asignado a la empresa enviada
+            }
+        }
+        if($module_id<>''){
+
+            if($this->module_in_company($company_id,$module_id)==false){
+                return ('E6'); //E6 el módulo no está asignado a la empresa enviada
+            }
+
+            $roles_user=$this->get_roles_user($user_id);
+            if(!isset($roles_user[0]["id"])){
+                return('E3'); //E3 el usuario no tiene roles asignados
+            }
+            $error_module=1;
+            $error_component=1;
+            foreach($roles_user as $role_id){
+                if($this->validate_module_role($role_id["id"],$module_id)==true){
+                    $error_module=0;
+                }
+                if($component_id<>'' and $permission_id<>''){
+                    if($this->validate_permission_component($role_id["id"],$module_id,$component_id,$permission_id)==true){
+                        $error_component=0;
+                    }
+                }else{
+                    $error_component=0;
+                }
+
+
+            }
+            if($error_module==1){
+                return('E4');// el usuario no tiene el módulo enviado asignado
+            }
+            if($error_component==1){
+                return('E5');// el usuario no tiene permiso para ejecutar la acción solicitada en el componente enviado
+            }
+
+
+        }
+        return("OK");
+
+    }
+
+    public function validate_permission_component($role_id,$module_id,$component_id,$permission_id)
+    {
+        $mModulesComponentsPermissions = new ModulesComponentsPermissions();
+        return $mModulesComponentsPermissions->validate_permission_component($role_id,$module_id,$component_id,$permission_id);
+    }
+
+    /**
+     * Retorna los componentes de un módulo
+     * @param $module_id
+     * @return mixed
+     */
+    public function get_ModulesComponents($module_id){
+        $mModulesComponents = new ModulesComponents();
+        return($mModulesComponents->get_ModulesComponents($module_id));
+    }
+
+    /**
+     * valida si un role tiene un modulo asignado
+     * @param $role_id
+     * @param $module_id
+     * @return bool
+     */
+
+    public function validate_module_role($role_id,$module_id)
+    {
+        $mModulesComponentsPermissions = new ModulesComponentsPermissions();
+        return $mModulesComponentsPermissions->validate_module_role($role_id,$module_id);
+    }
+
+    /**
+     * retorna los roles de un usuario
+     * @param $user_id
+     * @return array
+     */
+
+    public function get_roles_user($user_id){
+        $mHerarchies = new Herarchies();
+        return($mHerarchies->get_roles_user($user_id));
+    }
+
     /**
      * Obtiene las empresas asociadas a un usuario
      * @param $user_id
@@ -41,6 +141,11 @@ class Access{
     public function get_UserCompanies($user_id){
         $UsersCompanies = new UsersCompanies();
         return($UsersCompanies->get_UserCompanies($user_id));
+    }
+
+    public function module_in_company($company_id,$module_id){
+        $mCompaniesModules = new CompaniesModules();
+        return($mCompaniesModules->module_in_company($company_id,$module_id));
     }
 
     /**
@@ -53,6 +158,12 @@ class Access{
         return($mCompaniesModules->get_CompaniesModules($company_id));
     }
 
+    /**
+     * retorna las empresas asignadas a un usuario
+     * @param $user_id
+     * @param $company_id
+     * @return bool
+     */
     public function validate_user_company($user_id,$company_id){
         $UsersCompanies = new UsersCompanies();
         return($UsersCompanies->validate_user_company($user_id,$company_id));

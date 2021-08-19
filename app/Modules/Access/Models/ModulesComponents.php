@@ -57,5 +57,15 @@ class ModulesComponents extends Model
     //protected $cache_time = "10";
     protected $DBGroup = "techno";
 
+    public function get_ModulesComponents($module_id)
+    {
+        $result = $this
+            ->select('app_modules_components.id,app_modules.alias,app_modules_components.controller')
+            ->join('app_modules','app_modules.id=app_modules_components.app_module_id')
+            ->where("app_module_id", $module_id)
+            ->findAll();
+        return ($result);
+    }
+
 }
 

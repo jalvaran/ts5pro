@@ -56,5 +56,6 @@ class Roles extends Model
     //protected $cache_time = "10";
     protected $DBGroup = "techno";
 
+
 }
 
