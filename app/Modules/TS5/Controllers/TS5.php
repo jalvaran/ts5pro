@@ -5,6 +5,7 @@ namespace App\Modules\TS5\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\Session;
 use App\Modules\TS5\Libraries\Ts5_class;
+use App\Modules\TS5\Libraries\DataTable;
 
 class TS5 extends BaseController
 {

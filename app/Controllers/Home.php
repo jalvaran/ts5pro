@@ -6,6 +6,6 @@ class Home extends BaseController
 {
 	public function index()
 	{
-		redirect("/TS5");
+        return(redirect()->to(base_url('/ts5/signin')));
 	}
 }

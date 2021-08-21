@@ -22,8 +22,8 @@ return [
     "page_title_module_5" => "Módulo POS",
     "page_title_module_6" => "Módulo de Contabilidad",
 
-    "card_title_component_1" => "Administrar Plataforma",
-    "card_sub_title_component_1" => "Define las políticas de Acceso a la plataforma",
+    "card_title_component_1" => "Gestionar Empresas",
+    "card_sub_title_component_1" => "Administra las Empresas",
 
     "card_title_component_2" => "Gestionar Usuarios",
     "card_sub_title_component_2" => "Administra los usuarios",

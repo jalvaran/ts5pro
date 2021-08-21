@@ -116,8 +116,24 @@ class Users extends Model
         }
     }
 
+    public function has_Permission($user_id, $permission_id,$company_id)
+    {
+        $result=$this->select('access_control_users.id')
+                ->join('access_control_users_companies','access_control_users_companies.access_control_user_id=access_control_users.id')
+                ->join('access_control_herarchies','access_control_herarchies.access_control_user_id=access_control_users.id')
+                ->join('access_control_politics','access_control_politics.access_control_role_id=access_control_herarchies.access_control_role_id')
+                ->where('access_control_users.id',$user_id)
+                ->where('access_control_politics.access_control_permissions_id',$permission_id)
+                ->where('access_control_users_companies.app_company',$company_id)
+                ->first()
+                ;
+        if(isset($result["id"])){
+            return(true);
+        }else{
+            return(false);
+        }
 
-
+    }
 
 }
 
