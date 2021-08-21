@@ -29,6 +29,16 @@
 namespace App\Modules\TS5\Libraries;
 
 class Ts5_class{
+
+    private $session;
+    private $user_id;
+
+    public function __construct(){
+        $this->session=service('session');
+        $this->user_id=$this->session->get('user');
+
+    }
+
     /**
      * Función para retornar una llave única
      * @param string $prefix
@@ -46,7 +56,8 @@ class Ts5_class{
      * @return array
      */
     function getDataTemplate($company_id=""){
-        $session=service('session');
+        //$this->access->create_json_menu($this->user_id);
+
         $data["lang"] = "es";
         $data["page"] = "index";
         $data["favicon"] = "/companies_logos/1/favicon.png";
@@ -54,8 +65,16 @@ class Ts5_class{
         $data["menu_logo"] = "/companies_logos/1/tslogo.png";
         $data["message_error"] = 0;
         $data["menu_title"] = "TS5 PRO";
-        $data["user_name"] = $session->get('user_name');
-        $data["user_designation"] = $session->get('user_designation');
+        $data["user_name"] = $this->session->get('user_name');
+        $data["user_designation"] = $this->session->get('user_designation');
+
+        $data["menu"]=json_decode($this->session->get('json_menu'),true);
+        $data["menu_submenu"]=json_decode($this->session->get('json_sub_menu'),true);
+        $data["menu_pages"]=json_decode($this->session->get('json_menu_pages'),true);
+        $data["sidebar_title"]="Menu";
+        $data["theme"]="dark-theme";//Para modo oscuro
+        $data["theme"]="";
+
         return($data);
     }
 

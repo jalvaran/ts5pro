@@ -62,6 +62,12 @@ class Users extends Model
     //protected $cache_time = "10";
     protected $DBGroup = "techno";
 
+    /**
+     * verifica si existe el usuario y la contraseña
+     * @param $username
+     * @param $password
+     * @return array
+     */
     public function get_UserLogin($username, $password)
     {
         $result = $this
@@ -74,6 +80,42 @@ class Users extends Model
         return($result);
 
     }
+
+    /**
+     * retorna los roles asignados a un usuario
+     * @param $user_id
+     * @return array
+     */
+    public function get_UserRoles($user_id)
+    {
+        $roles = $this
+            ->select('access_control_herarchies.access_control_role_id')
+            ->join('access_control_herarchies', 'access_control_herarchies.access_control_user_id=access_control_users.id')
+            ->where("access_control_users.id", $user_id)
+            ->get()->getResultArray();
+
+
+        return($result);
+
+    }
+
+    /**
+     * Retorna falso o verdadero si el usuario activo ne la sesión es el
+     * autor del regsitro que se desea acceder, editar o eliminar.
+     * @param type $id codigo primario del registro a consultar
+     * @param type $author codigo del usuario del cual se pretende establecer la autoria
+     * @return boolean falso o verdadero segun sea el caso
+     */
+    public function get_Authority($id, $author)
+    {
+        $row = $this->where("author", $id)->first();
+        if (@$row["author"] == $author) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+
 
 
 

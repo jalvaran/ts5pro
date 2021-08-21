@@ -1,6 +1,6 @@
 <?php
 return [
-    "page_title_index" => "Menú de Administración",
+    "page_title_index" => "Menú de la Plataforma",
     "card_super_admin_title" => "ADMINISTRACIÓN GENERAL",
     "card_super_admin_sub_title" => "Access Control",
     "error_title_no_company" => "Error de Acceso",
@@ -25,5 +25,13 @@ return [
     "card_title_component_1" => "Administrar Plataforma",
     "card_sub_title_component_1" => "Define las políticas de Acceso a la plataforma",
 
+    "card_title_component_2" => "Gestionar Usuarios",
+    "card_sub_title_component_2" => "Administra los usuarios",
+
+    "card_title_component_3" => "Gestionar Roles",
+    "card_sub_title_component_3" => "Administra los Roles de los Usuarios",
+
+    "siderbar_title_index" => "Empresas Disponibles",
+    "siderbar_title_modules" => "Módulos Disponibles",
 
 ];

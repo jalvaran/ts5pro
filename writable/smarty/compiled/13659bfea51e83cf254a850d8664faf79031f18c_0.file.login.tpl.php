@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.39, created on 2021-08-14 10:34:55
+/* Smarty version 3.1.39, created on 2021-08-19 20:14:47
   from 'D:\xampp8\htdocs\ts5pro\app\Views\smarty\synadmin\login.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_6117e29f88dd63_76689063',
+  'unifunc' => 'content_611f02073451b6_72413366',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '13659bfea51e83cf254a850d8664faf79031f18c' => 
     array (
       0 => 'D:\\xampp8\\htdocs\\ts5pro\\app\\Views\\smarty\\synadmin\\login.tpl',
-      1 => 1628902808,
+      1 => 1628975866,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6117e29f88dd63_76689063 (Smarty_Internal_Template $_smarty_tpl) {
+function content_611f02073451b6_72413366 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!doctype html>
 <html lang="<?php echo $_smarty_tpl->tpl_vars['lang']->value;?>
 ">
@@ -78,11 +78,11 @@ function content_6117e29f88dd63_76689063 (Smarty_Internal_Template $_smarty_tpl)
 										<hr/>
 									</div>
 									<div class="form-body">
-										<form action="/login/validate" method="POST" enctype="multipart/form-data" class="row g-3">
+										<form action="/ts5/signin" method="POST" enctype="multipart/form-data" class="row g-3">
 											<div class="col-12">
-												<label for="user_email" class="form-label"><?php echo lang('Login.login_title_field_mail');?>
+												<label for="user_email" class="form-label"><?php echo lang('Login.login_title_field_username');?>
 </label>
-												<input type="email" class="form-control" id="user_email" name="user_email" placeholder="<?php echo lang('Login.login_title_field_mail');?>
+												<input type="text" class="form-control" id="user_username" name="user_username" placeholder="<?php echo lang('Login.login_title_field_username');?>
 ">
 											</div>
 											<div class="col-12">
