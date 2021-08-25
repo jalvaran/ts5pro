@@ -63,6 +63,7 @@ class Menu extends BaseController
         if(!$this->session->get_LoggedIn()) {
             return(redirect()->to(base_url('/ts5/signin')));
         }
+        $this->session->set('company_id',$company_id);
         $data["company_id"]=$company_id;
         $data["views_path"]=$this->views_path;
         $data["views_path_module"]=$this->views_path_module;

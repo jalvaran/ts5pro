@@ -1,37 +1,49 @@
 <script type="text/javascript">
+    /**
+     * Funcion para dibujar el formulario para crear una empresa
+     */
+    function frm_company_draw(){
+        var modal_use="modal_large";
+        var modal_body="modal_large_body";
+        $('#'+modal_use).modal("show");
+        $("#modal_large_btn_save").attr("data-form_id",1);
+        var urlController='<?php echo $controller_draw;?>';
+
+        var form_data = new FormData();
+        form_data.append('company_id', <?php echo $company_id;?>);
+
+        $.ajax({
+            url: urlController,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                <?php
+                $spinner=view($views_path.'/spinner_blue');
+                print('$("#"+modal_body).html(`'.$spinner.'`)');
+                ?>
+
+            },
+            complete: function(){
+                //$('#loader').fadeOut();
+            },
+            success: function(data){
+                $('#'+modal_body).html(data);
+            }
+        });//Fin peticion ajax
+    }
+
 
     $(document).ready( function () {
-        $('#<?php echo $table_id ?>').DataTable({
 
-            language: {
-                processing:     "<?php echo lang('DataTables.processing') ?>",
-                search:         "<?php echo lang('DataTables.search') ?>&nbsp;:",
-                lengthMenu:     "<?php echo lang('DataTables.lengthMenu') ?>",
-                info:           "<?php echo lang('DataTables.info') ?>",
-                infoEmpty:      "<?php echo lang('DataTables.infoEmpty') ?>",
-                infoFiltered:   "<?php echo lang('DataTables.infoFiltered') ?>",
-                infoPostFix:    "<?php echo lang('DataTables.infoPostFix') ?>",
-                loadingRecords: "<?php echo lang('DataTables.loadingRecords') ?>",
-                zeroRecords:    "<?php echo lang('DataTables.zeroRecords') ?>",
-                emptyTable:     "<?php echo lang('DataTables.emptyTable') ?>",
-                paginate: {
-                    first:      "<?php echo lang('DataTables.pag_first') ?>",
-                    previous:   "<?php echo lang('DataTables.pag_previous') ?>",
-                    next:       "<?php echo lang('DataTables.pag_next') ?>",
-                    last:       "<?php echo lang('DataTables.pag_last') ?>"
-                },
-                aria: {
-                    sortAscending:  ": <?php echo lang('DataTables.sortAscending') ?>",
-                    sortDescending: ": <?php echo lang('DataTables.sortDescending') ?>"
-                }
-            },
-
-
-            processing: true,
-            serverSide: true,
-            ajax: '<?php echo $controller_json;?>'
+        $('#btn_new_<?php echo $table_id;?>').on('click',function () {
+            frm_company_draw();
         });
-    } );
+
+    });
 
 
 </script>

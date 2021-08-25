@@ -95,7 +95,7 @@ class Users extends Model
             ->get()->getResultArray();
 
 
-        return($result);
+        return($roles);
 
     }
 
@@ -116,15 +116,17 @@ class Users extends Model
         }
     }
 
-    public function has_Permission($user_id, $permission_id,$company_id)
+    public function has_Permission($user_id, $permission_id,$company_id,$module_id)
     {
         $result=$this->select('access_control_users.id')
                 ->join('access_control_users_companies','access_control_users_companies.access_control_user_id=access_control_users.id')
+                ->join('app_companies_modules','access_control_users_companies.app_company=app_companies_modules.app_company_id')
                 ->join('access_control_herarchies','access_control_herarchies.access_control_user_id=access_control_users.id')
                 ->join('access_control_politics','access_control_politics.access_control_role_id=access_control_herarchies.access_control_role_id')
                 ->where('access_control_users.id',$user_id)
                 ->where('access_control_politics.access_control_permissions_id',$permission_id)
                 ->where('access_control_users_companies.app_company',$company_id)
+                ->where('app_companies_modules.app_module_id',$module_id)
                 ->first()
                 ;
         if(isset($result["id"])){

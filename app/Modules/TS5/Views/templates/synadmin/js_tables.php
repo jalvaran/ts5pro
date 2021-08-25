@@ -1,6 +1,7 @@
 <script type="text/javascript">
 
     $(document).ready( function () {
+
         $('#<?php echo $table_id ?>').DataTable({
 
             language: {
@@ -31,6 +32,8 @@
             serverSide: true,
             ajax: '<?php echo $controller_json;?>'
         });
+
+
     } );
 
 

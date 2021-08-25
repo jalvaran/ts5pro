@@ -12,9 +12,12 @@ $(function () {
         $(".search-bar").removeClass("full-search-bar");
         $(".page-wrapper").removeClass("search-overlay");
     });
+
     $(".mobile-toggle-menu").on("click", function () {
         $(".wrapper").addClass("toggled");
     });
+
+
     // toggle menu button
     $(".toggle-icon").click(function () {
         if ($(".wrapper").hasClass("toggled")) {
@@ -180,11 +183,18 @@ $(function () {
 });
 
 $(document).ready(function () {
+
     $(".sidebar-wrapper").hover(function () {
         $(".wrapper").addClass("sidebar-hovered");
     }, function () {
         $(".wrapper").removeClass("sidebar-hovered");
     })
+
+    if(window.matchMedia("(max-width: 767px)").matches){
+        $("#div_wrapper").removeClass("toggled");
+    }else{
+        $("#div_wrapper").addClass("toggled");
+    }
 
     $( ".ts_card" )
         .mouseout(function() {
