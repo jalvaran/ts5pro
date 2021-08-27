@@ -185,6 +185,56 @@
         });
     }
     /**
+     * Función para dibujar el listado de empresas
+     */
+    function companies_draw(){
+
+        var urlController='<?php echo $controller_companies_draw;?>';
+
+        var form_data = new FormData();
+        form_data.append('company_id', <?php echo $company_id;?>);
+
+        $.ajax({
+            url: urlController,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                <?php
+                $spinner=view($views_path.'/spinner_blue');
+                print('$("#div_table_companies").html(`'.$spinner.'`)');
+                ?>
+
+            },
+            complete: function(){
+                //$('#loader').fadeOut();
+            },
+            success: function(data){
+                $('#div_table_companies').html(data);
+                data_table_init('companies_table','<?php echo $controller_json;?>');
+                buttons_data_table_events_add();
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+    /**
      * Función para dibujar el formulario para crear una empresa
      */
     function frm_company_draw(){
@@ -293,6 +343,8 @@
                 if(typeof(data)=='object'){
                     if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
                         toastr.success(data.msg);
+                        $('#'+modal_use).modal("hide");
+                        companies_draw();
                     }else{
                         toastr.error(data.msg);
 
@@ -324,19 +376,23 @@
             }
         });//Fin peticion ajax
     }
-    /**
-     * callback para agregar los eventos a los botones
-     */
-    $(document).ready( function () {
 
+    function buttons_data_table_events_add(){
         $('#btn_new_<?php echo $table_id;?>').on('click',function () {
             frm_company_draw();
         });
 
+
+    }
+
+    /**
+     * callback para agregar los eventos a los botones
+     */
+    $(document).ready( function () {
+        buttons_data_table_events_add();
         $('#modal_full_btn_save').on('click',function () {
             confirm_save_company();
         });
-
     });
 
 

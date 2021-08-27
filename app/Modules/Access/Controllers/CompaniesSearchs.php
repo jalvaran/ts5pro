@@ -25,6 +25,7 @@ class CompaniesSearchs extends BaseController
         $i=0;
         $field_dataTable[$i]["field"]='id';
         $field_dataTable[$i]["action_links"]='action_links_companies';
+        //$field_dataTable[++$i]["field"]='id';
         $field_dataTable[++$i]["field"]='name';
         $field_dataTable[++$i]["field"]='description';
         $field_dataTable[++$i]["field"]='identification';

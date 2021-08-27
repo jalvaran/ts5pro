@@ -27,7 +27,7 @@
                 }
             },
 
-
+            order: [[ 0, "desc" ]],
             processing: true,
             serverSide: true,
             ajax: '<?php echo $controller_json;?>'

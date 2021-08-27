@@ -50,7 +50,7 @@ class Companies extends BaseController
             $controller_search_type_liability=base_url('/access/companies/type_liabilities?company_id='.$company_id);
             $controller_search_municipality=base_url('/access/companies/municipalities?company_id='.$company_id);
             $controller_save_company=base_url('/access/companies/create?company_id='.$company_id);
-
+            $controller_companies_draw=base_url('/access/companies/table_companies?company_id='.$company_id);
             $data_table["controller_json"]=$controller_json_companies;
             $data_table["controller_draw"]=$controller_draw_form_companies;
             $data_table["controller_search_languages"]=$controller_search_languages;
@@ -62,6 +62,7 @@ class Companies extends BaseController
             $data_table["controller_search_type_liability"]=$controller_search_type_liability;
             $data_table["controller_search_municipality"]=$controller_search_municipality;
             $data_table["controller_save_company"]=$controller_save_company;
+            $data_table["controller_companies_draw"]=$controller_companies_draw;
 
             $data_table["table_id"]="companies_table";
             $data_table["company_id"]=$company_id;
@@ -106,14 +107,17 @@ class Companies extends BaseController
             $data_table["table_title"]=lang('Access.companies_table_title');
             $data_table["div_cols"]=11;
             $data_table["cols"][0]=lang('Access.companies_table_col1');
+
             $data_table["cols"][1]=lang("Access.companies_table_col2");
             $data_table["cols"][2]=lang("Access.companies_table_col3");
             $data_table["cols"][3]=lang("Access.companies_table_col4");
             $data_table["cols"][4]=lang("Access.companies_table_col5");
             $data_table["cols"][5]=lang("Access.companies_table_col6");
+            $html.='<div class="row"><div class="col" id="div_table_companies">';
             $html.= view($this->views_path."\data_table",$data_table);
-
+            $html.='</div></div>';
         }else{
+
             $html.=view($this->views_path_module."\list/deny",array("views_path"=>$this->views_path));
         }
 

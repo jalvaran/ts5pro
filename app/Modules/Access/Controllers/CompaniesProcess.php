@@ -70,7 +70,18 @@ class CompaniesProcess extends BaseController
         $validator["not_required"]["ciius"]=1;
         $validator["not_required"]["icon"]=1;
         $validator["not_required"]["merchant_registration"]=1;
-        $validator["select2"]["app_cat_type_document_identification_id"]=1;
+        /*
+        $validator["select2"]["type_document_identification_id"]=1;
+        $validator["select2"]["country_id"]=1;
+        $validator["select2"]["municipality_id"]=1;
+        $validator["select2"]["type_organization_id"]=1;
+        $validator["select2"]["type_regime_id"]=1;
+        $validator["select2"]["language_id"]=1;
+        $validator["select2"]["type_currency_id"]=1;
+        $validator["select2"]["type_currency_id"]=1;
+        $validator["select2"]["type_currency_id"]=1;
+        $validator["select2"]["type_currency_id"]=1;
+        */
         foreach($data_form as $field => $value){
             if($value=='' and !isset($validator["not_required"][$field])){
                 $response["status"]=0;
