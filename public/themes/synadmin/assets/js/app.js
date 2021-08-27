@@ -196,12 +196,4 @@ $(document).ready(function () {
         $("#div_wrapper").addClass("toggled");
     }
 
-    $( ".ts_card" )
-        .mouseout(function() {
-            $(this).css({ opacity: '1','transform' : 'rotate('+ 0 +'deg)'});
-        })
-        .mouseover(function() {
-            $(this).css({ opacity: '0.8','transform' : 'rotate('+ 10 +'deg)'});
-        });
-
 });

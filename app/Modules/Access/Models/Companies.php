@@ -47,7 +47,6 @@ class Companies extends Model
         'mail',
         'language_id',
         'type_operation_id',
-
         'type_document_identification_id',
         'country_id',
         'type_currency_id',
@@ -55,11 +54,12 @@ class Companies extends Model
         'type_regime_id',
         'type_liability_id',
         'municipality_id',
-
         'merchant_registration',
         'address',
         'phone',
         'ciius',
+        'author',
+        'icon',
         'test_set_dian',
         'token_api_fe',
         'post_documents_automatically'

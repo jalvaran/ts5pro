@@ -343,14 +343,14 @@ body.lobibox-open {
   border: none;
 }
 .lobibox.lobibox-confirm .lobibox-header {
-  color: #eeeeee;
-  background-color: #3C2D2D;
+  color: black;
+  background-color: #e8e8e8;
 }
 .lobibox.lobibox-confirm .lobibox-body .lobibox-icon {
   color: #3C2D2D;
 }
 .lobibox.lobibox-confirm .lobibox-footer {
-  background-color: #594343;
+  background-color: #e8e8e8;
 }
 .lobibox.lobibox-success {
   border: 1px solid #29B87E;
