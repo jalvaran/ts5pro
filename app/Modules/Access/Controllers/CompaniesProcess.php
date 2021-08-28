@@ -59,8 +59,20 @@ class CompaniesProcess extends BaseController
         }
 
         $user_id=$this->session->get('user');
+
         $request = service('request');
+        $mUsers=model('App\Modules\Access\Models\Users');
         $company_id=$request->getVar('company_id');
+        $permission_id=2;  //Ver en tabla access_control_permissions
+        $module_id=2; //Access
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
         $data_form_serialized=$request->getVar('data_form_serialized');
         parse_str($data_form_serialized,$data_form);
         $validator["numeric"]["identification"]=1;
@@ -70,19 +82,88 @@ class CompaniesProcess extends BaseController
         $validator["not_required"]["ciius"]=1;
         $validator["not_required"]["icon"]=1;
         $validator["not_required"]["merchant_registration"]=1;
-        /*
-        $validator["select2"]["type_document_identification_id"]=1;
-        $validator["select2"]["country_id"]=1;
-        $validator["select2"]["municipality_id"]=1;
-        $validator["select2"]["type_organization_id"]=1;
-        $validator["select2"]["type_regime_id"]=1;
-        $validator["select2"]["language_id"]=1;
-        $validator["select2"]["type_currency_id"]=1;
-        $validator["select2"]["type_currency_id"]=1;
-        $validator["select2"]["type_currency_id"]=1;
-        $validator["select2"]["type_currency_id"]=1;
-        */
+
         foreach($data_form as $field => $value){
+            $data_form[$field]=trim($value);
+            if($value=='' and !isset($validator["not_required"][$field])){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
+                $response["msg"]=lang('Ts5.validation_field_empty',$data_lang);
+                $response["object_id"]=$field;
+                if(isset($validator["select2"][$field])){
+                    $response["object_id"]="select2-".$field."-container";
+                }
+                return $this->setResponseFormat('json')->respond($response);
+            }
+            if(isset($validator["numeric"][$field]) and !is_numeric($value)){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
+                $response["msg"]=lang('Ts5.validation_field_numeric_1',$data_lang);
+                $response["object_id"]=$field;
+                return $this->setResponseFormat('json')->respond($response);
+            }
+        }
+        $ts5=new Ts5_class();
+        $data_form["id"]=$ts5->getUniqueId("cp_",true);
+        $data_form["dv"]=$ts5->calculate_dv($data_form["identification"]);
+        $data_form["author"]=$user_id;
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $mCompanies->insert($data_form);
+        $response["status"]=1;
+        $response["msg"]="Registro Guardado";
+        return $this->setResponseFormat('json')->respond($response);
+    }
+
+    /**
+     * Función para editar una empresa
+     * @return mixed
+     */
+    function edit() {
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+
+        $request = service('request');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+        $company_id=$request->getVar('company_id');
+        $item_id=$request->getVar('item_id');
+
+        $permission_id=4;           //Permiso para Editar singular Ver en tabla access_control_permissions
+        $permission_id_all=5;       //Permiso para Editar plural Ver en tabla access_control_permissions
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $data_form_serialized=$request->getVar('data_form_serialized');
+
+        parse_str($data_form_serialized,$data_form);
+
+        $validator["numeric"]["identification"]=1;
+        $validator["numeric"]["phone"]=1;
+        $validator["numeric"]["post_documents_automatically"]=1;
+        $validator["not_required"]["test_set_dian"]=1;
+        $validator["not_required"]["ciius"]=1;
+        $validator["not_required"]["icon"]=1;
+        $validator["not_required"]["merchant_registration"]=1;
+
+        foreach($data_form as $field => $value){
+            $data_form[$field]=trim($value);
             if($value=='' and !isset($validator["not_required"][$field])){
                 $response["status"]=0;
                 $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
@@ -104,12 +185,11 @@ class CompaniesProcess extends BaseController
         $ts5=new Ts5_class();
 
         $data_form["dv"]=$ts5->calculate_dv($data_form["identification"]);
-        $data_form["author"]=$user_id;
+        //$data_form["author"]=$user_id;
         $mCompanies=model('App\Modules\Access\Models\Companies');
-
-        $mCompanies->insert($data_form);
+        $mCompanies->edit_company($data_form,$item_id);
         $response["status"]=1;
-        $response["msg"]="Registro Guardado";
+        $response["msg"]="Registro Editado";
         return $this->setResponseFormat('json')->respond($response);
     }
 

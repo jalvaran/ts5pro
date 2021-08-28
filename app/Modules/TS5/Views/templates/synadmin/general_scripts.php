@@ -87,7 +87,10 @@
             order: [[ 0, "desc" ]],
             processing: true,
             serverSide: true,
-            ajax: controller_data
+            ajax: controller_data,
+            initComplete: function(settings, json) {
+                buttons_data_table_events_add();
+            }
         });
     }
 

@@ -40,6 +40,7 @@ class Companies extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
+        'id',
         'name',
         'description',
         'identification',
@@ -81,19 +82,63 @@ class Companies extends Model
 
     /**
      * Retorna falso o verdadero si el usuario activo ne la sesión es el
-     * autor del regsitro que se desea acceder, editar o eliminar.
-     * @param type $id codigo primario del registro a consultar
-     * @param type $author codigo del usuario del cual se pretende establecer la autoria
-     * @return boolean falso o verdadero segun sea el caso
+     * autor del registro que se desea acceder, editar o eliminar.
+     * @param type $id código primario del registro a consultar
+     * @param type $author código del usuario del cual se pretende establecer la autoría
+     * @return boolean falso o verdadero según sea el caso
      */
     public function get_Authority($id, $author)
     {
-        $row = $this->where("author", $id)->first();
-        if (@$row["author"] == $author) {
+        $row = $this->select("id")
+                ->where("id", $id)
+                ->where("author", $author)
+                ->first();
+        if (@$row["id"] == $id) {
             return (true);
         } else {
             return (false);
         }
+    }
+
+    public function get_DataCompany($id)
+    {
+        $row = $this->select('app_companies.*')
+            ->select('app_cat_languages.name as name_language')
+            ->join("app_cat_languages", "app_cat_languages.id=app_companies.language_id")
+
+            ->select('app_cat_type_document_identifications.name as name_type_document')
+            ->join("app_cat_type_document_identifications", "app_cat_type_document_identifications.id=app_companies.type_document_identification_id")
+
+            ->select('app_cat_countries.name as name_country_id')
+            ->join("app_cat_countries", "app_cat_countries.id=app_companies.country_id")
+
+            ->select('app_cat_type_currencies.name as name_type_currency_id')
+            ->join("app_cat_type_currencies", "app_cat_type_currencies.id=app_companies.type_currency_id")
+
+            ->select('app_cat_type_organizations.name as name_type_organization_id')
+            ->join("app_cat_type_organizations", "app_cat_type_organizations.id=app_companies.type_organization_id")
+
+            ->select('app_cat_type_regimes.name as name_type_regime_id')
+            ->join("app_cat_type_regimes", "app_cat_type_regimes.id=app_companies.type_regime_id")
+
+            ->select('app_cat_type_liabilities.name as name_type_liability_id')
+            ->join("app_cat_type_liabilities", "app_cat_type_liabilities.id=app_companies.type_liability_id")
+
+            ->select('app_cat_municipalities.name as name_municipality_id')
+            ->join("app_cat_municipalities", "app_cat_municipalities.id=app_companies.municipality_id")
+
+            ->where("app_companies.id", $id)
+            ->first();
+        if (@$row["id"] == $id) {
+            return ($row);
+        } else {
+            return (false);
+        }
+    }
+
+    public function edit_company($data,$id){
+        $this->where("id",$id);
+        $this->update($id,$data);
     }
 
 }

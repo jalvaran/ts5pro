@@ -2,7 +2,7 @@
     <?php
         if(isset($buttons)){
             foreach ($buttons as $button){
-                print('<a href="'.$button["link"].'" type="button" class="btn btn-outline-'.$button["color"].' btn-sm"><i class="'.$button["icon"].'"></i></a>');
+                print('<button data-item_id="'.$button["id"].'"  type="button" class="btn btn-outline-'.$button["color"].' btn-sm '.$button["class"].'"><i class="'.$button["icon"].'"></i></button>');
             }
         }
 

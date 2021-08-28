@@ -3,6 +3,7 @@ return [
     "module_name" => "Access",
     "access_view_error_title" => "Error",
     "access_view_error" => "Su usuario no cuenta con permisos suficientes para realizar esta acción",
+
     "access_no_logged_in" => "Debe iniciar sesión",
     "companies_page_title" => "Gestión de Empresas",
     "companies_table_title" => "Listado de Empresas",
@@ -12,6 +13,8 @@ return [
     "companies_table_col4" => "Identificación",
     "companies_table_col5" => "DV",
     "companies_table_col6" => "Mail",
+    "companies_table_col7" => "Dirección",
+    "companies_table_col8" => "Teléfono",
     "companies_frm_create_title" => "Crear una Empresa",
     "companies_frm_input_name" => "Razón Social",
     "companies_frm_input_description" => "Descripción",

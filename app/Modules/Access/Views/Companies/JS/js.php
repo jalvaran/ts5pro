@@ -34,6 +34,7 @@
     */
     var modal_use="modal_fullscreen";
     var modal_body="modal_fullscreen_body";
+    var modal_button="modal_full_btn_save";
 
     /**
      * Función para convertir los Select a Select2
@@ -192,7 +193,7 @@
         var urlController='<?php echo $controller_companies_draw;?>';
 
         var form_data = new FormData();
-        form_data.append('company_id', <?php echo $company_id;?>);
+        form_data.append('company_id', '<?php echo $company_id;?>');
 
         $.ajax({
             url: urlController,
@@ -205,7 +206,7 @@
             beforeSend: function() {
                 <?php
                 $spinner=view($views_path.'/spinner_blue');
-                print('$("#div_table_companies").html(`'.$spinner.'`)');
+                print('$("#body_page_content").html(`'.$spinner.'`)');
                 ?>
 
             },
@@ -213,9 +214,9 @@
                 //$('#loader').fadeOut();
             },
             success: function(data){
-                $('#div_table_companies').html(data);
+                $('#body_page_content').html(data);
                 data_table_init('companies_table','<?php echo $controller_json;?>');
-                buttons_data_table_events_add();
+
             },
             error: function(xhr, ajaxOptions, thrownError){
 
@@ -240,12 +241,11 @@
     function frm_company_draw(){
 
         $('#'+modal_use).modal("show");
-
-        $("#modal_large_btn_save").attr("data-form_id",1);
+        $("#"+modal_button).attr("data-form_id",1);
         var urlController='<?php echo $controller_draw;?>';
 
         var form_data = new FormData();
-        form_data.append('company_id', <?php echo $company_id;?>);
+        form_data.append('company_id', '<?php echo $company_id;?>');
 
         $.ajax({
             url: urlController,
@@ -287,6 +287,64 @@
             }
         });//Fin peticion ajax
     }
+
+
+    /**
+     * Función para dibujar el formulario para editar una empresa
+     */
+    function frm_company_edit_draw(item_id){
+
+        $('#'+modal_use).modal("show");
+        $("#"+modal_button).attr("data-form_id",2);
+        $("#"+modal_button).attr("data-item_id",item_id);
+        var urlController='<?php echo $controller_edit_draw;?>/'+item_id;
+
+        var form_data = new FormData();
+        form_data.append('company_id', '<?php echo $company_id;?>');
+
+        $.ajax({
+            url: urlController,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                <?php
+                $spinner=view($views_path.'/spinner_blue');
+                print('$("#"+modal_body).html(`'.$spinner.'`)');
+                ?>
+
+            },
+            complete: function(){
+                //$('#loader').fadeOut();
+            },
+            success: function(data){
+                $('#'+modal_body).html(data);
+                select2_converter();
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+
+
     /**
      * Función para pedir confirmacion para grabar los datos en la tabla empresas
      */
@@ -377,11 +435,109 @@
         });//Fin peticion ajax
     }
 
+    /**
+     * Función para pedir confirmacion para grabar los datos en la tabla empresas
+     */
+    function confirm_edit_company(item_id){
+
+        Swal.fire({
+            title: '<?php echo lang('Ts5.confirm_edit_title')?>',
+            //text: "<?php echo lang('Ts5.confirm_text')?>",
+            icon: 'warning',
+
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '<?php echo lang('Ts5.confirm_button_ok')?>',
+            cancelButtonText: '<?php echo lang('Ts5.confirm_button_cancel')?>'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                edit_company(item_id);
+            }else{
+
+                toastr.error('<?php echo lang('Ts5.confirm_process_cancel_text')?>');
+            }
+        });
+    }
+    /**
+     * Función para grabar los datos en la tabla empresas
+     */
+    function edit_company(item_id){
+
+        var urlControllerProcess='<?php echo $controller_edit_company;?>';
+        var btnSave = $("#modal_full_btn_save");
+        var data_form_serialized=$('.ts_input').serialize();
+
+        var form_data = new FormData();
+        form_data.append('data_form_serialized',data_form_serialized);
+        form_data.append('item_id',item_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                btnSave.val("Enviando");
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                btnSave.val("Guardar");
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+modal_use).modal("hide");
+                        companies_draw();
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                }
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                btnSave.val("Guardar");
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
     function buttons_data_table_events_add(){
+
         $('#btn_new_<?php echo $table_id;?>').on('click',function () {
+
             frm_company_draw();
         });
 
+        $('.ts_button_edit').on('click',function () {
+
+            $(this).removeAttr("href");
+            frm_company_edit_draw($(this).attr("data-item_id"));
+        });
 
     }
 
@@ -389,9 +545,19 @@
      * callback para agregar los eventos a los botones
      */
     $(document).ready( function () {
-        buttons_data_table_events_add();
+
+        companies_draw();
         $('#modal_full_btn_save').on('click',function () {
-            confirm_save_company();
+            var form_id=$(this).attr("data-form_id");
+            var item_id=$(this).attr("data-item_id");
+            if(form_id==1){
+                confirm_save_company();
+            }else if(form_id==2){
+                confirm_edit_company(item_id);
+            }else{
+                toastr.error('<?php echo lang('Ts5.save_error_button')?>');
+            }
+
         });
     });
 

@@ -127,6 +127,11 @@ class Users extends Model
                 ->where('access_control_politics.access_control_permissions_id',$permission_id)
                 ->where('access_control_users_companies.app_company',$company_id)
                 ->where('app_companies_modules.app_module_id',$module_id)
+                ->where('access_control_users.deleted_at is null')
+                ->where('access_control_herarchies.deleted_at is null')
+                ->where('access_control_politics.deleted_at is null')
+                ->where('app_companies_modules.deleted_at is null')
+                ->where('access_control_users_companies.deleted_at is null')
                 ->first()
                 ;
         if(isset($result["id"])){

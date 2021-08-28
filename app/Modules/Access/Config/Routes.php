@@ -37,10 +37,11 @@ $routes->group("access", [
 
         $subroutes->add("companies/view/(:any)", "Companies::view/$1");
         $subroutes->add("companies/table_companies", "Companies::table_companies");
-        $subroutes->add("companies/frmCompany", "Companies::frm_company");
-        $subroutes->add("companies/edit/(:any)", "Companies::edit/$1");
+        $subroutes->add("companies/frm_create", "Companies::frm_create");
+        $subroutes->add("companies/frm_edit/(:any)", "Companies::frm_edit/$1");
         $subroutes->add("companies/delete/(:any)", "Companies::delete/$1");
         $subroutes->add("companies/create", "CompaniesProcess::create");
+        $subroutes->add("companies/edit", "CompaniesProcess::edit");
         $subroutes->add("companies/list/(:any)", "Companies::list/$1");
         $subroutes->add("companies/jsonCompanies", "CompaniesSearchs::jsonCompanies");
         $subroutes->add("companies/languages", "CompaniesSearchs::Languages");

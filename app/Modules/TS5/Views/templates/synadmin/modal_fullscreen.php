@@ -17,8 +17,8 @@
                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="modal_full_btn_close" data-form_id="0" type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo lang('Ts5.modal_btn_close') ?></button>
-                        <button id="modal_full_btn_save" data-form_id="0" type="button" class="btn btn-primary"><?php echo lang('Ts5.modal_btn_save') ?></button>
+                        <button name="modal_full_btn_close" id="modal_full_btn_close" data-form_id="0" type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo lang('Ts5.modal_btn_close') ?></button>
+                        <button name="modal_full_btn_save" id="modal_full_btn_save" data-form_id="0" type="button" class="btn btn-primary"><?php echo lang('Ts5.modal_btn_save') ?></button>
                     </div>
                 </div>
             </div>
