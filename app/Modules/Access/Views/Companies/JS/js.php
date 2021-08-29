@@ -206,7 +206,7 @@
             beforeSend: function() {
                 <?php
                 $spinner=view($views_path.'/spinner_blue');
-                print('$("#body_page_content").html(`'.$spinner.'`)');
+                print('$("#div_table_companies").html(`'.$spinner.'`)');
                 ?>
 
             },
@@ -214,7 +214,7 @@
                 //$('#loader').fadeOut();
             },
             success: function(data){
-                $('#body_page_content').html(data);
+                $('#div_table_companies').html(data);
                 data_table_init('companies_table','<?php echo $controller_json;?>');
 
             },
@@ -539,6 +539,12 @@
             frm_company_edit_draw($(this).attr("data-item_id"));
         });
 
+        $('.ts_button_view').on('click',function () {
+
+            $(this).removeAttr("href");
+            company_view($(this).attr("data-item_id"));
+        });
+
     }
 
     /**
@@ -554,11 +560,15 @@
                 confirm_save_company();
             }else if(form_id==2){
                 confirm_edit_company(item_id);
+            }else if(form_id==3){
+                $('#'+modal_use).modal("hide");
             }else{
                 toastr.error('<?php echo lang('Ts5.save_error_button')?>');
             }
 
         });
+
+
     });
 
 

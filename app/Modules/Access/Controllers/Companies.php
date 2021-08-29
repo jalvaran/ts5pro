@@ -1,5 +1,32 @@
 <?php
-
+/*
+ *--------------------------------------------------------------------------
+ *╔╦╗╔═╗╔═╗╦ ╦╔╗╔╔═╗
+ * ║ ║╣ ║  ╠═╣║║║║ ║
+ * ╩ ╚═╝╚═╝╩ ╩╝╚╝╚═╝
+ *--------------------------------------------------------------------------
+ * Copyright 2021 - Techno Soluciones S.A.S., Inc. <info@technosoluciones.com.co>
+ * Este archivo es parte de TS5 Pro V 1.0
+ * Para obtener información completa sobre derechos de autor y licencia, consulte
+ * la LICENCIA archivo que se distribuyó con este código fuente.
+ * -----------------------------------------------------------------------------
+ * EL SOFTWARE SE PROPORCIONA -TAL CUAL-, SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O
+ * IMPLÍCITA, INCLUYENDO PERO NO LIMITADO A LAS GARANTÍAS DE COMERCIABILIDAD,
+ * APTITUD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO SERÁ
+ * LOS AUTORES O TITULARES DE LOS DERECHOS DE AUTOR SERÁN RESPONSABLES DE CUALQUIER RECLAMO, DAÑOS U OTROS
+ * RESPONSABILIDAD, YA SEA EN UNA ACCIÓN DE CONTRATO, AGRAVIO O DE OTRO MODO, QUE SURJA
+ * DESDE, FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS
+ * NEGOCIACIONES EN EL SOFTWARE.
+ * -----------------------------------------------------------------------------
+ * Este archivo contiene el controlador para el modulo de creación de empresas
+ * -----------------------------------------------------------------------------
+ * @Author Julian Andres Alvarán Valencia <jalvaran@gmail.com>
+ * @created 2021-08-26
+ * @updated 2021-08-26
+ * @link https://www.technosoluciones.com.co
+ * @Version 1.0
+ * @since PHP 7, PHP 8
+ */
 namespace App\Modules\Access\Controllers;
 
 use App\Libraries\Session;
@@ -20,6 +47,10 @@ class Companies extends BaseController
         $this->session = new Session();
     }
 
+    /**
+     * pagina inicial
+     * @return \CodeIgniter\HTTP\RedirectResponse
+     */
     function index() {
 
         if (!$this->session->get_LoggedIn()) {
@@ -30,6 +61,11 @@ class Companies extends BaseController
 
     }
 
+    /**
+     * Muestra el listado de las empresas creadas en el sistema, más las opciones para crear, editar y ver
+     * @param $company_id
+     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     */
     function list($company_id) {
 
         if (!$this->session->get_LoggedIn()) {
@@ -53,6 +89,7 @@ class Companies extends BaseController
             $controller_edit_company=base_url('/access/companies/edit?company_id='.$company_id);
             $controller_companies_draw=base_url('/access/companies/table_companies?company_id='.$company_id);
             $controller_edit_draw=base_url('/access/companies/frm_edit/');
+            $controller_view_company=base_url('/access/companies/view/');
             $data_table["controller_json"]=$controller_json_companies;
             $data_table["controller_draw"]=$controller_draw_form_companies;
             $data_table["controller_search_languages"]=$controller_search_languages;
@@ -67,18 +104,35 @@ class Companies extends BaseController
             $data_table["controller_edit_company"]=$controller_edit_company;
             $data_table["controller_companies_draw"]=$controller_companies_draw;
             $data_table["controller_edit_draw"]=$controller_edit_draw;
+            $data_table["controller_view_company"]=$controller_view_company;
 
             $data_table["table_id"]="companies_table";
             $data_table["company_id"]=$company_id;
             $data_table["views_path"]=$this->views_path;
 
             $my_js=view($this->views_path_module."\JS/js",$data_table);
+            $my_js_company=view($this->views_path_module."\JS/js_view_company",$data_table);
+            $data_div["tags"]='class="col-md-12" id="div_table_companies" ';
+            $data_div["content_div"]='';
+            $div_md_12=view($this->views_path."\div",$data_div);
 
-            $html="";
+            $data_div["tags"]='class="col-md-9" id="div_view_company" ';
+            $data_div["content_div"]="";
+            $div_md_9=view($this->views_path."\div",$data_div);
+
+            $data_div["tags"]='class="col-md-3" id="div_view_msg" ';
+            $data_div["content_div"]='';
+            $div_md_3=view($this->views_path."\div",$data_div);
+
+            $data_div["tags"]='class="row" ';
+            $data_div["content_div"]=$div_md_12.$div_md_9.$div_md_3;
+            $div_md_row=view($this->views_path."\div",$data_div);
+
+            $html=$div_md_row;
 
             $data=$ts5->getDataTemplate();
             $data["data_template"]=$ts5->getDataTemplate();
-            $data["data_template"]["my_js"]=$my_js;
+            $data["data_template"]["my_js"]=$my_js.$my_js_company;
             $data["view_path"]=$this->views_path;
             $data["page_title"]=lang('Access.companies_page_title');
             $data["module_name"]=lang('Access.module_name');
@@ -89,6 +143,10 @@ class Companies extends BaseController
 
     }
 
+    /**
+     * Dibuja la tabla de empresas
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     */
     function table_companies(){
         if (!$this->session->get_LoggedIn()){
             return (redirect()->to(base_url('/ts5/signin')));
@@ -128,6 +186,10 @@ class Companies extends BaseController
         return($html);
     }
 
+    /**
+     * Dibuja el formulario para crear una empresa
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     */
     function frm_create(){
         if (!$this->session->get_LoggedIn()){
             return (redirect()->to(base_url('/ts5/signin')));
@@ -154,6 +216,11 @@ class Companies extends BaseController
 
     }
 
+    /**
+     * Dibuja el formulario para editar una empresa
+     * @param $id => id de la empresa que se desea editar
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     */
     function frm_edit($id) {
         if (!$this->session->get_LoggedIn()){
             return (redirect()->to(base_url('/ts5/signin')));
@@ -185,11 +252,30 @@ class Companies extends BaseController
         }
 
     }
-    function delete($id) {
-        return("delete {$id}");
+
+    /**
+     * Dibuja la interfaz con las diferentes opciones para el api de documentos electrónicos
+     * @param $id
+     */
+    public function view($id){
+        $ts5=new Ts5_class();
+        $data_template=$ts5->getDataTemplate();
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+        $data_company=$mCompanies->get_DataCompany($id);
+        $data["id"]=$id;
+        $data["data_company"]=$data_company;
+        $image_link="/companies/$id/img/header-logo.png";
+
+        $data["company_logo"]=$image_link;
+        $data["views_path"]=$this->views_path;
+
+        if(!file_exists(FCPATH.$image_link)){
+            $data["company_logo"]="/companies/general/images/no_image.jpg";
+        }
+
+
+        return(view($this->views_path_module."\View\Company",$data));
     }
-
-
 
 
 }

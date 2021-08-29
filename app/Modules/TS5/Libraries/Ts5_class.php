@@ -60,9 +60,9 @@ class Ts5_class{
 
         $data["lang"] = "es";
         $data["page"] = "index";
-        $data["favicon"] = "/companies_logos/1/favicon.png";
-        $data["company_logo"] = "/companies_logos/1/header-logo.png";
-        $data["menu_logo"] = "/companies_logos/1/tslogo.png";
+        $data["favicon"] = "/companies/cp_6128f69283025963104543/img/favicon.png";
+        $data["company_logo"] = "/companies/cp_6128f69283025963104543/img/header-logo.png";
+        $data["menu_logo"] = "/companies/cp_6128f69283025963104543/img/tslogo.png";
         $data["message_error"] = 0;
         $data["menu_title"] = "TS5 PRO";
         $data["user_name"] = $this->session->get('user_name');
