@@ -47,6 +47,19 @@
         "hideMethod": "fadeOut"
     }
 
+    function show_spinner(msg=''){
+        var cadena='';
+        cadena +='<div id="spinner1" style="position:fixed;top: 50%;left: 50%;z-index:10000;text-align:center;color:red">';
+        cadena +='<strong>'+msg+'</strong><br>';
+        cadena += `<?= view('App\Modules\TS5\Views\templates\synadmin\spinner_page')?>`;
+        cadena +='</div>';
+        var spinner = $(cadena);
+        $("#div_spinner").prepend(spinner);
+    }
+
+    function hide_spinner(){
+        $("#spinner1").remove();
+    }
 
     function error_mark(obj_id){
         var select2_id='select2-'+obj_id+'-container';
@@ -59,6 +72,7 @@
     }
 
     function data_table_init(table_id,controller_data){
+
         $('#'+table_id).DataTable({
 
             language: {

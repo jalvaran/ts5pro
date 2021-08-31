@@ -65,8 +65,8 @@
                                                 <h4><?= $data_company["name"] ?></h4>
                                                 <p class="text-secondary mb-1"><?= $data_company["description"] ?></p>
                                                 <p class="text-muted font-size-sm"><?= $data_company["address"] ?></p>
-                                                <button id="btn_crear_api" name="btn_crear_api" class="btn btn-primary"><?= lang('Access.access_view_button_create_company_api')?></button>
-                                                <button id="btn_update_api" name="btn_update_api" class="btn btn-outline-danger"><?= lang('Access.access_view_button_update_company_api')?></button>
+                                                <button id="btn_crear_api" data-item_id="<?= $data_company["id"] ?>" name="btn_crear_api" class="btn btn-primary"><?= lang('Access.access_view_button_create_company_api')?></button>
+                                                <button id="btn_update_api" data-item_id="<?= $data_company["id"] ?>" name="btn_update_api" class="btn btn-outline-danger"><?= lang('Access.access_view_button_update_company_api')?></button>
                                             </div>
                                         </div>
                                         <hr class="my-4">
@@ -89,7 +89,7 @@
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                 <h6 class="mb-0"><?= lang('Access.companies_table_col9')?></h6>
-                                                <span class="text-secondary"><?= $data_company["token_api_fe"]?></span>
+                                                <span class="text-secondary"><?= $data_company["token_api_soenac"]?></span>
                                             </li>
                                         </ul>
                                     </div>
@@ -112,7 +112,8 @@
                             <div class="col-md-6">
 
                                 <div class="col-12">
-                                    <button id="btn_create_logo" type="button" class="form-control btn btn-primary btn-lg px-5 "><?= lang('Access.btn_create_logo')?></button>
+                                    <button id="btn_create_logo" type="button" data-item_id="<?= $data_company["id"] ?>" name="btn_crear_api" class="form-control btn btn-primary btn-lg px-5 "><?= lang('Access.btn_create_logo')?></button>
+
                                 </div>
                             </div>
 
@@ -172,7 +173,77 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="tab5" role="tabpanel">
-                        Resolucion
+
+                        <div class="card border-top border-0 border-4 border-primary">
+                            <div class="card-body p-5">
+
+                                <form class="row g-3">
+                                    <div class="col-md-12">
+                                        <label for="type_document_id" class="form-label"><?= lang('Access.type_document_id');?></label>
+                                        <select id="resolution_type_document_id" name="resolution_type_document" class="form-select ts_input_resolution">
+                                            <option value="1"><?= lang('Access.type_document_id_option1');?></option>
+                                            <option value="5"><?= lang('Access.type_document_id_option2');?></option>
+                                            <option value="6"><?= lang('Access.type_document_id_option3');?></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="resolution_date" class="form-label "><?= lang('Access.date');?></label>
+                                        <input type="date" class="form-control ts_input_resolution" id="resolution_date" name="resolution_date" placeholder="<?= lang('Access.date');?>">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="prefix" class="form-label "><?= lang('Access.prefix');?></label>
+                                        <input type="text" class="form-control ts_input_resolution" id="prefix" name="prefix" placeholder="<?= lang('Access.prefix');?>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="resolution" class="form-label "><?= lang('Access.resolution');?></label>
+                                        <input type="text" class="form-control ts_input_resolution" id="resolution" name="resolution" placeholder="<?= lang('Access.resolution');?>">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="technical_key" class="form-label "><?= lang('Access.technical_key');?></label>
+                                        <input type="text" class="form-control ts_input_resolution" id="technical_key" name="technical_key" placeholder="<?= lang('Access.technical_key');?>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="from" class="form-label "><?= lang('Access.from');?></label>
+                                        <input type="text" class="form-control ts_input_resolution" id="from" name="from" placeholder="<?= lang('Access.from');?>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="to" class="form-label "><?= lang('Access.to');?></label>
+                                        <input type="text" class="form-control ts_input_resolution" id="to" name="to" placeholder="<?= lang('Access.to');?>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="date_from" class="form-label "><?= lang('Access.date_from');?></label>
+                                        <input type="date" class="form-control ts_input_resolution" id="date_from" name="date_from" placeholder="<?= lang('Access.date_from');?>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="date_to" class="form-label "><?= lang('Access.date_to');?></label>
+                                        <input type="date" class="form-control ts_input_resolution" id="date_to" name="date_to" placeholder="<?= lang('Access.date_to');?>">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label for="action_type" class="form-label "><?= lang('Access.resolution_action_type');?></label>
+                                        <select id="action_type" name="action_type" class="form-select ts_input_resolution">
+                                            <option value="1"><?= lang('Access.action_type_option1');?></option>
+                                            <option value="2"><?= lang('Access.action_type_option2');?></option>
+                                            <option value="3"><?= lang('Access.action_type_option3');?></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="action_type_resolution_id" class="form-label "><?= lang('Access.action_type_resolution_id');?></label>
+                                        <input type="text" class="form-control ts_input_resolution" id="action_type_resolution_id" name="action_type_resolution_id" placeholder="<?= lang('Access.action_type_resolution_id');?>">
+                                    </div>
+                                    <div class="col-4">
+                                        <button id="btn_get_numeration" class="btn btn-primary px-5 form-control"><?= lang('Access.resolution_btn_get_numeration');?></button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button id="btn_get_resolutions" class="btn btn-success px-5 form-control"><?= lang('Access.resolution_btn_get_resolutions');?></button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button id="btn_resolution_create" class="btn btn-danger px-5 form-control"><?= lang('Access.resolution_btn_resolution_create');?></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
@@ -188,7 +259,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col" id="div_mensajes_api">
+                    <div class="col" id="div_messages_api">
 
                     </div>
                 </div>

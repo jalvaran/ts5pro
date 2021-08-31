@@ -1,7 +1,13 @@
 <?php
 return [
     "save_error_button" => "No se inicializó el id del formulario en el botón Guardar",
+    "create_company_api_no_response" => "No se recibió respuesta por parte del API",
+    "processing" => "Procesando...",
+    "creating_company"=>"Creando Empresa",
+    "updating_company"=>"Actualizando Empresa",
     "btn_companies" => "Empresa",
+    "config" => "Configurar",
+    "edit" => "Editar",
     "modal_btn_close" => "Cerrar",
     "modal_btn_save" => "Guardar",
     "tables_btn_actions" => "Acciones",

@@ -52,5 +52,9 @@ $routes->group("access", [
         $subroutes->add("companies/municipalities", "CompaniesSearchs::municipalities");
 
 
+        $subroutes->add("companies/api_create_company/(:any)", "CompaniesProcess::api_create_company/$1");
+        $subroutes->add("companies/api_update_company/(:any)", "CompaniesProcess::api_update_company/$1");
+        $subroutes->add("companies/receive_logo_company", "CompaniesProcess::receive_logo_company");
+
     }
 );

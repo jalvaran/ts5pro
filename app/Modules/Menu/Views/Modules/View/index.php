@@ -6,7 +6,7 @@
 
     $mUserCompanies=model('App\Modules\Access\Models\UsersCompanies');
     $ts5=new Ts5_class();
-    $data_template["data_template"]=$ts5->getDataTemplate($company_id);
+    $data_template["data_template"]=$ts5->getDataTemplate($session);
 
 
     $data_template["view_path"]=$views_path;

@@ -62,7 +62,7 @@ class Companies extends Model
         'author',
         'icon',
         'test_set_dian',
-        'token_api_fe',
+        'token_api_soenac',
         'post_documents_automatically'
 
     ];

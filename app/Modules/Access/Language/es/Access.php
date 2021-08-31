@@ -18,12 +18,13 @@ return [
     "dropzone_company_logo_title" => "Por favor adjuntar el logo de la Empresa",
     "dropzone_company_logo_subtitle" => "Arrastre aquí el logo de la Empresa, solo se permiten extensiones .png",
 
+    "msg_create_logo"=>"Logo Asignado",
     "input_certified_password" => "Clave del Certificado digital",
     "input_software_id" => "ID del Software",
     "input_software_pin" => "PIN del Software",
     "btn_software_id" => "Crear Software",
     "btn_certified" => "Crear Certificado",
-    "btn_create_logo" => "Crear Logo",
+    "btn_create_logo" => "Crear Logo en API",
 
     "access_no_logged_in" => "Debe iniciar sesión",
     "companies_page_title" => "Gestión de Empresas",
@@ -61,5 +62,27 @@ return [
     "companies_frm_input_icon"   => "Icono",
     "companies_frm_input_test_set_dian"   => "ID Set de Pruebas DIAN",
     "companies_frm_input_post_documents_automatically"   => "Contabilizar Documentos Automáticamente",
+
+    "type_document_id"=>"Tipo de Documento",
+    "type_document_id_option1"=>"Factura Electrónica",
+    "type_document_id_option2"=>"Nota Crédito Electrónica",
+    "type_document_id_option3"=>"Nota Débito Electrónica",
+    "date"=>"Fecha",
+    "prefix"=>"Prefijo",
+    "resolution"=>"Numero de Resolución",
+    "technical_key"=>"Llave Técnica",
+    "from"=>"Desde",
+    "to"=>"Hasta",
+    "date_from"=>"Fecha Inicial",
+    "date_to"=>"Fecha Final",
+    "resolution_action_type"=>"Tipo de Acción",
+    "action_type_resolution_id"=>"ID de la Resolución",
+    "action_type_option1"=>"Creación y Actualización Individual",
+    "action_type_option2"=>"Creación de Resolución Multiple",
+    "action_type_option3"=>"Actualización de Resolución Multiple",
+    "resolution_btn_get_numeration"=>"Obtener Numeración",
+    "resolution_btn_get_resolutions"=>"Obtener Resoluciones",
+    "resolution_btn_resolution_create"=>"Crear/Actualizar Resolución",
+
 
 ];

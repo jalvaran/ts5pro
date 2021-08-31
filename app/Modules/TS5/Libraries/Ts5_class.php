@@ -34,8 +34,8 @@ class Ts5_class{
     private $user_id;
 
     public function __construct(){
-        $this->session=service('session');
-        $this->user_id=$this->session->get('user');
+        //$this->session=service('session');
+        //$this->user_id=$this->session->get('user');
 
     }
 
@@ -55,7 +55,7 @@ class Ts5_class{
      * @param string $company_id
      * @return array
      */
-    function getDataTemplate($company_id=""){
+    function getDataTemplate($session,$company_id=""){
         //$this->access->create_json_menu($this->user_id);
 
         $data["lang"] = "es";
@@ -65,12 +65,12 @@ class Ts5_class{
         $data["menu_logo"] = "/companies/cp_6128f69283025963104543/img/tslogo.png";
         $data["message_error"] = 0;
         $data["menu_title"] = "TS5 PRO";
-        $data["user_name"] = $this->session->get('user_name');
-        $data["user_designation"] = $this->session->get('user_designation');
+        $data["user_name"] = $session->get('user_name');
+        $data["user_designation"] = $session->get('user_designation');
 
-        $data["menu"]=json_decode($this->session->get('json_menu'),true);
-        $data["menu_submenu"]=json_decode($this->session->get('json_sub_menu'),true);
-        $data["menu_pages"]=json_decode($this->session->get('json_menu_pages'),true);
+        $data["menu"]=json_decode($session->get('json_menu'),true);
+        $data["menu_submenu"]=json_decode($session->get('json_sub_menu'),true);
+        $data["menu_pages"]=json_decode($session->get('json_menu_pages'),true);
         $data["sidebar_title"]="Menu";
         $data["theme"]="dark-theme";//Para modo oscuro
         $data["theme"]="";
@@ -105,6 +105,42 @@ class Ts5_class{
             $dv = $y;
             return $dv;
         }
+    }
+
+    public function curl($method, $url,$Token, $data){
+        $curl = curl_init();
+
+        switch ($method){
+            case "POST":
+                curl_setopt($curl, CURLOPT_POST, 1);
+                if ($data)
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                break;
+            case "PUT":
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+                if ($data)
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                break;
+            default:
+                if ($data)
+                    $url = sprintf("%s?%s", $url, http_build_query($data));
+        }
+
+        // OPTIONS:
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer '.$Token,
+            'Content-Type: application/json',
+            'Accept: application/json',
+        ));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+        // EXECUTE:
+        $result = curl_exec($curl);
+        if(!$result){die("Connection Failure");}
+        curl_close($curl);
+        return $result;
     }
 
 }

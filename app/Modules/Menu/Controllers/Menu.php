@@ -54,6 +54,7 @@ class Menu extends BaseController
             return(redirect()->to(base_url('/ts5/signin')));
         }
         $data["views_path"]=$this->views_path;
+        $data["view_path"]=$this->views_path;
         $data["views_path_module"]=$this->views_path_module;
         return(view($this->views_path_module.'\Home\View\index',$data));
     }

@@ -130,8 +130,8 @@ class Companies extends BaseController
 
             $html=$div_md_row;
 
-            $data=$ts5->getDataTemplate();
-            $data["data_template"]=$ts5->getDataTemplate();
+            $data=$ts5->getDataTemplate($this->session);
+            $data["data_template"]=$ts5->getDataTemplate($this->session);
             $data["data_template"]["my_js"]=$my_js.$my_js_company;
             $data["view_path"]=$this->views_path;
             $data["page_title"]=lang('Access.companies_page_title');
@@ -258,23 +258,50 @@ class Companies extends BaseController
      * @param $id
      */
     public function view($id){
-        $ts5=new Ts5_class();
-        $data_template=$ts5->getDataTemplate();
+        if (!$this->session->get_LoggedIn()){
+            return (redirect()->to(base_url('/ts5/signin')));
+        }
+
+        $request = service('request');
+        $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
-        $data_company=$mCompanies->get_DataCompany($id);
-        $data["id"]=$id;
-        $data["data_company"]=$data_company;
-        $image_link="/companies/$id/img/header-logo.png";
+        $user_id=$this->session->get('user');
+        $company_id=$request->getVar('company_id');
+        $permission_id=6;           //Permiso para ver la configuración singular Ver en tabla access_control_permissions
+        $permission_id_all=7;       //Permiso para ver la configuración plural Ver en tabla access_control_permissions
+        $module_id=2; //Access
+        $html="";
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($id,$user_id);
 
-        $data["company_logo"]=$image_link;
-        $data["views_path"]=$this->views_path;
+        if($p_all or  ($p_single and $authority) ){
+            $mCompanies=model('App\Modules\Access\Models\Companies');
+            $data_company=$mCompanies->get_DataCompany($id);
+            $data["id"]=$id;
+            $data["data_company"]=$data_company;
+            $image_link="public".DIRECTORY_SEPARATOR."companies".DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR."img".DIRECTORY_SEPARATOR."header-logo.png";
 
-        if(!file_exists(FCPATH.$image_link)){
-            $data["company_logo"]="/companies/general/images/no_image.jpg";
+            $data["company_logo"]=$image_link;
+            $data["views_path"]=$this->views_path;
+
+            if(!is_file(ROOTPATH.$image_link)){
+                $data["company_logo"]="/companies/general/images/no_image.jpg";
+            }else{
+                $data["company_logo"]="/companies/$id/img/header-logo.png";
+            }
+
+            return(view($this->views_path_module."\View\Company",$data));
+
+        }else{
+            $data["error_title"]=lang('Access.access_view_error_title');
+            $data["msg_error"]=lang('Access.access_view_error');
+            $html.= view($this->views_path."\alert_error",$data);
+            return($html);
         }
 
 
-        return(view($this->views_path_module."\View\Company",$data));
+
     }
 
 

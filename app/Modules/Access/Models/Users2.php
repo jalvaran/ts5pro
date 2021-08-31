@@ -69,14 +69,17 @@ class Users extends Model
      * @param $password
      * @return array
      */
-    public function get_UserLogin($username, $password)
+    public function get_UserLogin2($username, $password)
     {
-
+        $array[0]["id"]=2;
+        $array[0]["name"]="julian";
+        $array[0]["designation"]="ese";
+        return($array);
         $result = $this
-            ->select('id,name,designation')
+            ->select('id','name','designation')
             ->where("username", $username)
             ->where("password", $password)
-            ->first();
+            ->findAll();
 
 
         return($result);

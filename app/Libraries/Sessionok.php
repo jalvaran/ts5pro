@@ -22,17 +22,12 @@ class Session
 
     public function __construct()
     {
-        @session_start();
-        //$this->session = session();
-        if(isset($_SESSION["user"])){
-            $this->user=$_SESSION["user"];
-        }
-
-        //$this->avatar=$this->session->get("avatar");
+        $this->session = session();
+        $this->user=$this->session->get("user");
+        $this->avatar=$this->session->get("avatar");
         /** etc **/
         if(empty($this->user)){
-            $_SESSION["user"]=$this->anonymous;
-            //$this->session->set("user",$this->anonymous);
+            $this->session->set("user",$this->anonymous);
         }
     }
 
@@ -43,11 +38,10 @@ class Session
         $musers=model('App\Modules\Access\Models\Users');
         $user=$musers->get_UserLogin($username,$password);
 
-        if(isset($user["id"])){
-
-            $this->set("user",$user["id"]);
-            $this->set("user_name",$user["name"]);
-            $this->set("user_designation",$user["designation"]);
+        if(isset($user[0]["id"])){
+            $this->set("user",$user[0]["id"]);
+            $this->set("user_name",$user[0]["name"]);
+            $this->set("user_designation",$user[0]["designation"]);
             return(true);
         }
 
@@ -68,29 +62,12 @@ class Session
 
     public function set($name,$value)
     {
-        //$this->session->set($name,$value);
-        $_SESSION[$name]=$value;
+        $this->session->set($name,$value);
     }
 
     public function get($name)
     {
-        //return($this->session->get($name));
-        if(isset($_SESSION[$name])){
-            return($_SESSION[$name]);
-        }else{
-            return('');
-        }
-
-    }
-
-    /**
-     * @return mixed
-     */
-    public function session_destroy()
-    {
-        if(isset($_SESSION["user"])){
-            session_destroy();
-        }
+        return($this->session->get($name));
     }
 
 }

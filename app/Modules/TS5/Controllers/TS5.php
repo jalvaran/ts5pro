@@ -5,7 +5,6 @@ namespace App\Modules\TS5\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\Session;
 use App\Modules\TS5\Libraries\Ts5_class;
-use App\Modules\TS5\Libraries\DataTable;
 
 class TS5 extends BaseController
 {
@@ -16,10 +15,11 @@ class TS5 extends BaseController
 
     function __construct()
     {
-        $this->ts5 = new Ts5_class();
-        $this->data_template = $this->ts5->getDataTemplate();
-        $this->namespace = 'App\Modules\TS5';
         $this->session = new Session();
+        $this->ts5 = new Ts5_class();
+        $this->data_template = $this->ts5->getDataTemplate($this->session);
+        $this->namespace = 'App\Modules\TS5';
+
     }
 
     function index()
@@ -33,6 +33,7 @@ class TS5 extends BaseController
 
     function signin()
     {
+
         $this->data_template["html_errors"]="";
         if (isset($_REQUEST["user_username"])) {
             $request = service('request');
@@ -44,12 +45,14 @@ class TS5 extends BaseController
                     return (redirect()->to(base_url('/menu')));
                 } else {
                     $data_errors["error_title"]= (lang('Login.error_title'));
-                    $data_errors["msg_error"]= (lang('Login.error_msg_field_empty'));
+                    $data_errors["msg_error"]=(lang('Login.error_msg_password'));
                     $this->data_template["html_errors"]=view($this->namespace . '\Views\templates\synadmin\alert_error',$data_errors);
                 }
             } else {
+
+
                 $data_errors["error_title"]= (lang('Login.error_title'));
-                $data_errors["msg_error"]=(lang('Login.error_msg_password'));
+                $data_errors["msg_error"]= (lang('Login.error_msg_field_empty'));
                 $this->data_template["html_errors"]=view($this->namespace . '\Views\templates\synadmin\alert_error',$data_errors);
             }
 
@@ -59,7 +62,8 @@ class TS5 extends BaseController
 
     function signout()
     {
-        session_destroy();
+
+        $this->session->session_destroy();
         echo($this->signin());
     }
 

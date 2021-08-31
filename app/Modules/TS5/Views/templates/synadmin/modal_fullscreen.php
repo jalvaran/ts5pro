@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col">
-        <div class="modal fade " id="modal_fullscreen" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal fade " id="modal_fullscreen"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content">
                     <div class="modal-header">

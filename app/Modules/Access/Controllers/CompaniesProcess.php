@@ -33,7 +33,9 @@ namespace App\Modules\Access\Controllers;
 use App\Libraries\Session;
 use App\Controllers\BaseController;
 use App\Modules\TS5\Libraries\Ts5_class;
+use App\Modules\TS5\Libraries\ElectronicBill;
 use CodeIgniter\API\ResponseTrait;
+
 
 class CompaniesProcess extends BaseController
 {
@@ -193,5 +195,211 @@ class CompaniesProcess extends BaseController
         return $this->setResponseFormat('json')->respond($response);
     }
 
+    /**
+     * Crea una empresa en el api de documentos electrónicos de soenac
+     * @param $item_id
+     * @return mixed|void
+     */
+    public function api_create_company($item_id){
+
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $request = service('request');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+        $company_id=$this->session->get('company_id');
+        $item_id=$request->getVar('item_id');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->create_company_api($data_company,$item_id,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+        if(!is_array($arrayResponse)){
+
+            return $this->setResponseFormat('json')->respond($api_response);
+        }
+        if(isset($arrayResponse["errors"])){
+            foreach ($arrayResponse["errors"] as $key => $value) {
+                $response["status"]=0;
+                $response["msg"]=$value[0];
+                $response["msg_api"]=$arrayResponse;
+                return $this->setResponseFormat('json')->respond($response);
+            }
+        }else{
+            if(isset($arrayResponse["token"])){
+                $data_form["token_api_soenac"]=$arrayResponse["token"];
+
+                $mCompanies->edit_company($data_form,$item_id);
+                $response["status"]=1;
+                $response["msg"]=$arrayResponse["message"];
+                $response["msg_api"]=$arrayResponse;
+                return $this->setResponseFormat('json')->respond($response);
+            }else{
+                return $this->setResponseFormat('json')->respond($api_response);
+            }
+
+        }
+
+
+
+    }
+
+    /**
+     * Actualiza una empresa en el api de documentos electrónicos de soenac
+     * @param $item_id
+     * @return mixed|void
+     */
+    public function api_update_company($item_id){
+
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $request = service('request');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+        $company_id=$this->session->get('company_id');
+        $item_id=$request->getVar('item_id');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->update_company_api($data_company,$item_id,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+        if(!is_array($arrayResponse)){
+
+            return $this->setResponseFormat('json')->respond($api_response);
+        }
+        if(isset($arrayResponse["errors"])){
+            foreach ($arrayResponse["errors"] as $key => $value) {
+                $response["status"]=0;
+                $response["msg"]=$value[0];
+                $response["msg_api"]=$arrayResponse;
+                return $this->setResponseFormat('json')->respond($response);
+            }
+        }else{
+            if(isset($arrayResponse["company"])){
+
+                $response["status"]=1;
+                $response["msg"]=$arrayResponse["message"];
+                $response["msg_api"]=$arrayResponse;
+                return $this->setResponseFormat('json')->respond($response);
+            }else{
+                return $this->setResponseFormat('json')->respond($api_response);
+            }
+
+        }
+    }
+
+    /**
+     * recibe el logo de una empresa y lo almacena en su carpeta correspondiente
+     * @return string
+     */
+    public function receive_logo_company(){
+
+        $ts5=new Ts5_class($this->session);
+
+        $request = service('request');
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+        $item_id=$request->getVar('item_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+
+        $file = $this->request->getFile('company_logo');
+
+        $destiny="public".DIRECTORY_SEPARATOR."companies".DIRECTORY_SEPARATOR.$item_id.DIRECTORY_SEPARATOR."img";
+        $destiny=ROOTPATH.$destiny;
+        $file->move($destiny, "header-logo.png",true);
+        $destiny.="/header-logo.png";
+        $image=service('image');
+        $image->withFile($destiny)
+            ->resize(700, 300, false)
+            ->save($destiny);
+
+        $im = file_get_contents($destiny);
+        $logo_base_64=base64_encode($im);
+
+        $mLogo=model('App\Modules\TS5\Models\AppCompaniesLogos');
+        $data_logo=$mLogo->get_DataLogo($item_id);
+        if(!isset($data_logo["id"])){
+            $data_logo["id"]=$ts5->getUniqueId();
+            $data_logo["logo_base64"]=$logo_base_64;
+            $data_logo["company_id"]=$item_id;
+            $data_logo["author"]=$user_id;
+            $mLogo->insert($data_logo);
+        }else{
+            $data_logo["logo_base64"]=$logo_base_64;
+            $mLogo->edit_Logo($data_logo,$data_logo["id"]);
+        }
+        $response["status"]=1;
+        $response["msg"]=lang('Access.msg_create_logo');
+
+        return $this->setResponseFormat('json')->respond($response);
+
+
+    }
+
+    //Fin clase
 
 }
