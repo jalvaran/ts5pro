@@ -18,13 +18,19 @@ return [
     "dropzone_company_logo_title" => "Por favor adjuntar el logo de la Empresa",
     "dropzone_company_logo_subtitle" => "Arrastre aquí el logo de la Empresa, solo se permiten extensiones .png",
 
+    "msg_received_certificate" =>"Certificado Recibido",
     "msg_create_logo"=>"Logo Asignado",
-    "input_certified_password" => "Clave del Certificado digital",
+    "msg_create_software"=>"Software Creado",
+    "password" => "Contraseña",
+
     "input_software_id" => "ID del Software",
     "input_software_pin" => "PIN del Software",
     "btn_software_id" => "Crear Software",
     "btn_certified" => "Crear Certificado",
     "btn_create_logo" => "Crear Logo en API",
+    "btn_environment_test" => "Ambiente de Pruebas",
+    "btn_environment_production" => "Ambiente de Producción",
+    "type_environment_empty" => "No se recibió un tipo de ambiente válido",
 
     "access_no_logged_in" => "Debe iniciar sesión",
     "companies_page_title" => "Gestión de Empresas",

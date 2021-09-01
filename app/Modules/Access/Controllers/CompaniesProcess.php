@@ -340,7 +340,13 @@ class CompaniesProcess extends BaseController
      */
     public function receive_logo_company(){
 
-        $ts5=new Ts5_class($this->session);
+
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
 
         $request = service('request');
         $user_id=$this->session->get('user');
@@ -383,6 +389,7 @@ class CompaniesProcess extends BaseController
         $mLogo=model('App\Modules\TS5\Models\AppCompaniesLogos');
         $data_logo=$mLogo->get_DataLogo($item_id);
         if(!isset($data_logo["id"])){
+            $ts5=new Ts5_class();
             $data_logo["id"]=$ts5->getUniqueId();
             $data_logo["logo_base64"]=$logo_base_64;
             $data_logo["company_id"]=$item_id;
@@ -396,6 +403,448 @@ class CompaniesProcess extends BaseController
         $response["msg"]=lang('Access.msg_create_logo');
 
         return $this->setResponseFormat('json')->respond($response);
+
+
+    }
+
+    /**
+     * Crea el logo en el api de soenac
+     * @param $item_id
+     * @return mixed
+     */
+    public function create_logo_company_api($item_id){
+
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->create_logo_company_api($data_company,$item_id,$user_id);
+        if($api_response==false){
+            $response["status"]=0;
+            $response["msg"]=lang('Ts5.not_logo');
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+        $arrayResponse = json_decode($api_response,true);
+
+        if(isset($arrayResponse["message"])){
+            $response["status"]=1;
+            $response["msg"]=$arrayResponse["message"];
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+    }
+
+    /**
+     * crea el software tanto en la base de datos local como en el api de soenac
+     * @param $item_id
+     * @return mixed|void
+     */
+    public function create_software($item_id){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $request=service('request');
+        $data_form_serialized=$request->getVar('data_form_serialized');
+
+        parse_str($data_form_serialized,$data_form);
+
+        $validator["numeric"]["pin"]=1;
+
+        foreach($data_form as $field => $value){
+            $data_form[$field]=trim($value);
+            if($value=='' and !isset($validator["not_required"][$field])){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
+                $response["msg"]=lang('Ts5.validation_field_empty',$data_lang);
+                $response["object_id"]=$field;
+                if(isset($validator["select2"][$field])){
+                    $response["object_id"]="select2-".$field."-container";
+                }
+                return $this->setResponseFormat('json')->respond($response);
+            }
+            if(isset($validator["numeric"][$field]) and !is_numeric($value)){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
+                $response["msg"]=lang('Ts5.validation_field_numeric_1',$data_lang);
+                $response["object_id"]=$field;
+                return $this->setResponseFormat('json')->respond($response);
+            }
+        }
+
+        $mSoftware=model('App\Modules\TS5\Models\AppCompaniesSoftware');
+        $data_software=$mSoftware->get_DataSoftware($item_id);
+        if(!isset($data_software["id"])){
+            $ts5=new Ts5_class();
+            $data_form["id"]=$ts5->getUniqueId("sf_",true);
+            $data_form["author"]=$user_id;
+            $data_form["company_id"]=$company_id;
+            $mSoftware->insert($data_form);
+        }else{
+            $mSoftware->edit_Software($data_form,$data_software["id"]);
+        }
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->create_software_api($data_company,$data_software,$item_id,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+
+        if(isset($arrayResponse["message"])){
+            $response["status"]=1;
+            $response["msg"]=$arrayResponse["message"];
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+
+    }
+
+    /**
+     * recibe y guarda el certificado digital en p.12
+     * @return mixed
+     */
+    public function receive_certificate(){
+
+
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $request = service('request');
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+        $item_id=$request->getVar('item_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+
+        $file = $this->request->getFile('company_certificate');
+
+        $im = file_get_contents($file->getTempName());
+        $base_64=base64_encode($im);
+
+        $destiny="companies".DIRECTORY_SEPARATOR.$item_id.DIRECTORY_SEPARATOR."certificates";
+        $destiny=WRITEPATH.$destiny;
+        $file->move($destiny, "Certificate.p12",true);
+
+
+
+        $mCertificate=model('App\Modules\TS5\Models\AppCertificates');
+        $data_certificate = $mCertificate->get_DataCertificate($item_id);
+        if(!isset($data_certificate["id"])){
+            $ts5=new Ts5_class();
+            $data_certificate["id"]=$ts5->getUniqueId("cf_",true);
+            $data_certificate["base_64"]=$base_64;
+            $data_certificate["company_id"]=$item_id;
+            $data_certificate["author"]=$user_id;
+            $mCertificate->insert($data_certificate);
+        }else{
+            $data_certificate["base_64"]=$base_64;
+            $mCertificate->edit_Certificate($data_certificate,$data_certificate["id"]);
+        }
+        $response["status"]=1;
+        $response["msg"]=lang('Access.msg_received_certificate');
+
+        return $this->setResponseFormat('json')->respond($response);
+
+
+    }
+
+
+    /**
+     * crea el certificado digital en el api de soenac
+     * @param $item_id
+     * @return mixed|void
+     */
+    public function create_certificate($item_id){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $request=service('request');
+        $data_form_serialized=$request->getVar('data_form_serialized');
+
+        parse_str($data_form_serialized,$data_form);
+        foreach($data_form as $field => $value){
+            $data_form[$field]=trim($value);
+            if($value=='' and !isset($validator["not_required"][$field])){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
+                $response["msg"]=lang('Ts5.validation_field_empty',$data_lang);
+                $response["object_id"]=$field;
+                if(isset($validator["select2"][$field])){
+                    $response["object_id"]="select2-".$field."-container";
+                }
+                return $this->setResponseFormat('json')->respond($response);
+            }
+            if(isset($validator["numeric"][$field]) and !is_numeric($value)){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
+                $response["msg"]=lang('Ts5.validation_field_numeric_1',$data_lang);
+                $response["object_id"]=$field;
+                return $this->setResponseFormat('json')->respond($response);
+            }
+        }
+
+        $mCertificate=model('App\Modules\TS5\Models\AppCertificates');
+        $data_certificate=$mCertificate->get_DataCertificate($item_id);
+        if(!isset($data_certificate["id"])){
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=lang('Ts5.not_certificate');
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $mCertificate->edit_Certificate($data_form,$data_certificate["id"]);
+        }
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->create_certificate_api($data_company,$data_certificate,$item_id,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+
+        if(isset($arrayResponse["message"])){
+            $response["status"]=1;
+            $response["msg"]=$arrayResponse["message"];
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+
+    }
+
+    /**
+     * Establece el tipo de ambiente de la empresa, producción o pruebas
+     * @param $item_id
+     * @return mixed
+     */
+    public function set_environment_api($item_id){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $request=service('request');
+        $type_environment=$request->getVar('type_environment');
+        if($type_environment <> 1 and $type_environment<>2 ){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.type_environment_empty');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->set_type_environment_api($data_company,$type_environment,$item_id,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+
+        if(isset($arrayResponse["type_environment_id"])){
+            $response["status"]=1;
+            $response["msg"]=lang('msg.set_environment_test');
+            if($type_environment==1){
+                $response["msg"]=lang('msg.set_environment_production');
+            }
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+
+    }
+
+    /**
+     * Obtiene la numeración dian de una empresa
+     * @param $item_id
+     */
+    public function get_numeration($item_id){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->get_numeration($data_company,$item_id,$user_id);
+        if($api_response=='E1'){
+            $response["status"]=0;
+            $response["msg"]=lang('msg.not_software');
+
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+        $arrayResponse = json_decode($api_response,true);
+
+        if(isset($arrayResponse["responseDian"])){
+            $response["status"]=1;
+            $response["msg"]=lang('msg.get_numeration_ok');
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
 
 
     }

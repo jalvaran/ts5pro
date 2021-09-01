@@ -46,14 +46,13 @@
         }, function () {
             $(".ts_dropzone").css("color","black");
         })
-        urlQuery='procesadores/admin_empresas.process.php';
-        var empresa_id=$("#company_certificate").data("empresa_id");
+        urlQuery='<?php echo base_url('/access/companies/receive_certificate'); ?>';
+        var item_id=$("#company_logo").attr("data-company_id");
 
-        var myDropzone = new Dropzone("#company_certificate", { url: urlQuery,paramName: "certificado_empresa",maxFiles: 1,acceptedFiles: '.p12'});
+        var myDropzone = new Dropzone("#company_certificate", { url: urlQuery,paramName: "company_certificate",maxFiles: 1,acceptedFiles: '.p12'});
         myDropzone.on("sending", function(file, xhr, formData) {
 
-            formData.append("Accion", 4);
-            formData.append("empresa_id", empresa_id);
+            formData.append("item_id", item_id);
 
         });
 
@@ -65,14 +64,18 @@
 
         myDropzone.on("success", function(file, data) {
 
-            var respuestas = data.split(';');
-            if(respuestas[0]=="OK"){
-                toastr.success(respuestas[1]);
+            if(typeof(data)=='object'){
+                if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                    toastr.success(data.msg);
+                    $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                }else{
+                    toastr.error(data.msg);
+                    $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
 
-            }else if(respuestas[0]=="E1"){
-                toastr.warning(respuestas[1]);
+                }
             }else{
-                swal(data);
+                alert(data);
+                $('#'+div_messages).html(data);
             }
 
         });
@@ -244,6 +247,11 @@
         });//Fin peticion ajax
     }
 
+    /**
+     * Actualiza los datos de una empresa en el api de soenac
+     * @param urlControllerProcess
+     * @param item_id
+     */
     function update_company_api(urlControllerProcess,item_id){
 
 
@@ -308,9 +316,387 @@
         });//Fin peticion ajax
     }
 
+    /**
+     * crea el logo de la empresa en el api de soenac
+     * @param urlControllerProcess
+     * @param item_id
+     */
+    function create_logo_company_api(urlControllerProcess,item_id){
+
+
+        var btnSave = $("#btn_create_logo");
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('Ts5.creating_company')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    /**
+     * crea el software en la base de datos local y en el api de soenac
+     * @param urlControllerProcess
+     * @param item_id
+     */
+    function create_software(urlControllerProcess,item_id){
+
+
+        var btnSave = $("#btn_create_logo");
+        var data_form_serialized=$('.ts_input_software').serialize();
+
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+        form_data.append('data_form_serialized',data_form_serialized);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('Ts5.creating_software')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    /**
+     * crea el certificado digital en el api de soenac
+     * @param urlControllerProcess
+     * @param item_id
+     */
+    function create_certificate(urlControllerProcess,item_id){
+
+
+        var btnSave = $("#btn_create_logo");
+        var data_form_serialized=$('.ts_input_certificate').serialize();
+
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+        form_data.append('data_form_serialized',data_form_serialized);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('Ts5.creating_certificate')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    /**
+     * cambia el tipo de ambiente a pruebas o producción
+     * @param urlControllerProcess
+     * @param item_id
+     * @param type_environment
+     */
+    function set_environment_api (urlControllerProcess,item_id,type_environment){
+
+
+        var btnSave = $("#btn_create_logo");
+
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+        form_data.append('type_environment',type_environment);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('Ts5.set_environment')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    /**
+     * obtiene las numeraciones asociadas a una empresa
+     * @param urlControllerProcess
+     * @param item_id
+     * @param type_environment
+     */
+    function get_numeration(urlControllerProcess,item_id){
+
+
+        var btnSave = $("#btn_create_logo");
+
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.get_numeration')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg)+"</code>");
+
+                        var resolution_list=data.msg_api.responseDian.Envelope.Body.GetNumberingRangeResponse.GetNumberingRangeResult.ResponseList;
+
+                        $.each(resolution_list, function (index, item) {
+                            var newRow=
+                                "<tr>"
+                                +"<td>"+item.ResolutionNumber+"</td>"
+                                +"<td>"+item.ResolutionDate+"</td>"
+                                +"<td>"+item.Prefix+"</td>"
+                                +"<td>"+item.FromNumber+"</td>"
+                                +"<td>"+item.ToNumber+"</td>"
+                                +"<td>"+item.ValidDateFrom+"</td>"
+                                +"<td>"+item.ValidDateTo+"</td>"
+                                +"<td>"+item.TechnicalKey+"</td>"
+
+                                +"</tr>";
+                            $(newRow).appendTo("#table_resolutions tbody");
+                        });
+
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    /**
+     * agrega los eventos a los botones de la vista configuracion
+     */
     function add_events_buttons_config_company(){
 
-        $('#btn_crear_api').on('click',function () {
+        $('#btn_create_api').on('click',function () {
             var item_id=$(this).attr("data-item_id");
             var controller='<?php echo base_url('/access/companies/api_create_company') ?>'+'/'+item_id;
             create_company_api(controller,item_id);
@@ -321,6 +707,41 @@
             var controller='<?php echo base_url('/access/companies/api_update_company') ?>'+'/'+item_id;
             update_company_api(controller,item_id);
         });
+        $('#btn_create_logo').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+            var controller='<?php echo base_url('/access/companies/create_logo_company_api') ?>'+'/'+item_id;
+            create_logo_company_api(controller,item_id);
+        });
+
+        $('#btn_create_software').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+            var controller='<?php echo base_url('/access/companies/create_software') ?>'+'/'+item_id;
+            create_software(controller,item_id);
+        });
+
+        $('#btn_create_certificate').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+            var controller='<?php echo base_url('/access/companies/create_certificate') ?>'+'/'+item_id;
+            create_certificate(controller,item_id);
+        });
+
+        $('#btn_environment_test').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+            var controller='<?php echo base_url('/access/companies/set_environment_api') ?>'+'/'+item_id;
+            set_environment_api(controller,item_id,2);
+        });
+        $('#btn_environment_production').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+            var controller='<?php echo base_url('/access/companies/set_environment_api') ?>'+'/'+item_id;
+            set_environment_api(controller,item_id,1);
+        });
+
+        $('#btn_get_numeration').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+            var controller='<?php echo base_url('/access/companies/get_numeration') ?>'+'/'+item_id;
+            get_numeration(controller,item_id);
+        });
+
     }
 
 

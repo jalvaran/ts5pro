@@ -118,9 +118,214 @@ class ElectronicBill extends Ts5_class{
 
         $end_point=str_replace("{nit}",$data_company["identification"],$data_endpoint["name"]);
         $method=$data_endpoint["method"];
+
         $url=$url.$end_point;
 
         $response=$this->curl($method,$url,$token_api,$json_company);
+
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+    /**
+     * Crea el logo de una empresa en el api de facturación electrónica
+     * @param $data_company
+     * @param $item_id
+     * @param $user_id
+     * @return bool|string|void
+     */
+    public function create_logo_company_api($data_company,$item_id,$user_id){
+        $end_point_id=17;//end point para crear el logo de una empresa
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+        $mLogoCompany=model('App\Modules\TS5\Models\AppCompaniesLogos');
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+
+        $api_id=2;
+        $token_api=$data_company["token_api_soenac"];
+
+        $logo_base64=$mLogoCompany->get_DataLogo($data_company["id"]);
+        if(!isset($logo_base64["logo_base64"])){
+            return(false);
+        }
+        $json='{
+          "logo": "'.$logo_base64["logo_base64"].'"
+        }';
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=$data_endpoint["name"];
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+    /**
+     * Crear software en el api
+     * @param $data_company
+     * @param $data_software
+     * @param $item_id
+     * @param $user_id
+     * @return bool|string|void
+     */
+    public function create_software_api($data_company,$data_software,$item_id,$user_id){
+        $end_point_id=9;//end point para crear o actualizar el software de una empresa
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=2;
+        $token_api=$data_company["token_api_soenac"];
+
+        $json='{
+            "id":"'.$data_software["identifier"].'",
+            "pin": "'.$data_software["pin"].'"
+        }';
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=$data_endpoint["name"];
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+
+    /**
+     * crea el certificado digital en el api
+     * @param $data_company
+     * @param $data_certificate
+     * @param $item_id
+     * @param $user_id
+     * @return bool|string|void
+     */
+    public function create_certificate_api($data_company,$data_certificate,$item_id,$user_id){
+        $end_point_id=11;//end point para crear o actualizar el certificado digital de una empresa
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=2;
+        $token_api=$data_company["token_api_soenac"];
+
+        $json='{
+            "certificate":"'.$data_certificate["base_64"].'",
+            "password": "'.$data_certificate["password"].'"
+        }';
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=$data_endpoint["name"];
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+    /**
+     * Establece el tipo de ambiente de una empresa en el api de soenac
+     * @param $data_company
+     * @param $type_environment > 1 producción, 2 pruebas
+     * @param $item_id
+     * @param $user_id
+     * @return bool|string|void
+     */
+    public function set_type_environment_api($data_company,$type_environment,$item_id,$user_id){
+        $end_point_id=7;//end point para actualizar el tipo de ambiente, producción o pruebas
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=2;
+        $token_api=$data_company["token_api_soenac"];
+
+        $json='{
+            "type_environment_id":"'.$type_environment.'"            
+        }';
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=$data_endpoint["name"];
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+    public function get_numeration($data_company,$item_id,$user_id){
+        $end_point_id=51;//end point para obtener la numeración de la DIAN
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+        $mSoftware=model('App\Modules\TS5\Models\AppCompaniesSoftware');
+        $data_software=$mSoftware->get_DataSoftware($item_id);
+        if(!isset($data_software["identifier"])){
+            return("E1");
+        }
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=2;
+        $token_api=$data_company["token_api_soenac"];
+
+        $json='';
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=str_replace("{nit}",$data_company["identification"],$data_endpoint["name"]);
+        $end_point=str_replace("{software_id}",$data_software["identifier"],$end_point);
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
         $data_response["id"]=$process_id;
         $data_response["app_apps_end_point_id"]=$end_point_id;
         $data_response["process_item_id"]=$item_id;

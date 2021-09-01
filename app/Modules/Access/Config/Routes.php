@@ -55,6 +55,12 @@ $routes->group("access", [
         $subroutes->add("companies/api_create_company/(:any)", "CompaniesProcess::api_create_company/$1");
         $subroutes->add("companies/api_update_company/(:any)", "CompaniesProcess::api_update_company/$1");
         $subroutes->add("companies/receive_logo_company", "CompaniesProcess::receive_logo_company");
+        $subroutes->add("companies/create_logo_company_api/(:any)", "CompaniesProcess::create_logo_company_api/$1");
+        $subroutes->add("companies/create_software/(:any)", "CompaniesProcess::create_software/$1");
+        $subroutes->add("companies/receive_certificate", "CompaniesProcess::receive_certificate");
+        $subroutes->add("companies/create_certificate/(:any)", "CompaniesProcess::create_certificate/$1");
+        $subroutes->add("companies/set_environment_api/(:any)", "CompaniesProcess::set_environment_api/$1");
+        $subroutes->add("companies/get_numeration/(:any)", "CompaniesProcess::get_numeration/$1");
 
     }
 );
