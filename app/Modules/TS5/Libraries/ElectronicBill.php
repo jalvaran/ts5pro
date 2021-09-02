@@ -31,6 +31,14 @@ use App\Modules\TS5\Libraries\Ts5_class;
 
 
 class ElectronicBill extends Ts5_class{
+
+    public $api_id;
+
+    public function __construct()
+    {
+        $this->api_id=2;
+    }
+
     /**
      * retorna el json de la creación de una empresa
      * @param $data_company
@@ -74,7 +82,7 @@ class ElectronicBill extends Ts5_class{
         $json_company=$this->get_json_company_create($data_company);
 
         $mConfig=model('App\Modules\TS5\Models\AppConfig');
-        $api_id=2;
+        $api_id=$this->api_id;
         $token_api=$mConfig->get_TokenApi($api_id);  //Token el api de documentos electrónicos
         $url=$mApi->get_Url($api_id);
         $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id); //end point crear  una empresa
@@ -111,7 +119,7 @@ class ElectronicBill extends Ts5_class{
         $json_company=$this->get_json_company_create($data_company);
 
         $mConfig=model('App\Modules\TS5\Models\AppConfig');
-        $api_id=2;
+        $api_id=$this->api_id;
         $token_api=$mConfig->get_TokenApi($api_id);  //Token el api de documentos electrónicos
         $url=$mApi->get_Url($api_id);
         $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
@@ -148,7 +156,7 @@ class ElectronicBill extends Ts5_class{
         $mLogoCompany=model('App\Modules\TS5\Models\AppCompaniesLogos');
         $mApi=model('App\Modules\TS5\Models\AppApps');
 
-        $api_id=2;
+        $api_id=$this->api_id;
         $token_api=$data_company["token_api_soenac"];
 
         $logo_base64=$mLogoCompany->get_DataLogo($data_company["id"]);
@@ -192,7 +200,7 @@ class ElectronicBill extends Ts5_class{
         $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
 
         $mApi=model('App\Modules\TS5\Models\AppApps');
-        $api_id=2;
+        $api_id=$this->api_id;
         $token_api=$data_company["token_api_soenac"];
 
         $json='{
@@ -234,7 +242,7 @@ class ElectronicBill extends Ts5_class{
         $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
 
         $mApi=model('App\Modules\TS5\Models\AppApps');
-        $api_id=2;
+        $api_id=$this->api_id;
         $token_api=$data_company["token_api_soenac"];
 
         $json='{
@@ -275,7 +283,7 @@ class ElectronicBill extends Ts5_class{
         $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
 
         $mApi=model('App\Modules\TS5\Models\AppApps');
-        $api_id=2;
+        $api_id=$this->api_id;
         $token_api=$data_company["token_api_soenac"];
 
         $json='{
@@ -300,6 +308,13 @@ class ElectronicBill extends Ts5_class{
         return($response);
     }
 
+    /**
+     * obtiene la numeracion que se tiene asignada para las resoluciones de facturacion en la dian
+     * @param $data_company
+     * @param $item_id
+     * @param $user_id
+     * @return bool|string|void
+     */
     public function get_numeration($data_company,$item_id,$user_id){
         $end_point_id=51;//end point para obtener la numeración de la DIAN
         $process_id=$this->getUniqueId("",true);
@@ -312,7 +327,7 @@ class ElectronicBill extends Ts5_class{
         }
 
         $mApi=model('App\Modules\TS5\Models\AppApps');
-        $api_id=2;
+        $api_id=$this->api_id;
         $token_api=$data_company["token_api_soenac"];
 
         $json='';
@@ -322,6 +337,221 @@ class ElectronicBill extends Ts5_class{
 
         $end_point=str_replace("{nit}",$data_company["identification"],$data_endpoint["name"]);
         $end_point=str_replace("{software_id}",$data_software["identifier"],$end_point);
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+    /**
+     * json para crear una resolucion de una nota credito o debito
+     * @param $type_document_id
+     * @param $prefix
+     * @param $from
+     * @param $to
+     * @return string
+     */
+    public function get_json_resolution_notes($type_document_id,$data_resolution) {
+
+        $json_data='{ 
+            "type_document_id": '.$type_document_id.',
+            "prefix": "'.$data_resolution["prefix"].'",
+            "from": '.$data_resolution["from"].',
+            "to": '.$data_resolution["to"].'            
+        }' ;
+        return($json_data);
+    }
+
+    /**
+     * Json para crear una resolucion de facturacion
+     * @param $type_document_id
+     * @param $prefix
+     * @param $from
+     * @param $to
+     * @param $number_resolution
+     * @param $resolution_date
+     * @param $technical_key
+     * @param $date_from
+     * @param $date_to
+     * @return string
+     */
+    public function get_json_resolution_billing($type_document_id,$data_resolution) {
+
+        $json_data='{ 
+            "type_document_id": '.$type_document_id.',
+            "prefix": "'.$data_resolution["prefix"].'",
+            "from": '.$data_resolution["from"].',
+            "to": '.$data_resolution["to"].',
+            "resolution":'.$data_resolution["resolution"].',
+            "resolution_date":"'.$data_resolution["resolution_date"].'",
+            "technical_key":"'.$data_resolution["technical_key"].'",
+            "date_from":"'.$data_resolution["date_from"].'",
+            "date_to":"'.$data_resolution["date_to"].'"            
+        }' ;
+        return($json_data);
+    }
+
+    /**
+     * crea una resolución de facturación electronica
+     * @param $data_company
+     * @param $type_environment > 1 producción, 2 pruebas
+     * @param $item_id
+     * @param $user_id
+     * @return bool|string|void
+     */
+    public function create_resolution_api($data_company,$data_resolution,$item_id,$user_id){
+        $type_document=$data_resolution["type_document_id"];
+        $end_point_id=13;//end point para crear una resolución
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=$this->api_id;
+        $token_api=$data_company["token_api_soenac"];
+        $json="";
+        if($type_document==1){
+            $json=$this->get_json_resolution_billing($type_document,$data_resolution);
+        }
+
+        if($type_document==5 or $type_document==6){
+            $json=$this->get_json_resolution_notes($type_document,$data_resolution);
+        }
+
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=$data_endpoint["name"];
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+    /**
+     * Obtiene las resoluciones del api
+     * @param $data_company
+     * @param $item_id
+     * @param $user_id
+     * @return bool|string|void
+     */
+    public function get_resolutions($data_company,$item_id,$user_id){
+
+        $end_point_id=12;//end point para obtener las resoluciones
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=$this->api_id;
+        $token_api=$data_company["token_api_soenac"];
+        $json="";
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=$data_endpoint["name"];
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+    /**
+     * Borra una resolucion del api
+     * @param $data_company
+     * @param $item_id
+     * @param $resolution_id_api
+     * @param $user_id
+     * @return bool|string|void
+     */
+    public function delete_resolution_api($data_company,$item_id,$resolution_id_api,$user_id){
+
+        $end_point_id=15;//end point para borrar una resolución
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=$this->api_id;
+        $token_api=$data_company["token_api_soenac"];
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+        $json="";
+        $end_point=str_replace("{resolution_id}",$resolution_id_api,$data_endpoint["name"]);
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+
+    /**
+     * Actualizar una resolución del api
+     * @param $data_company
+     * @param $data_resolution
+     * @param $item_id
+     * @param $resolution_id_api
+     * @param $user_id
+     * @return bool|string|void
+     */
+    public function update_resolution_api($data_company,$data_resolution,$item_id,$resolution_id_api,$user_id){
+        $type_document=$data_resolution["type_document_id"];
+        $end_point_id=14;//end point para actualizar una resolución
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=$this->api_id;
+        $token_api=$data_company["token_api_soenac"];
+        $json="";
+        if($type_document==1){
+            $json=$this->get_json_resolution_billing($type_document,$data_resolution);
+        }
+
+        if($type_document==5 or $type_document==6){
+            $json=$this->get_json_resolution_notes($type_document,$data_resolution);
+        }
+
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=str_replace("{resolution_id}",$resolution_id_api,$data_endpoint["name"]);
         $method=$data_endpoint["method"];
         $url=$url.$end_point;
 

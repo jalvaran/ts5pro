@@ -91,8 +91,16 @@ class AppResolutions extends Model
      * @param $company_id
      * @throws \ReflectionException
      */
-    public function edit_Resolution($data,$company_id){
-        $this->where("company_id",$company_id);
+    public function edit_Resolution($data,$resolution_id_api){
+        $result=$this->select('id')
+                ->where('resolution_id_api',$resolution_id_api)
+                ->first();
+        if(!isset($result["id"])){
+            return(false);
+        }
+        $id=$result["id"];
+
+        $this->where("resolution_id_api",$resolution_id_api);
         $this->update($id,$data);
     }
 

@@ -62,6 +62,8 @@ $routes->group("access", [
         $subroutes->add("companies/set_environment_api/(:any)", "CompaniesProcess::set_environment_api/$1");
         $subroutes->add("companies/get_numeration/(:any)", "CompaniesProcess::get_numeration/$1");
         $subroutes->add("companies/create_resolution/(:any)", "CompaniesProcess::create_resolution/$1");
+        $subroutes->add("companies/delete_resolution/(:any)/(:any)", "CompaniesProcess::delete_resolution/$1/$2");
+        $subroutes->add("companies/get_resolutions/(:any)", "CompaniesProcess::get_resolutions/$1");
 
     }
 );

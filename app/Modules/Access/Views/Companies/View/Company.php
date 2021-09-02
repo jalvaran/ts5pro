@@ -184,7 +184,7 @@
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <label for="type_document_id" class="form-label"><?= lang('Access.type_document_id');?></label>
-                                        <select id="resolution_type_document_id" name="resolution_type_document" class="form-select ts_input_resolution">
+                                        <select id="type_document_id" name="type_document_id" class="form-select ts_input_resolution">
                                             <option value="1"><?= lang('Access.type_document_id_option1');?></option>
                                             <option value="5"><?= lang('Access.type_document_id_option2');?></option>
                                             <option value="6"><?= lang('Access.type_document_id_option3');?></option>
@@ -231,8 +231,8 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="action_type_resolution_id" class="form-label "><?= lang('Access.action_type_resolution_id');?></label>
-                                        <input type="text" class="form-control ts_input_resolution" id="action_type_resolution_id" name="action_type_resolution_id" placeholder="<?= lang('Access.action_type_resolution_id');?>">
+                                        <label for="action_resolution_id" class="form-label "><?= lang('Access.action_type_resolution_id');?></label>
+                                        <input type="text" class="form-control ts_input_resolution" id="action_resolution_id" name="action_resolution_id" placeholder="<?= lang('Access.action_type_resolution_id');?>">
                                     </div>
                                     <div class="col-4">
                                         <button id="btn_get_numeration" data-item_id="<?= $data_company["id"] ?>" class="btn btn-primary px-5 form-control"><?= lang('Access.resolution_btn_get_numeration');?></button>
@@ -251,7 +251,7 @@
                                     <table id="table_resolutions" class="table table-striped">
 
                                         <thead>
-                                            <tr><th>add</th><th>ResolutionNumber</th><th>ResolutionDate</th><th>Prefix</th><th>FromNumber</th><th>ToNumber</th><th>ValidDateFrom</th><th>ValidDateTo</th><th>TechnicalKey</th></tr>
+                                            <tr><th>Action</th><th>ID</th><th>Type</th><th>ResolutionNumber</th><th>ResolutionDate</th><th>Prefix</th><th>FromNumber</th><th>ToNumber</th><th>ValidDateFrom</th><th>ValidDateTo</th><th>TechnicalKey</th></tr>
                                         </thead>
                                         <tbody>
 

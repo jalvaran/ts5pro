@@ -653,7 +653,7 @@
                     if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
                         toastr.success(data.msg);
                         $('#'+div_messages).html("<code>"+JSON.stringify(data.msg)+"</code>");
-
+                        $('#table_resolutions tbody').empty();
                         var resolution_list=data.msg_api.responseDian.Envelope.Body.GetNumberingRangeResponse.GetNumberingRangeResult.ResponseList;
                         var i=0;
                         $.each(resolution_list, function (index, item) {
@@ -661,6 +661,8 @@
                             var newRow=
                                 "<tr>"
                                 +'<td><button id="btn_'+i+'" onclick="set_valuesResolution('+i+');" class="btn btn-primary" data-resolutionNumber="'+item.ResolutionNumber+'" data-ResolutionDate="'+item.ResolutionDate+'" data-Prefix="'+item.Prefix+'" data-FromNumber="'+item.FromNumber+'" data-ToNumber="'+item.ToNumber+'" data-ValidDateFrom="'+item.ValidDateFrom+'" data-ResolutionNumber="'+item.ResolutionNumber+'" data-ValidDateTo="'+item.ValidDateTo+'" data-TechnicalKey="'+item.TechnicalKey+'">Add</button></td>'
+                                +"<td> </td>"
+                                +"<td> </td>"
                                 +"<td>"+item.ResolutionNumber+"</td>"
                                 +"<td>"+item.ResolutionDate+"</td>"
                                 +"<td>"+item.Prefix+"</td>"
@@ -734,7 +736,7 @@
             data: form_data,
             type: 'post',
             beforeSend: function() {
-                show_spinner('<?=lang('Ts5.creating_resolution')?>');
+                show_spinner('<?=lang('msg.creating_resolution')?>');
                 btnSave.attr("disabled","disabled");
 
             },
@@ -746,6 +748,173 @@
                     if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
                         toastr.success(data.msg);
                         $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    /**
+     * crea una resolucion en la base de datos y en el api de soenac
+     * @param urlControllerProcess
+     * @param item_id
+     */
+    function delete_resolution(item_id,resolution_id){
+
+        var urlControllerProcess='<?php echo base_url('/access/companies/delete_resolution') ?>'+'/'+item_id+'/'+resolution_id;
+        var btnSave = $("#btn_resolution_create");
+
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.deleting_resolution')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                        get_resolutions(item_id);
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    /**
+     * obtiene las resoluciones asociadas a una empresa
+     * @param urlControllerProcess
+     * @param item_id
+     * @param type_environment
+     */
+    function get_resolutions(item_id){
+
+        var urlControllerProcess='<?php echo base_url('/access/companies/get_resolutions') ?>'+'/'+item_id;
+
+        var btnSave = $("#btn_create_logo");
+
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.get_resolutions')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg)+"</code>");
+                        $('#table_resolutions tbody').empty();
+                        var resolution_list=data.msg_api;
+                        var i=0;
+                        $.each(resolution_list, function (index, item) {
+                            i=i+1;
+                            var newRow=
+                                "<tr>"
+                                +'<td><button id="btn_delete_'+i+'" onclick="delete_resolution(`'+item_id+'`,`'+item.id+'`);" class="btn btn-danger" >Delete</button></td>'
+                                +"<td>"+item.id+"</td>"
+                                +"<td>"+item.type_document_id+"</td>"
+                                +"<td>"+item.resolution+"</td>"
+                                +"<td>"+item.resolution_date+"</td>"
+                                +"<td>"+item.prefix+"</td>"
+                                +"<td>"+item.from+"</td>"
+                                +"<td>"+item.to+"</td>"
+                                +"<td>"+item.date_from+"</td>"
+                                +"<td>"+item.date_to+"</td>"
+                                +"<td>"+item.technical_key+"</td>"
+
+
+                                +"</tr>";
+                            $(newRow).appendTo("#table_resolutions tbody");
+                        });
+
                     }else{
                         toastr.error(data.msg);
                         $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
@@ -836,6 +1005,12 @@
             var item_id=$(this).attr("data-item_id");
             var controller='<?php echo base_url('/access/companies/create_resolution') ?>'+'/'+item_id;
             create_resolution(controller,item_id);
+        });
+
+        $('#btn_get_resolutions').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+
+            get_resolutions(item_id);
         });
 
     }

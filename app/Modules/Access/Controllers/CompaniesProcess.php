@@ -849,6 +849,11 @@ class CompaniesProcess extends BaseController
 
     }
 
+    /**
+     * Crea una resolucion de facturacion o notas credito y debito en el api de soenac
+     * @param $item_id
+     * @return mixed
+     */
     public function create_resolution($item_id){
         if (!$this->session->get_LoggedIn()) {
             $response["status"]=0;
@@ -886,6 +891,7 @@ class CompaniesProcess extends BaseController
         $validator["numeric"]["resolution"]=1;
         $validator["numeric"]["from"]=1;
         $validator["numeric"]["to"]=1;
+
         $validator["not_required"]["prefix"]=1;
         $validator["not_required"]["action_type_resolution_id"]=1;
 
@@ -913,7 +919,166 @@ class CompaniesProcess extends BaseController
         $obEB=new ElectronicBill();
         $data_company=$mCompanies->get_DataCompany($item_id);
 
-        return("resolution");
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        if($data_form["action_resolution_id"]==''){
+            $api_response=$obEB->create_resolution_api($data_company,$data_form,$item_id,$user_id);
+
+        }else{
+            $api_response=$obEB->update_resolution_api($data_company,$data_form,$item_id,$data_form["action_resolution_id"],$user_id);
+        }
+
+        $arrayResponse = json_decode($api_response,true);
+
+        if(isset($arrayResponse["resolution"])){
+            $ts5=new Ts5_class();
+            $response["status"]=1;
+            $response["msg"]=lang('msg.creating_resolution_ok');
+            $response["msg_api"]=$arrayResponse["resolution"];
+
+            $data_form["resolution_id_api"]=$arrayResponse["resolution"]["id"];
+            $data_form["id"]=$ts5->getUniqueId("rs_",true);
+            $data_form["company_id"]=$item_id;
+            $mResolutions=model('App\Modules\TS5\Models\AppResolutions');
+            if($data_form["type_document_id"]==5 or $data_form["type_document_id"]==6){
+                unset($data_form["resolution"]);
+                unset($data_form["technical_key"]);
+            }
+            if($data_form["action_resolution_id"]=='') {
+                $mResolutions->insert($data_form);
+            }else{
+                $resolution_id_api=$data_form["action_resolution_id"];
+                $mResolutions->edit_Resolution($data_form, $resolution_id_api);
+                $response["msg"]=lang('msg.updating_resolution_ok');
+            }
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+        print_r($arrayResponse);
+    }
+
+    /**
+     * Obtiene las resoluciones que se han creado en el api
+     * @param $item_id > id de la empresa que se está configurando
+     */
+    public function get_resolutions($item_id){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->get_resolutions($data_company,$item_id,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+
+        if(is_array($arrayResponse)){
+            $response["status"]=1;
+            $response["msg"]=lang('msg.get_resolutions_ok');
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+
+    }
+
+    /**
+     * Borra una resolución de facturación del api y de la base de datos
+     * @param $item_id > id de la empresa que se está configurando
+     * @param $resolution_id_api > id de la resolución que se va a borrar
+     * @return mixed
+     */
+    public function delete_resolution($item_id,$resolution_id_api){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+        //exit("$item_id res: $resolution_id_api");
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->delete_resolution_api($data_company,$item_id,$resolution_id_api,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+
+        if(isset($arrayResponse["message"])){
+
+            $response["status"]=1;
+            $response["msg"]=lang('msg.creating_resolution_ok');
+            $response["msg_api"]=$arrayResponse["message"];
+
+
+            $mResolutions=model('App\Modules\TS5\Models\AppResolutions');
+            $mResolutions->where('resolution_id_api',$resolution_id_api);
+            $mResolutions->delete();
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+        print_r($arrayResponse);
     }
 
     //Fin clase
