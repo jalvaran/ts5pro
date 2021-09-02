@@ -5,5 +5,6 @@ return [
     "get_numeration" => "Obteniendo Numeración",
     "not_software" => "Ésta Empresa no tiene un software creado",
     "get_numeration_ok" => "Numeración obtenida",
+    "creating_resolution" => "Creando Resolución",
 
 ];

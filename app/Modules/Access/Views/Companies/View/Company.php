@@ -251,7 +251,7 @@
                                     <table id="table_resolutions" class="table table-striped">
 
                                         <thead>
-                                            <tr><th>ResolutionNumber</th><th>ResolutionDate</th><th>Prefix</th><th>FromNumber</th><th>ToNumber</th><th>ValidDateFrom</th><th>ValidDateTo</th><th>TechnicalKey</th></tr>
+                                            <tr><th>add</th><th>ResolutionNumber</th><th>ResolutionDate</th><th>Prefix</th><th>FromNumber</th><th>ToNumber</th><th>ValidDateFrom</th><th>ValidDateTo</th><th>TechnicalKey</th></tr>
                                         </thead>
                                         <tbody>
 

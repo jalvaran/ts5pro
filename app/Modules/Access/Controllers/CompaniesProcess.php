@@ -849,6 +849,73 @@ class CompaniesProcess extends BaseController
 
     }
 
+    public function create_resolution($item_id){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
+        $module_id=2; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $request=service('request');
+        $data_form_serialized=$request->getVar('data_form_serialized');
+
+        parse_str($data_form_serialized,$data_form);
+
+        $validator["numeric"]["resolution"]=1;
+        $validator["numeric"]["from"]=1;
+        $validator["numeric"]["to"]=1;
+        $validator["not_required"]["prefix"]=1;
+        $validator["not_required"]["action_type_resolution_id"]=1;
+
+        foreach($data_form as $field => $value){
+            $data_form[$field]=trim($value);
+            if($value=='' and !isset($validator["not_required"][$field])){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('fields.'.$field);
+                $response["msg"]=lang('Ts5.validation_field_empty',$data_lang);
+                $response["object_id"]=$field;
+                if(isset($validator["select2"][$field])){
+                    $response["object_id"]="select2-".$field."-container";
+                }
+                return $this->setResponseFormat('json')->respond($response);
+            }
+            if(isset($validator["numeric"][$field]) and !is_numeric($value)){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('fields.'.$field);
+                $response["msg"]=lang('Ts5.validation_field_numeric_1',$data_lang);
+                $response["object_id"]=$field;
+                return $this->setResponseFormat('json')->respond($response);
+            }
+        }
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+
+        return("resolution");
+    }
+
     //Fin clase
 
 }
