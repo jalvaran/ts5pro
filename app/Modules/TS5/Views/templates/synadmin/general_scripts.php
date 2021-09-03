@@ -71,10 +71,18 @@
         $("#"+obj_id).focus();
     }
 
-    function data_table_init_2(table_id){
+
+    function data_table_init_2(table_id,urlControllerJson){
+
         $('#'+table_id).DataTable({
 
+            ajax: urlControllerJson,
+
+            order: [[ 0, "desc" ]],
+            processing: true,
+            serverSide: true,
             language: {
+
                 processing:     "<?php echo lang('DataTables.processing') ?>",
                 search:         "<?php echo lang('DataTables.search') ?>&nbsp;:",
                 lengthMenu:     "<?php echo lang('DataTables.lengthMenu') ?>",
@@ -95,14 +103,10 @@
                     sortAscending:  ": <?php echo lang('DataTables.sortAscending') ?>",
                     sortDescending: ": <?php echo lang('DataTables.sortDescending') ?>"
                 }
-            }
-
+            },
 
         }).on('draw.dt', function () {
-            if(typeof buttons_data_table_events_add === 'function'){
-                buttons_data_table_events_add();
-            }
-
+            buttons_data_table_events_add();
         });
     }
 
@@ -161,6 +165,52 @@
         document.execCommand("copy");
         $temp.remove();
         toastr.success("<?= lang('msg.copy_to_clipboard')?>");
+    }
+
+    function data_table_draw(table_id,model,module_id,permission_id,function_name){
+
+        var urlControllerDraw ='<?= base_url('access/users/data_table_users')?>'+'/'+model+'/'+table_id+'/'+permission_id+'/'+module_id;
+        var urlControllerJson='<?= base_url('access/users/jsonUsers')?>'+'/'+model+'/'+permission_id+'/'+module_id;
+
+        var form_data = new FormData();
+
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('Cargando');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#div_'+table_id).html(data);
+                data_table_init_2(table_id,urlControllerJson,model);
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
     }
 
 

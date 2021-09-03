@@ -71,14 +71,20 @@ class UsersDraw extends BaseController
         $ts5=new Ts5_class();
 
         $data["views_path_module"]=$this->views_path_module;
-        $data["views_path"]=$this->views_path;
         $data["view_path"]=$this->views_path;
         $data["company_id"]=$company_id;
+
+        $data["table_id"]='table_users';
+        $data["table_model"]='App\Modules\Access\Models\Users';
+        $data["permission_id"]=8;
+        $data["module_id"]=2;
+        $data["function_name"]="users_draw";
+
         $user_js=view($this->views_path_module."\JS\users_js",$data);
         $data_card["title"]="Tabla de Usuarios";
         $data_card["sub_title"]="";
         $data_card["content"]="";
-        $data_card["div_id"]="div_table_users";
+        $data_card["div_id"]="div_".$data["table_id"];
         $html=view($this->views_path."\card",$data_card);
 
         $this->session->set('company_id',$company_id);
@@ -93,12 +99,13 @@ class UsersDraw extends BaseController
 
     }
 
-    public function data_table_users(){
+    public function data_table_users($model_base64,$table_id){
 
-        $model = model('App\Modules\Access\Models\Users');
+        $model_path=base64_decode(urldecode($model_base64));
+        $model = model($model_path);
         $data['fields']=$model->allowedFields;
-        $data['data_model'] = $model->select($data['fields'])->orderBy('id', 'DESC')->findAll();
-        $data['table_id']="table_users";
+        $data['data_model'] ='';
+        $data['table_id']=$table_id;
         $html= view('App\Modules\TS5\Views\templates\synadmin\data_table2', $data);
         return($html);
     }

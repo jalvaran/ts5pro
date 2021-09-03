@@ -22,26 +22,13 @@ class UsersSearchs extends BaseController
      * retorna el json para el datatable de los usuarios
      * @return mixed
      */
-    function jsonUsers() {
-        $dataTable = new DataTable();
-        $modelClass='App\Modules\Access\Models\Users';
-        $helper='App\Modules\Access\Helpers\actions_users';
-        $i=0;
-        $field_dataTable[$i]["field"]='id';
-        $field_dataTable[$i]["action_links"]='action_links';
+    function jsonUsers($model_base64)
+    {
 
-        $field_dataTable[++$i]["field"]='name';
-        $field_dataTable[++$i]["field"]='identification';
-        $field_dataTable[++$i]["field"]='telephone';
-        $field_dataTable[++$i]["field"]='email';
-        $field_dataTable[++$i]["field"]='designation';
-        $field_dataTable[++$i]["field"]='username';
-        $field_dataTable[++$i]["field"]='enabled';
-
-        $response = $dataTable->process($helper,$modelClass, $field_dataTable);
-
+        $modelClass=base64_decode(urldecode($model_base64));
+        $dataTable=new DataTable();
+        $response=$dataTable->getDataTable($modelClass);
         return $this->setResponseFormat('json')->respond($response);
-
     }
 
 

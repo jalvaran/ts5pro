@@ -1,52 +1,13 @@
 <script type="text/javascript">
 
+    var table_id='<?= $table_id?>';
+    var permission_id='<?= $permission_id?>';
+    var module_id='<?= $module_id?>';
+    var model='<?= urlencode(base64_encode($table_model))?>';
 
-    /**
-     * Función para dibujar el listado de usuarios
-     */
-    function users_draw(){
-        var urlController='<?= base_url('access/users/data_table_users')?>';
-
-        var form_data = new FormData();
-
-        $.ajax({
-            url: urlController,
-
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: form_data,
-            type: 'post',
-            beforeSend: function() {
-                show_spinner('Cargando');
-
-            },
-            complete: function(){
-                //$('#loader').fadeOut();
-            },
-            success: function(data){
-                hide_spinner();
-                $('#div_table_users').html(data);
-                data_table_init_2('table_users');
-
-            },
-            error: function(xhr, ajaxOptions, thrownError){
-
-                var code_error=xhr.status;
-                if(code_error==0){
-                    alert('No connect, verify Network.');
-                }else if(code_error==404){
-                    alert('Page not found [404]');
-                }else if(code_error==500){
-                    alert(xhr.responseText+' '+thrownError);
-                }else{
-                    alert(code_error +' '+xhr.responseText+' '+thrownError);
-                }
-
-
-            }
-        });//Fin peticion ajax
-    }
+    var users_draw = function() {
+        data_table_draw(table_id,model,module_id,permission_id,'users_draw');
+    };
 
     function buttons_data_table_events_add(){
         console.log("entras a eventos");
