@@ -47,7 +47,6 @@ class Companies extends Model
         'dv',
         'mail',
         'language_id',
-        'type_operation_id',
         'type_document_identification_id',
         'country_id',
         'type_currency_id',
@@ -60,8 +59,10 @@ class Companies extends Model
         'phone',
         'ciius',
         'author',
+        'db',
         'icon',
         'test_set_dian',
+        'sync',
         'token_api_soenac',
         'post_documents_automatically'
 

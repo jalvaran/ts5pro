@@ -73,7 +73,7 @@ class Companies extends BaseController
         } else {
 
             $ts5=new Ts5_class();
-            $company_id=$this->session->get('company_id');
+            //$company_id=$this->session->get('company_id');
             $this->session->set('company_id',$company_id);
             $controller_json_companies=base_url('/access/companies/jsonCompanies');
             $controller_draw_form_companies=base_url('/access/companies/frm_create');
@@ -112,6 +112,8 @@ class Companies extends BaseController
 
             $my_js=view($this->views_path_module."\JS/js",$data_table);
             $my_js_company=view($this->views_path_module."\JS/js_view_company",$data_table);
+
+
             $data_div["tags"]='class="col-md-12" id="div_table_companies" ';
             $data_div["content_div"]='';
             $div_md_12=view($this->views_path."\div",$data_div);
@@ -165,14 +167,17 @@ class Companies extends BaseController
             $data_table["actions_path"]=base_url("/access/companies/list");
             $data_table["table_title"]=lang('Access.companies_table_title');
             $data_table["div_cols"]=12;
-            $data_table["cols"][0]=lang('Access.companies_table_col1');
-            $data_table["cols"][1]=lang("Access.companies_table_col2");
-            $data_table["cols"][2]=lang("Access.companies_table_col3");
-            $data_table["cols"][3]=lang("Access.companies_table_col4");
-            $data_table["cols"][4]=lang("Access.companies_table_col5");
-            $data_table["cols"][5]=lang("Access.companies_table_col6");
-            $data_table["cols"][6]=lang("Access.companies_table_col7");
-            $data_table["cols"][7]=lang("Access.companies_table_col8");
+            $i=0;
+            //$data_table["cols"][$i++]="id";
+            $data_table["cols"][$i++]=lang('Access.companies_table_col1');
+            $data_table["cols"][$i++]=lang("Access.companies_table_col2");
+            $data_table["cols"][$i++]=lang("Access.companies_table_col3");
+            $data_table["cols"][$i++]=lang("Access.companies_table_col4");
+            $data_table["cols"][$i++]=lang("Access.companies_table_col5");
+            $data_table["cols"][$i++]=lang("Access.companies_table_col6");
+            $data_table["cols"][$i++]=lang("Access.companies_table_col7");
+            $data_table["cols"][$i++]=lang("Access.companies_table_col8");
+
 
 
             $html.= view($this->views_path."\data_table",$data_table);

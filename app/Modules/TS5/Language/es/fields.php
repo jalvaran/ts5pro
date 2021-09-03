@@ -8,6 +8,7 @@ return [
     "to" => "Hasta",
     "date_from" => "Fecha Inicial",
     "date_to" => "Fecha Final",
+    "sync" => "Sincronizado",
 
 
 ];

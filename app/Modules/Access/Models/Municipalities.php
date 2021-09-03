@@ -40,9 +40,10 @@ class Municipalities extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
+        'id',
+        'department_id',
         'name',
-        'code',
-        'country_id'
+        'code'
 
     ];
 

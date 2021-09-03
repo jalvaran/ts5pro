@@ -40,6 +40,7 @@ class Users extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
+        'id',
         'name',
         'identification',
         'telephone',
@@ -71,7 +72,7 @@ class Users extends Model
      */
     public function get_UserLogin($username, $password)
     {
-
+        $password =md5($password);
         $result = $this
             ->select('id,name,designation')
             ->where("username", $username)
@@ -142,6 +143,10 @@ class Users extends Model
             return(false);
         }
 
+    }
+
+    public function getColums(){
+        return($this->getFieldNames($this->table));
     }
 
 }

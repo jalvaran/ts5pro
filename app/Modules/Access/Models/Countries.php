@@ -40,6 +40,7 @@ class Countries extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
+        'id',
         'name',
         'code'
 

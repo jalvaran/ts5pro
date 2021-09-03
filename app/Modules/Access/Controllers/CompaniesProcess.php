@@ -109,6 +109,7 @@ class CompaniesProcess extends BaseController
         $data_form["id"]=$ts5->getUniqueId("cp_",true);
         $data_form["dv"]=$ts5->calculate_dv($data_form["identification"]);
         $data_form["author"]=$user_id;
+        $data_form["db"]="techno_ts5_pro_".$data_form["identification"];
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
         $mCompanies->insert($data_form);
@@ -188,6 +189,7 @@ class CompaniesProcess extends BaseController
 
         $data_form["dv"]=$ts5->calculate_dv($data_form["identification"]);
         //$data_form["author"]=$user_id;
+        $data_form["db"]="techno_ts5_pro_".$data_form["identification"];
         $mCompanies=model('App\Modules\Access\Models\Companies');
         $mCompanies->edit_company($data_form,$item_id);
         $response["status"]=1;
@@ -534,7 +536,7 @@ class CompaniesProcess extends BaseController
             $ts5=new Ts5_class();
             $data_form["id"]=$ts5->getUniqueId("sf_",true);
             $data_form["author"]=$user_id;
-            $data_form["company_id"]=$company_id;
+            $data_form["company_id"]=$item_id;
             $mSoftware->insert($data_form);
         }else{
             $mSoftware->edit_Software($data_form,$data_software["id"]);
@@ -542,7 +544,7 @@ class CompaniesProcess extends BaseController
 
         $obEB=new ElectronicBill();
         $data_company=$mCompanies->get_DataCompany($item_id);
-        $api_response=$obEB->create_software_api($data_company,$data_software,$item_id,$user_id);
+        $api_response=$obEB->create_software_api($data_company,$data_form,$item_id,$user_id);
 
         $arrayResponse = json_decode($api_response,true);
 
@@ -893,7 +895,7 @@ class CompaniesProcess extends BaseController
         $validator["numeric"]["to"]=1;
 
         $validator["not_required"]["prefix"]=1;
-        $validator["not_required"]["action_type_resolution_id"]=1;
+        $validator["not_required"]["action_resolution_id"]=1;
 
         foreach($data_form as $field => $value){
             $data_form[$field]=trim($value);
@@ -1051,8 +1053,6 @@ class CompaniesProcess extends BaseController
             exit();
         }
 
-        $obEB=new ElectronicBill();
-        $data_company=$mCompanies->get_DataCompany($item_id);
 
         $obEB=new ElectronicBill();
         $data_company=$mCompanies->get_DataCompany($item_id);

@@ -139,6 +139,13 @@ $input["value"]=(isset($data_form["test_set_dian"])) ? $data_form["test_set_dian
 $input["placeholder"]=$input["label"];
 $html.=view($views_path."/frm_input",$input);
 
+$input["id"]="sync";
+$input["label"]=lang('fields.sync');
+$input["type"]="text";
+$input["value"]=(isset($data_form["sync"])) ? $data_form["sync"] : '';
+$input["placeholder"]=$input["label"];
+$html.=view($views_path."/frm_input",$input);
+
 $input["id"]="post_documents_automatically";
 $input["label"]=lang('Access.companies_frm_input_post_documents_automatically');
 $input["type"]="text";

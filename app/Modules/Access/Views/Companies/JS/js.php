@@ -527,22 +527,28 @@
     }
 
     function buttons_data_table_events_add(){
-
+        $( '#btn_new_<?php echo $table_id;?>').unbind( "click");
         $('#btn_new_<?php echo $table_id;?>').on('click',function () {
 
             frm_company_draw();
         });
-
+        $( ".ts_button_edit" ).unbind( "click");
         $('.ts_button_edit').on('click',function () {
 
             $(this).removeAttr("href");
             frm_company_edit_draw($(this).attr("data-item_id"));
         });
-
+        $( ".ts_button_view" ).unbind( "click");
         $('.ts_button_view').on('click',function () {
 
             $(this).removeAttr("href");
             company_view($(this).attr("data-item_id"));
+        });
+
+        $( ".ts_button_table_id" ).unbind( "click");
+        $('.ts_button_table_id').on('click',function () {
+
+            copyToClipboard("#"+$(this).attr("id"));
         });
 
     }

@@ -12,5 +12,7 @@ return [
     "creating_resolution_ok" => "Resolución creada exitosamente",
     "updating_resolution_ok" => "Resolución actualizada exitosamente",
     "deleting_resolution" => "Borrando Resolución",
+    "title_table_id" => "Click para Copiar al portapapeles",
+    "copy_to_clipboard" => "Copiado al portapapeles",
 
 ];
