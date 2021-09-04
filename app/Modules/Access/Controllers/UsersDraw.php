@@ -67,30 +67,64 @@ class UsersDraw extends BaseController
      * @return \CodeIgniter\HTTP\RedirectResponse|void
      */
     function home($company_id) {
-
+        if (!$this->session->get_LoggedIn()) {
+            return (redirect()->to(base_url('/ts5/signin')));
+        }
         $ts5=new Ts5_class();
-
+        $html="";
         $data["views_path_module"]=$this->views_path_module;
         $data["view_path"]=$this->views_path;
         $data["company_id"]=$company_id;
 
         $data["table_id"]='table_users';
+        $data["function_name"]='users_draw';
         $data["table_model"]='App\Modules\Access\Models\Users';
-        $data["permission_id"]=8;
+        $data["permissions"]["list"]=8;
+        $data["permissions"]["create"]=9;
+        $data["permissions"]["edit"]=11;
+        $data["permissions"]["edit_all"]=12;
         $data["module_id"]=2;
-        $data["function_name"]="users_draw";
 
-        $user_js=view($this->views_path_module."\JS\users_js",$data);
-        $data_card["title"]="Tabla de Usuarios";
+        $data_tables_js=view($this->views_path."\data_tables_js",$data);
+
+        $data_card["title"]=lang('Access_Pages.users_table_title');
         $data_card["sub_title"]="";
         $data_card["content"]="";
+        $data_card["cols"]="12";
         $data_card["div_id"]="div_".$data["table_id"];
-        $html=view($this->views_path."\card",$data_card);
+        $html.=view($this->views_path."\card",$data_card);
+
+
+        /**
+         * libro
+         */
+
+        $data["table_id"]='table_libro';
+        $data["function_name"]='libro_draw';
+        $data["table_model"]='App\Modules\Access\Models\Libro';
+        $data["permissions"]["list"]=8;
+        $data["permissions"]["create"]=9;
+        $data["permissions"]["edit"]=11;
+        $data["permissions"]["edit_all"]=12;
+        $data["module_id"]=2;
+
+        $data_tables_libro_js=view($this->views_path."\data_tables_js",$data);
+
+        $data_card["title"]="libro Diario";
+        $data_card["sub_title"]="";
+        $data_card["content"]="";
+        $data_card["cols"]="12";
+        $data_card["div_id"]="div_".$data["table_id"];
+        $html.=view($this->views_path."\card",$data_card);
+
+        /**
+         * Fin libro
+         */
 
         $this->session->set('company_id',$company_id);
         $data=$ts5->getDataTemplate($this->session);
         $data["data_template"]=$ts5->getDataTemplate($this->session);
-        $data["data_template"]["my_js"]=$user_js;
+        $data["data_template"]["my_js"]=$data_tables_libro_js.$data_tables_js;
 
         $data["page_title"]=lang('Access_Pages.users_title');
         $data["module_name"]=lang('Access_Pages.users');
@@ -99,16 +133,7 @@ class UsersDraw extends BaseController
 
     }
 
-    public function data_table_users($model_base64,$table_id){
 
-        $model_path=base64_decode(urldecode($model_base64));
-        $model = model($model_path);
-        $data['fields']=$model->allowedFields;
-        $data['data_model'] ='';
-        $data['table_id']=$table_id;
-        $html= view('App\Modules\TS5\Views\templates\synadmin\data_table2', $data);
-        return($html);
-    }
 
 
 

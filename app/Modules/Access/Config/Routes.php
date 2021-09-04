@@ -68,7 +68,6 @@ $routes->group("access", [
         $subroutes->add("users", "UsersDraw::index");
         $subroutes->add("users/list/(:any)", "UsersDraw::home/$1");
         $subroutes->add("users/data_table_users/(:any)/(:any)/(:any)/(:any)", "UsersDraw::data_table_users/$1/$2/$3/$4");
-        $subroutes->add("users/jsonUsers/(:any)/(:any)/(:any)", "UsersSearchs::jsonUsers/$1/$2/$3");
 
     }
 );

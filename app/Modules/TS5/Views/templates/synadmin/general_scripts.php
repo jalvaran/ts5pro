@@ -167,11 +167,11 @@
         toastr.success("<?= lang('msg.copy_to_clipboard')?>");
     }
 
-    function data_table_draw(table_id,model,module_id,permission_id,function_name){
+    function data_table_draw(table_id,model,module_id,permissions,function_name){
 
-        var urlControllerDraw ='<?= base_url('access/users/data_table_users')?>'+'/'+model+'/'+table_id+'/'+permission_id+'/'+module_id;
-        var urlControllerJson='<?= base_url('access/users/jsonUsers')?>'+'/'+model+'/'+permission_id+'/'+module_id;
-
+        var urlControllerDraw ='<?= base_url('ts5/tables_draw')?>'+'/'+model+'/'+table_id+'/'+permissions+'/'+module_id;
+        var urlControllerJson='<?= base_url('ts5/tables_json')?>'+'/'+model+'/'+permissions+'/'+module_id;
+        console.log(urlControllerDraw);
         var form_data = new FormData();
 
         $.ajax({
