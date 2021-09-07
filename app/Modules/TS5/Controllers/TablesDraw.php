@@ -93,7 +93,27 @@ class TablesDraw extends BaseController
                 }
 
                 $data_field["type"]="text";
-                $html_fields.=view('App\Modules\TS5\Views\templates\synadmin\frm_input',$data_field);
+                if(isset($array_data_table["fields"][$value]["type"])){
+                    $data_field["type"]=$array_data_table["fields"][$value]["type"];
+                }
+
+                if($data_field["type"]=='textarea'){
+                    $html_fields.=view('App\Modules\TS5\Views\templates\synadmin\frm_input_textarea',$data_field);
+                }else if($data_field["type"]=='select2'){
+                    $data_field["model"]="";
+                    if(isset($array_data_table["fields"][$value]["model"])){
+                        $data_field["model"]=$array_data_table["fields"][$value]["model"];
+                    }
+                    $data_field["labels"]="";
+                    if(isset($array_data_table["fields"][$value]["labels"])){
+                        $data_field["labels"]=$array_data_table["fields"][$value]["labels"];
+                    }
+                    $data_field["data_table"]=$data_table;
+                    $html_fields.=view('App\Modules\TS5\Views\templates\synadmin\frm_select2',$data_field);
+                }else{
+                    $html_fields.=view('App\Modules\TS5\Views\templates\synadmin\frm_input',$data_field);
+                }
+
             }
 
         }

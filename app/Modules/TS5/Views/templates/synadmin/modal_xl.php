@@ -17,8 +17,8 @@
                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button  data-form_id="0" type="button" class="btn btn-secondary ts_btn_save_modals" data-bs-dismiss="modal"><?php echo lang('Ts5.modal_btn_close') ?></button>
-                        <button  data-form_id="0" type="button" class="btn btn-primary ts_btn_cancel_modals"><?php echo lang('Ts5.modal_btn_save') ?></button>
+                        <button  data-form_id="0" type="button" class="btn btn-secondary ts_btn_cancel_modals " data-bs-dismiss="modal"><?php echo lang('Ts5.modal_btn_close') ?></button>
+                        <button  data-form_id="0" type="button" class="btn btn-primary ts_btn_save_modals "><?php echo lang('Ts5.modal_btn_save') ?></button>
                     </div>
                 </div>
             </div>

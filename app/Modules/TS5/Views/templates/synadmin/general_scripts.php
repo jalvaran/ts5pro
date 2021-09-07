@@ -214,11 +214,12 @@
     }
 
 
-    function frm_tables_draw(id,data_table){
+    function frm_tables_draw(id,data_table,table_id){
         $('#modal_xl').modal("show");
-        console.log(id);
+
         $(".ts_btn_save_modals").attr("data-data_table",data_table);
         $(".ts_btn_save_modals").attr("data-id",id);
+        $(".ts_btn_save_modals").attr("data-table_id",table_id);
         if(id=='NA'){
             $(".ts_btn_save_modals").attr("data-form_id",1);
         }else{
@@ -245,6 +246,7 @@
             success: function(data){
                 hide_spinner();
                 $('#modal_xl_body').html(data);
+                select2_forms_converter();
 
             },
             error: function(xhr, ajaxOptions, thrownError){
@@ -263,6 +265,185 @@
 
             }
         });
+    }
+
+    function confirm_save_register(data_table,table_id){
+
+        Swal.fire({
+            title: '<?php echo lang('Ts5.confirm_title')?>',
+            //text: "<?php echo lang('Ts5.confirm_text')?>",
+            icon: 'warning',
+
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '<?php echo lang('Ts5.confirm_button_ok')?>',
+            cancelButtonText: '<?php echo lang('Ts5.confirm_button_cancel')?>'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                create_register(data_table,table_id);
+            }else{
+
+                toastr.error('<?php echo lang('Ts5.confirm_process_cancel_text')?>');
+            }
+        });
+    }
+
+    function create_register(data_table,table_id){
+
+        var urlControllerProcess='<?php echo base_url('/ts5/tables_create_register') ?>';
+        var btnSave = $(".ts_btn_save_modals");
+        var data_form_serialized=$('.ts_input').serialize();
+        var form_data = new FormData();
+
+        form_data.append('data_table',data_table);
+        form_data.append('data_form_serialized',data_form_serialized);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#modal_xl').modal("hide");
+
+                        reload_table(table_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    function confirm_edit_register(id,data_table,table_id){
+
+        Swal.fire({
+            title: '<?php echo lang('Ts5.confirm_title')?>',
+            //text: "<?php echo lang('Ts5.confirm_text')?>",
+            icon: 'warning',
+
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '<?php echo lang('Ts5.confirm_button_ok')?>',
+            cancelButtonText: '<?php echo lang('Ts5.confirm_button_cancel')?>'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                edit_register(id,data_table,table_id);
+            }else{
+
+                toastr.error('<?php echo lang('Ts5.confirm_process_cancel_text')?>');
+            }
+        });
+    }
+
+    function edit_register(id,data_table,table_id){
+
+        var urlControllerProcess='<?php echo base_url('/ts5/tables_edit_register') ?>';
+        var btnSave = $(".ts_btn_save_modals");
+        var data_form_serialized=$('.ts_input').serialize();
+        var form_data = new FormData();
+
+        form_data.append('data_table',data_table);
+        form_data.append('edit_id',id);
+        form_data.append('data_form_serialized',data_form_serialized);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.editing')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#modal_xl').modal("hide");
+
+                        reload_table(table_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
     }
 
 

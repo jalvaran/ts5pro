@@ -12,6 +12,9 @@ $routes->group("ts5", [
         $routes->add("tables_draw/(:any)/(:any)", "TablesDraw::tables_draw/$1/$2");
         $routes->add("frm_tables_draw/(:any)/(:any)", "TablesDraw::frm_tables_draw/$1/$2");
         $routes->add("tables_json/(:any)", "TablesProcess::tables_json/$1");
+        $routes->add("tables_create_register", "TablesProcess::tables_create_register");
+        $routes->add("tables_edit_register", "TablesProcess::tables_edit_register");
+        $routes->add("tables_searchs", "TablesProcess::tables_searchs");
 
     }
 );

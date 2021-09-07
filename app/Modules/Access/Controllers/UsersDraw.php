@@ -102,6 +102,15 @@ class UsersDraw extends BaseController
             $data["data"]["buttons"]["view"]["disabled"]=1;
             $data["data"]["module_id"]=2;
             $data["data"]["table_id"]='table_users';
+            $data["data"]["fields"]["password"]["type"]='password';
+
+            $data["data"]["fields"]["identification"]["validation"]["number"]=1;
+            $data["data"]["fields"]["telephone"]["validation"]["number"]=1;
+
+            $data["data"]["fields"]["enabled"]["type"]='select2';
+            $data["data"]["fields"]["enabled"]["model"]='App\Modules\TS5\Models\AppResponsesEnable';
+            $data["data"]["fields"]["enabled"]["labels"]='label';
+            $data["data"]["function_name"]=$data["function_name"];
 
             $data_tables_js=view($this->views_path."\data_tables_js",$data);
 

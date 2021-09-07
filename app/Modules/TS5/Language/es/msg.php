@@ -14,5 +14,10 @@ return [
     "deleting_resolution" => "Borrando Resolución",
     "title_table_id" => "Click para Copiar al portapapeles",
     "copy_to_clipboard" => "Copiado al portapapeles",
+    "saving" => "Guardando Registro",
+    "editing" => "Editando Registro",
+    "saving_register_ok" => "Registro creado correctamente",
+    "edit_register_ok" => "Registro editado correctamente",
+    "option_select2" => "Seleccione una opción",
 
 ];

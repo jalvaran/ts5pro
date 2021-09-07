@@ -103,16 +103,18 @@ class Users extends Model
     }
 
     /**
-     * Retorna falso o verdadero si el usuario activo ne la sesión es el
-     * autor del regsitro que se desea acceder, editar o eliminar.
-     * @param type $id codigo primario del registro a consultar
-     * @param type $author codigo del usuario del cual se pretende establecer la autoria
-     * @return boolean falso o verdadero segun sea el caso
+     * Consulta el autor de un registro
+     * @param $id
+     * @param $author
+     * @return bool
      */
     public function get_Authority($id, $author)
     {
-        $row = $this->where("author", $id)->first();
-        if (@$row["author"] == $author) {
+        $row = $this->select("id")
+            ->where("id", $id)
+            ->where("author", $author)
+            ->first();
+        if (@$row["id"] == $id) {
             return (true);
         } else {
             return (false);
