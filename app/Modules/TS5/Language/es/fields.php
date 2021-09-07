@@ -11,7 +11,21 @@ return [
     "sync" => "Sincronizado",
     "actions" => "Acciones",
     "id" => "id",
-    "author" => "Creador",
+    "author" => "Autor",
+    "view" => "Ver",
+    "edit" => "Editar",
+    "delete" => "Borrar",
+    "loading" => "Cargando...",
+
+    "name" => "Nombre",
+    "identification" => "Identificación",
+    "telephone" => "Teléfono",
+    "email" => "Correo",
+    "username" => "Usuario",
+    "password" => "Contraseña",
+    "enabled" => "Habilitado",
+    "author" => "Autor",
+    "designation" => "Cargo",
 
 
 

@@ -9,7 +9,9 @@ $routes->group("ts5", [
         $routes->add("signin", "TS5::signin");
         $routes->add("signup", "TS5::signup");
         $routes->add("signout", "TS5::signout");
-        $routes->add("tables_draw/(:any)/(:any)/(:any)/(:any)", "TablesDraw::tables_draw/$1/$2/$3/$4");
-        $routes->add("tables_json/(:any)/(:any)/(:any)", "TablesProcess::tables_json/$1/$2/$3");
+        $routes->add("tables_draw/(:any)/(:any)", "TablesDraw::tables_draw/$1/$2");
+        $routes->add("frm_tables_draw/(:any)/(:any)", "TablesDraw::frm_tables_draw/$1/$2");
+        $routes->add("tables_json/(:any)", "TablesProcess::tables_json/$1");
+
     }
 );

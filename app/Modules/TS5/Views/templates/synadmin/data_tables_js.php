@@ -5,14 +5,31 @@
     var <?= $function_name?> = function() {
 
         var table_id='<?= $table_id?>';
-        var permissions='<?= json_encode($permissions)?>';
-        var module_id='<?= $module_id?>';
-        var model='<?= urlencode(base64_encode($table_model))?>';
+        var data='<?= urlencode(base64_encode(json_encode($data)))?>';
 
-        data_table_draw(table_id,model,module_id,permissions,<?= $function_name?>);
+        data_table_draw(table_id,data,<?= $function_name?>);
     };
 
-    function buttons_data_table_events_add(){
+    function buttons_data_table_events_add_2(table_id){
+        $('.ts_input_view_'+table_id).unbind();
+        $('.ts_input_edit_'+table_id).unbind();
+        $('.ts_input_excel_'+table_id).unbind();
+        $('.ts_input_pdf_'+table_id).unbind();
+        $('.ts_input_delete_'+table_id).unbind();
+        $('.ts_input_create_'+table_id).unbind();
+
+        $('.ts_input_edit_'+table_id).on('click',function () {
+            var id=$(this).attr("data-id");
+            var data_table=$(this).attr("data-data_table");
+            frm_tables_draw(id,data_table);
+        });
+
+        $('.ts_input_create_'+table_id).on('click',function () {
+            var id="NA";
+            var data_table=$(this).attr("data-data_table");
+            frm_tables_draw(id,data_table);
+        });
+
         console.log("entras a eventos");
     }
 

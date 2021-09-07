@@ -106,7 +106,7 @@
             },
 
         }).on('draw.dt', function () {
-            buttons_data_table_events_add();
+            buttons_data_table_events_add_2(table_id);
         });
     }
 
@@ -167,11 +167,11 @@
         toastr.success("<?= lang('msg.copy_to_clipboard')?>");
     }
 
-    function data_table_draw(table_id,model,module_id,permissions,function_name){
+    function data_table_draw(table_id,data_table,function_name){
 
-        var urlControllerDraw ='<?= base_url('ts5/tables_draw')?>'+'/'+model+'/'+table_id+'/'+permissions+'/'+module_id;
-        var urlControllerJson='<?= base_url('ts5/tables_json')?>'+'/'+model+'/'+permissions+'/'+module_id;
-        console.log(urlControllerDraw);
+        var urlControllerDraw ='<?= base_url('ts5/tables_draw')?>'+'/'+data_table+'/'+table_id;
+        var urlControllerJson='<?= base_url('ts5/tables_json')?>'+'/'+data_table;
+        //console.log(urlControllerDraw);
         var form_data = new FormData();
 
         $.ajax({
@@ -192,7 +192,59 @@
             success: function(data){
                 hide_spinner();
                 $('#div_'+table_id).html(data);
-                data_table_init_2(table_id,urlControllerJson,model);
+                data_table_init_2(table_id,urlControllerJson);
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
+
+
+    function frm_tables_draw(id,data_table){
+        $('#modal_xl').modal("show");
+        console.log(id);
+        $(".ts_btn_save_modals").attr("data-data_table",data_table);
+        $(".ts_btn_save_modals").attr("data-id",id);
+        if(id=='NA'){
+            $(".ts_btn_save_modals").attr("data-form_id",1);
+        }else{
+            $(".ts_btn_save_modals").attr("data-form_id",2);
+        }
+        var urlControllerDraw ='<?= base_url('ts5/frm_tables_draw')?>'+'/'+id+'/'+data_table;
+        var form_data = new FormData();
+
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#modal_xl_body').html(data);
 
             },
             error: function(xhr, ajaxOptions, thrownError){

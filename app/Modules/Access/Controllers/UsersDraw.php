@@ -72,59 +72,53 @@ class UsersDraw extends BaseController
         }
         $ts5=new Ts5_class();
         $html="";
+
+        $permission_list=8;
+        $module_id=2;
         $data["views_path_module"]=$this->views_path_module;
         $data["view_path"]=$this->views_path;
         $data["company_id"]=$company_id;
-
         $data["table_id"]='table_users';
         $data["function_name"]='users_draw';
-        $data["table_model"]='App\Modules\Access\Models\Users';
-        $data["permissions"]["list"]=8;
-        $data["permissions"]["create"]=9;
-        $data["permissions"]["edit"]=11;
-        $data["permissions"]["edit_all"]=12;
-        $data["module_id"]=2;
+        $user_id=$this->session->get('user');
+        $mUsers=model('App\Modules\Access\Models\Users');
 
-        $data_tables_js=view($this->views_path."\data_tables_js",$data);
+        $p_single=$mUsers->has_Permission($user_id,$permission_list,$company_id,$module_id);
+        $data_tables_js="";
+        if(!$p_single){
+            $data["error_title"]=lang('Access.access_view_error_title');
+            $data["msg_error"]=lang('Access.access_view_error');
+            $html.=(view($this->views_path."\alert_error",$data));
+        }else{
 
-        $data_card["title"]=lang('Access_Pages.users_table_title');
-        $data_card["sub_title"]="";
-        $data_card["content"]="";
-        $data_card["cols"]="12";
-        $data_card["div_id"]="div_".$data["table_id"];
-        $html.=view($this->views_path."\card",$data_card);
+            $data["data"]["model"]='App\Modules\Access\Models\Users';
+            $data["data"]["permissions"]["list"]=$permission_list;
+            $data["data"]["permissions"]["create"]=9;
+            $data["data"]["permissions"]["edit"]=11;
+            $data["data"]["permissions"]["edit_all"]=12;
+            $data["data"]["buttons"]["excel"]["disabled"]=1;
+            $data["data"]["buttons"]["pdf"]["disabled"]=1;
+            $data["data"]["buttons"]["delete"]["disabled"]=1;
+            $data["data"]["buttons"]["view"]["disabled"]=1;
+            $data["data"]["module_id"]=2;
+            $data["data"]["table_id"]='table_users';
+
+            $data_tables_js=view($this->views_path."\data_tables_js",$data);
+
+            $data_card["title"]=lang('Access_Pages.users_table_title');
+            $data_card["sub_title"]="";
+            $data_card["content"]="";
+            $data_card["cols"]="12";
+            $data_card["div_id"]="div_".$data["table_id"];
+            $html.=view($this->views_path."\card",$data_card);
+        }
 
 
-        /**
-         * libro
-         */
-
-        $data["table_id"]='table_libro';
-        $data["function_name"]='libro_draw';
-        $data["table_model"]='App\Modules\Access\Models\Libro';
-        $data["permissions"]["list"]=8;
-        $data["permissions"]["create"]=9;
-        $data["permissions"]["edit"]=11;
-        $data["permissions"]["edit_all"]=12;
-        $data["module_id"]=2;
-
-        $data_tables_libro_js=view($this->views_path."\data_tables_js",$data);
-
-        $data_card["title"]="libro Diario";
-        $data_card["sub_title"]="";
-        $data_card["content"]="";
-        $data_card["cols"]="12";
-        $data_card["div_id"]="div_".$data["table_id"];
-        $html.=view($this->views_path."\card",$data_card);
-
-        /**
-         * Fin libro
-         */
 
         $this->session->set('company_id',$company_id);
         $data=$ts5->getDataTemplate($this->session);
         $data["data_template"]=$ts5->getDataTemplate($this->session);
-        $data["data_template"]["my_js"]=$data_tables_libro_js.$data_tables_js;
+        $data["data_template"]["my_js"]=$data_tables_js;
 
         $data["page_title"]=lang('Access_Pages.users_title');
         $data["module_name"]=lang('Access_Pages.users');
