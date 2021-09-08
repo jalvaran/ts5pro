@@ -8,6 +8,15 @@
         ?>
         <select data-data_table="<?php echo $data_table;?>" data-model="<?php echo $model;?>" data-labels="<?php echo $labels;?>" class="form-select ts_input ts_input_select2" id="<?php echo $id;?>" name="<?php echo $id;?>" >
             <option value=""><?=lang('msg.option_select2') ?></option>
+
+            <?php
+                if(isset($options)){
+                    foreach($options as $key => $value){
+                        print('<option selected value="'.$options[$key]["value"].'">'.$options[$key]["label"].'</option>');
+                    }
+                }
+            ?>
+
         </select>
     </div>
 </div>

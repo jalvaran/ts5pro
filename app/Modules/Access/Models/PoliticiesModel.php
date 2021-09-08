@@ -28,10 +28,10 @@ namespace App\Modules\Access\Models;
 
 use CodeIgniter\Model;
 
-class CompaniesModules extends Model
+class PoliticiesModel extends Model
 {
 
-    protected $table = 'app_companies_modules';
+    protected $table = 'access_control_politics';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = true;
@@ -40,9 +40,11 @@ class CompaniesModules extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
-        'app_company_id',
-        'app_module_id',
-        'author'
+        'id',
+        'access_control_role_id',
+        'access_control_permissions_id',
+        'author',
+        'backed_at'
 
     ];
 
@@ -58,32 +60,23 @@ class CompaniesModules extends Model
     protected $DBGroup = "techno";
 
     /**
-     * Obtiene los módulos asociados a una empresa
-     * @param $company_id
-     * @return array
+     * Retorna falso o verdadero si el usuario activo ne la sesión es el
+     * autor del registro que se desea acceder, editar o eliminar.
+     * @param type $id código primario del registro a consultar
+     * @param type $author código del usuario del cual se pretende establecer la autoría
+     * @return boolean falso o verdadero según sea el caso
      */
-    public function get_CompaniesModules($company_id)
+    public function get_Authority($id, $author)
     {
-        $result = $this
-            ->join('app_modules', 'app_modules.id=app_module_id')
-            ->where("app_company_id", $company_id)
-            ->notLike("app_modules.id",'613784ab2471f217811471')
-            ->findAll();
-        return ($result);
-    }
-
-    public function module_in_company($company_id,$module_id){
-        $result=$this
-            ->select("id")
-            ->where("app_company_id", $company_id)
-            ->where("app_module_id", $module_id)
-            ->find();
-        if(isset($result[0]["id"])){
-            return(true);
-        }else{
-            return(false);
+        $row = $this->select("id")
+            ->where("id", $id)
+            ->where("author", $author)
+            ->first();
+        if (@$row["id"] == $id) {
+            return (true);
+        } else {
+            return (false);
         }
-
     }
 
 }

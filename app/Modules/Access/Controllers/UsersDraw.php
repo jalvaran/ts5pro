@@ -73,8 +73,8 @@ class UsersDraw extends BaseController
         $ts5=new Ts5_class();
         $html="";
 
-        $permission_list=8;
-        $module_id=2;
+        $permission_list='613784ab2471f217811508';
+        $module_id='613784ab2471f217811472';
         $data["views_path_module"]=$this->views_path_module;
         $data["view_path"]=$this->views_path;
         $data["company_id"]=$company_id;
@@ -93,14 +93,14 @@ class UsersDraw extends BaseController
 
             $data["data"]["model"]='App\Modules\Access\Models\Users';
             $data["data"]["permissions"]["list"]=$permission_list;
-            $data["data"]["permissions"]["create"]=9;
-            $data["data"]["permissions"]["edit"]=11;
-            $data["data"]["permissions"]["edit_all"]=12;
+            $data["data"]["permissions"]["create"]='613784ab2471f217811509';
+            $data["data"]["permissions"]["edit"]='613784ab2471f217811511';
+            $data["data"]["permissions"]["edit_all"]='613784ab2471f217811512';
             $data["data"]["buttons"]["excel"]["disabled"]=1;
             $data["data"]["buttons"]["pdf"]["disabled"]=1;
             $data["data"]["buttons"]["delete"]["disabled"]=1;
             $data["data"]["buttons"]["view"]["disabled"]=1;
-            $data["data"]["module_id"]=2;
+            $data["data"]["module_id"]='613784ab2471f217811472';
             $data["data"]["table_id"]='table_users';
             $data["data"]["fields"]["password"]["type"]='password';
 

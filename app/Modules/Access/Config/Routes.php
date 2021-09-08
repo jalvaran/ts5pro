@@ -69,5 +69,8 @@ $routes->group("access", [
         $subroutes->add("users/list/(:any)", "UsersDraw::home/$1");
         $subroutes->add("users/data_table_users/(:any)/(:any)/(:any)/(:any)", "UsersDraw::data_table_users/$1/$2/$3/$4");
 
+        $subroutes->add("politicies", "Politicies::index");
+        $subroutes->add("politicies/list/(:any)", "Politicies::home/$1");
+
     }
 );

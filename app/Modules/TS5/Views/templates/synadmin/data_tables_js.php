@@ -93,19 +93,10 @@
 
     }
 
-    function reload_table(table_id){
-        if(table_id=='<?= $table_id?>'){
-            <?= $function_name?>();
-        }
-
-    }
 
     $(document).ready( function () {
 
-
-
-        var table_id='<?= $table_id?>';
-        reload_table(table_id);
+        <?= $function_name?>();
 
 
     });

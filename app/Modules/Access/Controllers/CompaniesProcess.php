@@ -65,8 +65,8 @@ class CompaniesProcess extends BaseController
         $request = service('request');
         $mUsers=model('App\Modules\Access\Models\Users');
         $company_id=$request->getVar('company_id');
-        $permission_id=2;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811502';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
 
         if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
             $response["status"]=0;
@@ -138,9 +138,9 @@ class CompaniesProcess extends BaseController
         $company_id=$request->getVar('company_id');
         $item_id=$request->getVar('item_id');
 
-        $permission_id=4;           //Permiso para Editar singular Ver en tabla access_control_permissions
-        $permission_id_all=5;       //Permiso para Editar plural Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811504';           //Permiso para Editar singular Ver en tabla access_control_permissions
+        $permission_id_all='613784ab2471f217811505';       //Permiso para Editar plural Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -218,9 +218,9 @@ class CompaniesProcess extends BaseController
         $company_id=$this->session->get('company_id');
         $item_id=$request->getVar('item_id');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -290,9 +290,9 @@ class CompaniesProcess extends BaseController
         $company_id=$this->session->get('company_id');
         $item_id=$request->getVar('item_id');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -358,9 +358,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -429,9 +429,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -487,9 +487,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -585,9 +585,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -653,9 +653,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -744,9 +744,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -809,9 +809,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -870,9 +870,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -982,9 +982,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -1038,9 +1038,9 @@ class CompaniesProcess extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $mCompanies=model('App\Modules\Access\Models\Companies');
 
-        $permission_id=6;           //Permiso singular para editar la configuración de una empresa
-        $permission_id_all=7;       //Permiso plural para editar la configuración de una empresa
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
 
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);

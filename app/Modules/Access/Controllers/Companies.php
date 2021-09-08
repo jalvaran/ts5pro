@@ -158,8 +158,8 @@ class Companies extends BaseController
         $ts5=new Ts5_class();
         $user_id=$this->session->get('user');
         $company_id=$this->session->get('company_id');
-        $permission_id=1;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811501';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $html="";
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
 
@@ -203,8 +203,8 @@ class Companies extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $user_id=$this->session->get('user');
         $company_id=$request->getVar('company_id');
-        $permission_id=2;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811502';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $html="";
 
         if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
@@ -235,9 +235,9 @@ class Companies extends BaseController
         $mCompanies=model('App\Modules\Access\Models\Companies');
         $user_id=$this->session->get('user');
         $company_id=$request->getVar('company_id');
-        $permission_id=4;           //Permiso para Editar singular Ver en tabla access_control_permissions
-        $permission_id_all=5;       //Permiso para Editar plural Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811504';           //Permiso para Editar singular Ver en tabla access_control_permissions
+        $permission_id_all='613784ab2471f217811505';       //Permiso para Editar plural Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $html="";
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
@@ -272,9 +272,9 @@ class Companies extends BaseController
         $mCompanies=model('App\Modules\Access\Models\Companies');
         $user_id=$this->session->get('user');
         $company_id=$request->getVar('company_id');
-        $permission_id=6;           //Permiso para ver la configuración singular Ver en tabla access_control_permissions
-        $permission_id_all=7;       //Permiso para ver la configuración plural Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811506';           //Permiso para ver la configuración singular Ver en tabla access_control_permissions
+        $permission_id_all='613784ab2471f217811507';       //Permiso para ver la configuración plural Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $html="";
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);

@@ -41,7 +41,7 @@ class Menu extends BaseController
     function __construct()
     {
         $this->session = new Session();
-        $this->module_id = 1;  //identifico el módulo
+        $this->module_id = '613784ab2471f217811471';  //identifico el módulo
         $this->namespace = 'App\Modules\Menu';
         $this->views_path = 'App\Modules\TS5\Views\templates\synadmin';
         $this->views_path_module = 'App\Modules\Menu\Views';

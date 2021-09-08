@@ -28,8 +28,8 @@ return [
     "card_title_component_2" => "Gestionar Usuarios",
     "card_sub_title_component_2" => "Administra los usuarios",
 
-    "card_title_component_3" => "Gestionar Roles",
-    "card_sub_title_component_3" => "Administra los Roles de los Usuarios",
+    "card_title_component_3" => "Políticas de Acceso",
+    "card_sub_title_component_3" => "Administra las políticas de acceso",
 
     "siderbar_title_index" => "Empresas Disponibles",
     "siderbar_title_modules" => "Módulos Disponibles",

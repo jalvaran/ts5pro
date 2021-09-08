@@ -40,8 +40,11 @@ class Permissions extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
+        'id',
         'name',
-        'description'
+        'description',
+        'author',
+        'backed_at'
 
     ];
 
@@ -55,6 +58,26 @@ class Permissions extends Model
     protected $skipValidation = false;
     //protected $cache_time = "10";
     protected $DBGroup = "techno";
+
+    /**
+     * Retorna falso o verdadero si el usuario activo ne la sesión es el
+     * autor del registro que se desea acceder, editar o eliminar.
+     * @param type $id código primario del registro a consultar
+     * @param type $author código del usuario del cual se pretende establecer la autoría
+     * @return boolean falso o verdadero según sea el caso
+     */
+    public function get_Authority($id, $author)
+    {
+        $row = $this->select("id")
+            ->where("id", $id)
+            ->where("author", $author)
+            ->first();
+        if (@$row["id"] == $id) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
 
 }
 

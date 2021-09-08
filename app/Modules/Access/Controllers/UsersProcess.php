@@ -65,8 +65,8 @@ class UsersProcess extends BaseController
         $request = service('request');
         $mUsers=model('App\Modules\Access\Models\Users');
         $company_id=$request->getVar('company_id');
-        $permission_id=2;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811509';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
 
         if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
             $response["status"]=0;

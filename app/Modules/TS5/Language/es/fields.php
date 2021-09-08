@@ -26,6 +26,12 @@ return [
     "enabled" => "Habilitado",
     "author" => "Autor",
     "designation" => "Cargo",
+    "app_company_id"=>"Empresa",
+    "access_control_user_id"=>"ID del Usuario",
+    "access_control_role_id"=>"ID del Role",
+    "description"=>"Descripción",
+    "access_control_permissions_id"=>"ID del Permiso",
+    "backed_at"=>"Respaldado",
 
 
 

@@ -206,13 +206,14 @@ class TablesProcess extends BaseController
             return $this->setResponseFormat('json')->respond($error);
         }
 
-
+        $request = service('request');
+        $array_data_table=json_decode(base64_decode(urldecode($request->getVar('data_table'))),true);
+        $company_id=$this->session->get('company_id');
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
-        $request = service('request');
-        $company_id=$this->session->get('company_id');
+        $permission_id=$array_data_table["permissions"]["list"];
+        $module_id=$array_data_table["module_id"];
+
 
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
 

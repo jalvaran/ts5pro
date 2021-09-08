@@ -53,8 +53,8 @@ class CompaniesSearchs extends BaseController
 
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811503';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $request = service('request');
         $company_id=$request->getVar('company_id');
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
@@ -88,8 +88,8 @@ class CompaniesSearchs extends BaseController
 
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811503';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $request = service('request');
         $company_id=$request->getVar('company_id');
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
@@ -123,8 +123,8 @@ class CompaniesSearchs extends BaseController
 
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811503';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $request = service('request');
         $company_id=$request->getVar('company_id');
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
@@ -159,8 +159,8 @@ class CompaniesSearchs extends BaseController
 
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811503';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $request = service('request');
         $company_id=$request->getVar('company_id');
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
@@ -194,8 +194,8 @@ class CompaniesSearchs extends BaseController
 
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811503';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $request = service('request');
         $company_id=$request->getVar('company_id');
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
@@ -229,8 +229,8 @@ class CompaniesSearchs extends BaseController
 
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811503';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $request = service('request');
         $company_id=$request->getVar('company_id');
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
@@ -264,8 +264,8 @@ class CompaniesSearchs extends BaseController
 
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811503';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $request = service('request');
         $company_id=$request->getVar('company_id');
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
@@ -299,8 +299,8 @@ class CompaniesSearchs extends BaseController
 
         $user_id=$this->session->get('user');
         $mUsers=model('App\Modules\Access\Models\Users');
-        $permission_id=3;  //Ver en tabla access_control_permissions
-        $module_id=2; //Access
+        $permission_id='613784ab2471f217811503';  //Ver en tabla access_control_permissions
+        $module_id='613784ab2471f217811472'; //Access
         $request = service('request');
         $company_id=$request->getVar('company_id');
         if($mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {

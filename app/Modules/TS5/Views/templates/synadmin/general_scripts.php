@@ -321,7 +321,7 @@
                         toastr.success(data.msg);
                         $('#modal_xl').modal("hide");
 
-                        reload_table(table_id);
+                        eval(table_id+"_draw()");
                     }else{
                         toastr.error(data.msg);
 
@@ -410,8 +410,8 @@
                     if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
                         toastr.success(data.msg);
                         $('#modal_xl').modal("hide");
+                        eval(table_id+"_draw()");
 
-                        reload_table(table_id);
                     }else{
                         toastr.error(data.msg);
 

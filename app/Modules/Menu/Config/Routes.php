@@ -7,7 +7,7 @@ $routes->group("menu", [
     function ($subroutes) {
         $subroutes->add("", "Menu::index");
         $subroutes->add("modules/(:any)", "Menu::show_modules/$1");
-        $subroutes->add("components/(:any)/(:num)", "Menu::show_components/$1/$2");
+        $subroutes->add("components/(:any)/(:any)", "Menu::show_components/$1/$2");
 
     }
 );

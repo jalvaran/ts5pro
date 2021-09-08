@@ -103,12 +103,24 @@ class TablesDraw extends BaseController
                     $data_field["model"]="";
                     if(isset($array_data_table["fields"][$value]["model"])){
                         $data_field["model"]=$array_data_table["fields"][$value]["model"];
+
                     }
                     $data_field["labels"]="";
                     if(isset($array_data_table["fields"][$value]["labels"])){
                         $data_field["labels"]=$array_data_table["fields"][$value]["labels"];
                     }
                     $data_field["data_table"]=$data_table;
+                    if(isset($data_register[$value])){
+                        $data_field["options"][0]["value"]=$data_register[$value];
+                        $model_select=model($array_data_table["fields"][$value]["model"]);
+                        $data_model=$model_select->select($data_field["labels"])->where('id',$data_register[$value])->first();
+                        $text="";
+                        foreach($data_model as $label){
+                            $text.=$label." ";
+                        }
+                        $data_field["options"][0]["label"]=$text;
+                    }
+
                     $html_fields.=view('App\Modules\TS5\Views\templates\synadmin\frm_select2',$data_field);
                 }else{
                     $html_fields.=view('App\Modules\TS5\Views\templates\synadmin\frm_input',$data_field);
