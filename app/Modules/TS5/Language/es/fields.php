@@ -32,6 +32,11 @@ return [
     "description"=>"Descripción",
     "access_control_permissions_id"=>"ID del Permiso",
     "backed_at"=>"Respaldado",
+    "search" => "Buscar",
+    "yes" => "Si",
+    "no" => "No",
+    "roles" => "Roles",
+    "users" => "Usuarios",
 
 
 

@@ -40,9 +40,11 @@ class UsersCompanies extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
+        'id',
         'app_company',
         'access_control_user_id',
-        'author'
+        'author',
+        'backed_at',
 
     ];
 
@@ -88,6 +90,7 @@ class UsersCompanies extends Model
         }
 
     }
+
 
 }
 

@@ -31,6 +31,11 @@ return [
     "card_title_component_3" => "Políticas de Acceso",
     "card_sub_title_component_3" => "Administra las políticas de acceso",
 
+    "card_title_component_4" => "Administración de la Plataforma",
+    "card_sub_title_component_4" => "Administra el control de acceso a la plataforma",
+
+
+
     "siderbar_title_index" => "Empresas Disponibles",
     "siderbar_title_modules" => "Módulos Disponibles",
 

@@ -230,7 +230,6 @@ class CompaniesProcess extends BaseController
             $response["status"]=0;
             $response["msg"]=lang('Access.access_view_error');
             return $this->setResponseFormat('json')->respond($response);
-            exit();
         }
 
 

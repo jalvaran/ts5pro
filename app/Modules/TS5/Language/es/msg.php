@@ -19,5 +19,9 @@ return [
     "saving_register_ok" => "Registro creado correctamente",
     "edit_register_ok" => "Registro editado correctamente",
     "option_select2" => "Seleccione una opción",
+    "info" => "Página _START_ de _END_, Registros Totales: _TOTAL_ ",
+    "create_role" => "Crear o Editar un Role ",
+    "create_user" => "Crear o Editar un Usuario ",
+    "save_register"=>"Registro Guardando Correctamente",
 
 ];
