@@ -3,7 +3,7 @@
      * Variables generales del script
      *
      */
-    var list_id=1;
+    var list_id=2;
     var page=1;
     var general_div="div_content_list";
 
@@ -404,13 +404,549 @@
         });//Fin peticion ajax
     }
 
+
+    function role_view(id){
+
+
+        var urlControllerDraw ='<?= base_url('admin/role_view')?>';
+        var form_data = new FormData();
+
+        form_data.append('id',id);
+
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+
+                $('#'+general_div).html(data);
+                roles_permissions_list(id);
+                select2_permission();
+                
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
+
+    function roles_permissions_list(id){
+
+
+        var urlControllerDraw ='<?= base_url('admin/roles_permissions_list')?>';
+        var form_data = new FormData();
+
+        form_data.append('id',id);
+
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#div_permissions_list').html(data);
+                event_add_btn_permissions_list();
+                //event_add_list();
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
+    
+    
+        
+    function event_add_btn_permissions_list(){
+        $("#btn_add_permission").unbind();
+        $(".ts_btn_delete").unbind();
+
+        $("#btn_add_permission").on('click',function () {
+            var role_id = $(this).attr("data-id");
+            add_permission_role(role_id);
+        });
+        
+        $(".ts_btn_delete").on('click',function () {
+            var permission_id = $(this).attr("data-id");
+            var role_id = $(this).attr("data-role_id");
+            delete_permission_role(role_id,permission_id);
+        });
+    }
+    
+    function add_permission_role(role_id){
+
+        var urlControllerProcess='<?php echo base_url('/admin/add_permission_role') ?>';
+        var btnSave = $("#btn_add_permission");
+        var permission_id=$('#permission_id').val();
+        var form_data = new FormData();
+
+            form_data.append('role_id',role_id);
+            form_data.append('permission_id',permission_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        roles_permissions_list(role_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+    
+    function delete_permission_role(role_id,permission_id){
+
+        var urlControllerProcess='<?php echo base_url('/admin/delete_permission_role') ?>';
+        var btnSave = $("#btn_add_permission");
+        
+        var form_data = new FormData();            
+            form_data.append('permission_id',permission_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        roles_permissions_list(role_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+    
+    function user_view(id){
+
+
+        var urlControllerDraw ='<?= base_url('admin/user_view')?>';
+        var form_data = new FormData();
+
+        form_data.append('id',id);
+
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#'+general_div).html(data);
+                user_roles_list(id);
+                select2_roles();
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
+    
+    function user_roles_list(id){
+    
+        var urlControllerDraw ='<?= base_url('admin/user_roles_list')?>';
+        var form_data = new FormData();
+
+        form_data.append('id',id);
+
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#div_roles_list').html(data);
+                event_add_btn_roles_list();
+                
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
+
+    
+    function add_role_user(user_id){
+
+        var urlControllerProcess='<?php echo base_url('/admin/add_role_user') ?>';
+        var btnSave = $("#btn_add_role");
+        var role_id=$('#role_id').val();
+        var form_data = new FormData();
+
+            form_data.append('user_id',user_id);
+            form_data.append('role_id',role_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        user_roles_list(user_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+    
+    function delete_role_user(user_id,id){
+
+        var urlControllerProcess='<?php echo base_url('/admin/delete_role_user') ?>';
+        var btnSave = $("#btn_add_permission");
+        
+        var form_data = new FormData();            
+            form_data.append('id',id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        user_roles_list(user_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id);
+                        }
+
+                    }
+                }else{
+                    alert(data);
+
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+
+    function select2_permission(){
+        $('#permission_id').select2({
+            ajax: {
+                url: '<?= base_url('admin/permissions_searches');?>',
+                dataType: 'json',
+                delay: 250,
+
+
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+    }
+    
+    function select2_roles(){
+        $('#role_id').select2({
+            ajax: {
+                url: '<?= base_url('admin/roles_searches');?>',
+                dataType: 'json',
+                delay: 250,
+
+
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+    }
+
+    function event_add_btn_roles_list(){
+        $("#btn_add_role").unbind();
+        $(".ts_btn_delete").unbind();
+
+        $("#btn_add_role").on('click',function () {
+            var user_id = $(this).attr("data-id");            
+            add_role_user(user_id);
+        });
+        
+        $(".ts_btn_delete").on('click',function () {
+            var user_id = $(this).attr("data-user_id");
+            var id = $(this).attr("data-id");
+            delete_role_user(user_id,id);
+        });
+    }
+
     function event_add_list(){
         $(".ts_btn_page").unbind();
         $(".ts_btn_actions").unbind();
+        $(".ts_col_table").unbind();
 
         $(".ts_btn_page").on('click',function () {
             page = $(this).attr("data-page");
             select_list();
+        });
+
+        $(".ts_col_table").on('click',function () {
+            id = $(this).attr("data-id");
+
+            if(list_id==1){
+                role_view(id);
+            }
+            if(list_id==2){
+                user_view(id);
+            }
+
         });
 
         $('.ts_btn_actions').on('click',function () {
@@ -423,6 +959,8 @@
             }
         });
     }
+    
+    
 
     /**
      * Acciones a ejecutar cuando el documento esté listo

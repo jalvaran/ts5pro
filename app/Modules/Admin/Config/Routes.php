@@ -41,6 +41,18 @@ $routes->group("admin", [
         $subroutes->add("frm_create_user", "AdminController::frm_create_user");
         $subroutes->add("save_role", "AdminProcess::save_role");
         $subroutes->add("save_user", "AdminProcess::save_user");
+        $subroutes->add("permissions_searches", "AdminProcess::permissions_searches");
+        $subroutes->add("add_permission_role", "AdminProcess::add_permission_role");
+        $subroutes->add("delete_permission_role", "AdminProcess::delete_permission_role");
+        $subroutes->add("role_view", "AdminController::role_view");
+        $subroutes->add("roles_permissions_list", "AdminController::roles_permissions_list");
+        $subroutes->add("user_view", "AdminController::user_view");
+        $subroutes->add("user_roles_list", "AdminController::user_roles_list");  
+        $subroutes->add("roles_searches", "AdminProcess::roles_searches");
+        
+        $subroutes->add("add_role_user", "AdminProcess::add_role_user");
+        $subroutes->add("delete_role_user", "AdminProcess::delete_role_user");
+        
 
     }
 );

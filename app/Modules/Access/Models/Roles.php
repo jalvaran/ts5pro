@@ -43,7 +43,10 @@ class Roles extends Model
         'id',
         'name',
         'app_company_id',
-        'author'
+        'author',
+        'created_at',
+        'updated_at',
+        'backed_at'
 
     ];
 
@@ -79,5 +82,11 @@ class Roles extends Model
         }
     }
 
+    public function getDataRole($id){
+        return($this->where("id",$id)->first());
+
+    }
+    
+    
 }
 

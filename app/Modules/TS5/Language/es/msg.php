@@ -23,5 +23,6 @@ return [
     "create_role" => "Crear o Editar un Role ",
     "create_user" => "Crear o Editar un Usuario ",
     "save_register"=>"Registro Guardando Correctamente",
+    "delete_register" => "Registro Eliminado Correctamente",
 
 ];

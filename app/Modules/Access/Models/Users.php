@@ -150,6 +150,12 @@ class Users extends Model
     public function getColums(){
         return($this->getFieldNames($this->table));
     }
+    
+    public function getDataUser($id) {
+        $result=$this->where("id",$id)
+                ->first();
+        return($result);
+    }
 
 }
 

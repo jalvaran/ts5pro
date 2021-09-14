@@ -189,6 +189,10 @@ class AdminController extends BaseController
         echo view($this->views_path.'\table_list',$data);
     }
 
+    /**
+     * Formulario para crear o editar un role
+     * @return string
+     */
     function frm_create_role(){
 
         $company_id=$this->session->get('company_id');
@@ -230,6 +234,10 @@ class AdminController extends BaseController
         return(view($this->views_path_module.'\Admin\frm_role',$data));
     }
 
+    /**
+     * Formulario para crear o editar un usuario
+     * @return string
+     */
     function frm_create_user(){
 
         $company_id=$this->session->get('company_id');
@@ -270,6 +278,10 @@ class AdminController extends BaseController
         return(view($this->views_path_module.'\Admin\frm_user',$data));
     }
 
+    /**
+     * lista los usuarios asignados a la empresa activa
+     * @return string|void
+     */
     function users_list(){
         $company_id=$this->session->get('company_id');
         $mUsers=model('App\Modules\Access\Models\Users');
@@ -357,8 +369,102 @@ class AdminController extends BaseController
         $data["data"]=$response;
         echo view($this->views_path.'\table_list',$data);
     }
+    /**
+     * Abre la vista para ver los permisos que tiene un role, ademas de poder agregarlos
+     * @return type
+     */
+    public function role_view(){
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='613a3cb44d1c9444282576';  //listar roles
+        $module_id=$this->module_id;      //Admin
 
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
 
+        }
+        $request = service('request');
+
+        $id=$request->getVar('id');
+        $mRole=model('App\Modules\Access\Models\Roles');
+        $data=$mRole->getDataRole($id);
+        //return("role");
+        return(view($this->views_path_module.'\Admin\role_view',$data));
+    }
+    /**
+     * Lista los permisos que tiene un role
+     * @return type
+     */
+    public function roles_permissions_list(){
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='613a3cb44d1c9444282576';  //listar roles
+        $module_id=$this->module_id;      //Admin
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        $request = service('request');
+        $id=$request->getVar('id');
+        $model=model('App\Modules\Access\Models\PoliticiesModel');
+        $data_model["data_permissions"]=$model->get_ListPermissionsRole($id);
+        return(view($this->views_path_module.'\Admin\role_permissions_list',$data_model));
+
+    }
+    /**
+     * muestra la informacion de un usuario y los roles que tiene asignados
+     * @return type
+     */
+    public function user_view(){
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='613a3cb44d1c9444282576';  //listar roles
+        $module_id=$this->module_id;      //Admin
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        $request = service('request');
+
+        $id=$request->getVar('id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $data=$mUsers->getDataUser($id);
+        
+        return(view($this->views_path_module.'\Admin\user_view',$data));
+    }
+    
+    public function user_roles_list(){
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='613adb311ef3a661853259';  //listar usuarios
+        $module_id=$this->module_id;      //Admin
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        $request = service('request');
+        $id=$request->getVar('id');
+        $model=model('App\Modules\Access\Models\Herarchies');
+        $data_model["data_roles"]=$model->getRolesInUser($id,$company_id);
+        
+        return(view($this->views_path_module.'\Admin\user_roles_list',$data_model));
+
+    }
 
 
 }

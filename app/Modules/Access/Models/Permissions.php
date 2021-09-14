@@ -42,6 +42,7 @@ class Permissions extends Model
     protected $allowedFields = [
         'id',
         'name',
+        'app_module_id',
         'description',
         'author',
         'backed_at'

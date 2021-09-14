@@ -225,6 +225,280 @@ class AdminProcess extends BaseController
     }
 
 
+
+    public function permissions_searches(){
+        if (!$this->session->get_LoggedIn()){
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+
+        $request = service('request');
+
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $permission_id='613a3cb44d1c9444282576';
+        $module_id='613784ab2471f217811480';
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+
+
+        $key=$request->getVar('q');
+
+        $text="name";
+        $model_class=model('App\Modules\Access\Models\Permissions');
+        $model_class->select("id,{$text} as text");
+        
+        $model_class->where("EXISTS ( SELECT 1 FROM app_companies_modules where app_companies_modules.`app_company_id` = '{$company_id}' AND app_companies_modules.app_module_id= access_control_permissions.app_module_id AND ISNULL(app_companies_modules.deleted_at) )");
+        
+        $k=0;
+        if($key<>''){
+            
+            $model_class->like("name",$key);
+            $model_class->orWhere("id",$key);
+        }
+        //print_r($model_class->getCompiledSelect());
+        
+
+        $results=$model_class->orderBy('name ASC')->findAll(100);
+
+        return $this->setResponseFormat('json')->respond($results);
+
+    }
+    
+    public function add_permission_role(){
+        if (!$this->session->get_LoggedIn()){
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+        
+        $request = service('request');
+        $role_id=$request->getVar('role_id');
+        
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $permission_id='613a5731c2f9b333888639';
+        $permission_id_all='613ace0468c5e548652327';
+        $module_id='613784ab2471f217811480';
+        $mRoles=model('App\Modules\Access\Models\Roles');
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mRoles->get_Authority($role_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            
+        }
+        
+        $mPolitics=model('App\Modules\Access\Models\PoliticiesModel');
+        $permission_id_add=$request->getVar('permission_id');
+        
+        //return("Vali ".$validation);
+        if($mPolitics->permission_in_role($permission_id_add,$role_id)==true){
+            $response["status"]=0;
+            $response["msg"]=lang('admin.permission_exists');
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+        $ts5=new Ts5_class();
+        
+        $id=$ts5->getUniqueId("",true);
+        $data["id"]=$id;
+        $data["access_control_role_id"]=$role_id;
+        $data["access_control_permissions_id"]=$permission_id_add;
+        $data["author"]=$user_id;
+        $mPolitics->insert($data);
+        
+        $response["status"]=1;
+        $response["msg"]=lang('msg.save_register');
+        return $this->setResponseFormat('json')->respond($response);
+        
+    }
+
+    public function delete_permission_role() {
+        if (!$this->session->get_LoggedIn()){
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+        
+        $request = service('request');
+        $role_id=$request->getVar('role_id');
+        
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $permission_id='613a5731c2f9b333888639';
+        $permission_id_all='613ace0468c5e548652327';
+        $module_id='613784ab2471f217811480';
+        $mRoles=model('App\Modules\Access\Models\Roles');
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mRoles->get_Authority($role_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            
+        }
+        
+        $mPolitics=model('App\Modules\Access\Models\PoliticiesModel');
+        $permission_id_del=$request->getVar('permission_id');
+         
+        $mPolitics->delete(['id',$permission_id_del]);
+        
+        $response["status"]=1;
+        $response["msg"]=lang('msg.delete_register');
+        return $this->setResponseFormat('json')->respond($response);
+    }
+
+    
+    public function roles_searches(){
+        if (!$this->session->get_LoggedIn()){
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+
+        $request = service('request');
+
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $permission_id='613adb311ef3a661853259';
+        $module_id='613784ab2471f217811480';
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+
+
+        $key=$request->getVar('q');
+
+        $text="name";
+        $model_class=model('App\Modules\Access\Models\Roles');
+        $model_class->select("id,{$text} as text");
+        
+        $model_class->where("app_company_id",$company_id);
+        
+        $k=0;
+        if($key<>''){
+            
+            $model_class->like("name",$key);
+            $model_class->orWhere("id",$key);
+        }
+        //print_r($model_class->getCompiledSelect());
+        
+
+        $results=$model_class->orderBy('name ASC')->findAll(100);
+
+        return $this->setResponseFormat('json')->respond($results);
+
+    }
+    
+
+    public function add_role_user(){
+        if (!$this->session->get_LoggedIn()){
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+        
+        $request = service('request');
+        $role_id=$request->getVar('role_id');
+        
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $permission_id='613ada7fad7e7386240937';
+        $permission_id_all='613ada93f23b4753305035';
+        $module_id='613784ab2471f217811480';
+        
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mUsers->get_Authority($role_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            
+        }
+        
+        $mHierarchies=model('App\Modules\Access\Models\Herarchies');
+        $role_id=$request->getVar('role_id');
+        $user_id_add=$request->getVar('user_id');
+        
+        if($mHierarchies->role_in_user($role_id,$user_id_add)==true){
+            $response["status"]=0;
+            $response["msg"]=lang('admin.role_exists');
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+        $ts5=new Ts5_class();
+        
+        $id=$ts5->getUniqueId("",true);
+        $data["id"]=$id;
+        $data["access_control_role_id"]=$role_id;
+        $data["access_control_user_id"]=$user_id_add;
+        $data["author"]=$user_id;
+        $mHierarchies->insert($data);
+        
+        $response["status"]=1;
+        $response["msg"]=lang('msg.save_register');
+        return $this->setResponseFormat('json')->respond($response);
+        
+    }
+
+    public function delete_role_user() {
+        if (!$this->session->get_LoggedIn()){
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+        
+        $request = service('request');
+        $id=$request->getVar('id');
+        
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $permission_id='613ada7fad7e7386240937';
+        $permission_id_all='613ada93f23b4753305035';
+        $module_id='613784ab2471f217811480';
+        $mHierarchies=model('App\Modules\Access\Models\Herarchies');
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mHierarchies->get_Authority($id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            
+        }
+        
+        
+        $mHierarchies->delete(['id',$id]);
+        
+        $response["status"]=1;
+        $response["msg"]=lang('msg.delete_register');
+        return $this->setResponseFormat('json')->respond($response);
+    }
+
+
     //Fin clase
 
 }

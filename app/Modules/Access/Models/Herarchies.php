@@ -107,6 +107,30 @@ class Herarchies extends Model
             return (false);
         }
     }
+    
+    public function getRolesInUser($user_id,$company_id) {
+        $result=$this->select('access_control_herarchies.id,access_control_roles.name as role_name,access_control_herarchies.access_control_user_id as user_id')
+                ->join('access_control_roles','access_control_roles.id=access_control_herarchies.access_control_role_id')
+                ->where("access_control_herarchies.access_control_user_id", $user_id)
+                ->where("access_control_roles.app_company_id", $company_id)
+                //->where("isnull(access_control_roles.deleted_at) ")
+                ->findAll();
+        return($result);
+    }
+    
+    
+    public function role_in_user($role_id,$user_id) {
+        $result=$this->select('id')
+                ->where('access_control_role_id',$role_id)
+                ->where('access_control_user_id',$user_id)
+                ->first();
+                ;
+        if(isset($result["id"])){
+            return(true);
+        }else{
+            return(false);
+        }
+    }
 
 }
 

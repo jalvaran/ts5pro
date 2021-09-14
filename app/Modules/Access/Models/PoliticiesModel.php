@@ -79,5 +79,29 @@ class PoliticiesModel extends Model
         }
     }
 
+    public function get_ListPermissionsRole($role_id){
+        $result=$this->select('access_control_politics.id,access_control_politics.access_control_role_id as role_id,access_control_roles.name as role_name,access_control_permissions.name as permission_name')
+            ->join('access_control_roles','access_control_roles.id=access_control_politics.access_control_role_id')
+            ->join('access_control_permissions','access_control_permissions.id=access_control_politics.access_control_permissions_id')
+            ->where('access_control_roles.id',$role_id)
+            ->orderBy("id DESC")    
+            ->findAll();
+        return($result);
+    }
+
+    public function permission_in_role($permission_id,$role_id) {
+        $result=$this->select('id')
+                ->where('access_control_role_id',$role_id)
+                ->where('access_control_permissions_id',$permission_id)
+                ->first();
+                ;
+        if(isset($result["id"])){
+            return(true);
+        }else{
+            return(false);
+        }
+    }
+    
+        
 }
 

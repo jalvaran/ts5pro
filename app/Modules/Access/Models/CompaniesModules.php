@@ -86,5 +86,16 @@ class CompaniesModules extends Model
 
     }
 
+    public function get_ModulesInCompany($company_id){
+        $result=$this
+            ->select("app_module_id as id")
+
+            ->where("app_company_id", $company_id)
+
+            ->findAll();
+        return($result);
+
+    }
+
 }
 
