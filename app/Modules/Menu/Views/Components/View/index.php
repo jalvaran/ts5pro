@@ -1,6 +1,6 @@
 <?php
 
-    use App\Libraries\Session;
+    use App\Modules\TS5\Libraries\Session;
     use App\Modules\TS5\Libraries\Ts5_class;
     $session = new Session();
 

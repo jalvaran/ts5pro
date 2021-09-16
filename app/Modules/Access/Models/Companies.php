@@ -62,6 +62,11 @@ class Companies extends Model
         'db',
         'icon',
         'test_set_dian',
+        'theme_header',
+        'theme_sidebar',
+        
+        'menu_title',
+        
         'sync',
         'token_api_soenac',
         'post_documents_automatically'
@@ -105,6 +110,7 @@ class Companies extends Model
     {
         $row = $this->select('app_companies.*')
             ->select('app_cat_languages.name as name_language')
+            ->select('app_cat_languages.code as code_language')
             ->join("app_cat_languages", "app_cat_languages.id=app_companies.language_id")
 
             ->select('app_cat_type_document_identifications.name as name_type_document')
@@ -140,6 +146,13 @@ class Companies extends Model
     public function edit_company($data,$id){
         $this->where("id",$id);
         $this->update($id,$data);
+    }
+    
+    public function get_database($id){
+        $result=$this->select('db')
+                ->where('id',$id)
+                ->first();
+        return($result["db"]);
     }
 
 }

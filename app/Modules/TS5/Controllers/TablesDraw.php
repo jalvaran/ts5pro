@@ -2,7 +2,7 @@
 
 namespace App\Modules\TS5\Controllers;
 
-use App\Libraries\Session;
+use App\Modules\TS5\Libraries\Session;
 use App\Controllers\BaseController;
 use App\Modules\TS5\Libraries\Ts5_class;
 

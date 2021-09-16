@@ -18,13 +18,14 @@
     <!--notification js -->
     <script src="<?php echo base_url("/themes/synadmin/assets/plugins/toastr/toastr.js")?>"></script>
     <script src="<?php echo base_url("/themes/synadmin/assets/plugins/sweetalert2/sweetalert2.min.js")?>"></script>
+    <script src="<?php echo base_url("/themes/synadmin/assets/plugins/jquery/js.cookie.min.js")?>"></script>
 
     <!--app JS-->
     <script src="<?php echo base_url("/themes/synadmin/assets/js/app.js")?>"></script>
 
     <?php echo view('App\Modules\TS5\Views\templates\synadmin\general_scripts') ?>
 
-<?php if(isset($data_template["my_js"])){
-        echo  $data_template["my_js"];
+    <?php if(isset($data_template["my_js"])){
+        echo  $data_template["my_js"];        
     }
     ?>

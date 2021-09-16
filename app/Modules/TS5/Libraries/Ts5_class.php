@@ -28,14 +28,16 @@
 
 namespace App\Modules\TS5\Libraries;
 
+use App\Modules\TS5\Libraries\Session;
+
 class Ts5_class{
 
     private $session;
     private $user_id;
 
     public function __construct(){
-        //$this->session=service('session');
-        //$this->user_id=$this->session->get('user');
+        $this->session = new Session();
+        $this->user_id=$this->session->get('user');
 
     }
 
@@ -55,16 +57,22 @@ class Ts5_class{
      * @param string $company_id
      * @return array
      */
-    function getDataTemplate($session,$company_id=""){
+    function getDataTemplate($session){
         //$this->access->create_json_menu($this->user_id);
-
-        $data["lang"] = "es";
+        $company_id=$this->session->get("company_id");
+        $mCompany=model('App\Modules\Access\Models\Companies');
+        $data_company=$mCompany->get_DataCompany($company_id);
+        $data["lang"] = $data_company["code_language"];
         $data["page"] = "index";
-        $data["favicon"] = "/companies/cp_6128f69283025963104543/img/favicon.png";
-        $data["company_logo"] = "/companies/cp_6128f69283025963104543/img/header-logo.png";
-        $data["menu_logo"] = "/companies/cp_6128f69283025963104543/img/tslogo.png";
+        $data["favicon"] = "/companies/{$company_id}/img/favicon.png";
+        $data["company_logo"] = "/companies/{$company_id}/img/header-logo.png";
+        $data["menu_logo"] = "/companies/{$company_id}/img/tslogo.png";
         $data["message_error"] = 0;
-        $data["menu_title"] = "TS5 PRO";
+        $data["company_name"] = $data_company["name"];
+        $data["menu_title"] = $data_company["menu_title"];
+        $data["theme_header"] = $data_company["theme_header"];
+        $data["theme_sidebar"] = $data_company["theme_sidebar"];
+        
         $data["user_name"] = $session->get('user_name');
         $data["user_designation"] = $session->get('user_designation');
 

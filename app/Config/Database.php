@@ -24,7 +24,7 @@ class Database extends Config
 	 * @var string
 	 */
 	public $defaultGroup = 'techno';
-
+           
 	/**
 	 * The default database connection.
 	 *
@@ -42,7 +42,7 @@ class Database extends Config
 		'pConnect' => false,
 		'DBDebug'  => (ENVIRONMENT !== 'production'),
 		'charset'  => 'utf8',
-		'DBCollat' => 'utf8_general_ci',
+		'DBCollat' => 'utf8_spanish_ci',
 		'swapPre'  => '',
 		'encrypt'  => false,
 		'compress' => false,
@@ -56,13 +56,13 @@ class Database extends Config
 		'hostname' => 'localhost',
 		'username' => 'techno',
 		'password' => 'techno',
-		'database' => TS_APPNODE,
+		'database' => 'techno_ts5_pro',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
 		'DBDebug'  => (ENVIRONMENT !== 'production'),
 		'charset'  => 'utf8',
-		'DBCollat' => 'utf8_general_ci',
+		'DBCollat' => 'utf8_spanish_ci',
 		'swapPre'  => '',
 		'encrypt'  => false,
 		'compress' => false,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Libraries;
+namespace App\Modules\TS5\Libraries;
 
 class Session
 {

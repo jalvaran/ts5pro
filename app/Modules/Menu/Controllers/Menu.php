@@ -27,7 +27,7 @@
 namespace App\Modules\Menu\Controllers;
 
 use App\Controllers\BaseController;
-use App\Libraries\Session;
+use App\Modules\TS5\Libraries\Session;
 
 class Menu extends BaseController
 {

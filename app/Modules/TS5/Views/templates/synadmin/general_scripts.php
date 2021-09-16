@@ -446,5 +446,59 @@
         });//Fin peticion ajax
     }
 
+    function theme_sidebar(id){
+        if(id==null){
+            return;
+        }
+        $('html').attr('class', 'color-sidebar sidebarcolor'+id);
+    }
+    
+    function theme_header(id){
+        if(id==null){
+            return;
+        }
+        $("html").removeClass("headercolor1 headercolor2 headercolor3 headercolor4 headercolor5 headercolor6 headercolor7 headercolor8");
+        $("html").addClass("color-header headercolor"+id);
+        
+    }
+    
+    function selector_theme_mode(){
+        var dark_mode = Cookies.get('dark-mode');
+        
+        if(dark_mode==1){
+            
+            $('#btn_dark_mode').attr('data-id',0);
+            $('#btn_dark_mode').removeClass("fa fa-moon");
+            $('#btn_dark_mode').addClass("fa fa-sun");
+            $('html').attr('class', 'dark-theme');
+        }else{
+            
+            $('#btn_dark_mode').attr('data-id',1);
+            $('#btn_dark_mode').removeClass("fa fa-sun");
+            $('#btn_dark_mode').addClass("fa fa-moon");
+            $('html').attr('class', 'light-theme');
+            theme_sidebar('<?=$theme_sidebar?>');
+            theme_header('<?=$theme_header?>');
+        }
+        
+    }
+    
+    selector_theme_mode();     
+     
+     
+    $(document).ready( function () {       
+       $('#btn_dark_mode').on('click',function () {
+           var dark_mode = Cookies.get('dark-mode');
+           if(dark_mode==1){
+                Cookies.set('dark-mode',0, { sameSite: 'strict' });
+           }else{
+               Cookies.set('dark-mode',1, { sameSite: 'strict' });
+            }
+           selector_theme_mode();
+           
+       });
+       
+    });    
+   
 
 </script>
