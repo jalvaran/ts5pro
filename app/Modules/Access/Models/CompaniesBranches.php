@@ -18,7 +18,11 @@
  * DESDE, FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS
  * NEGOCIACIONES EN EL SOFTWARE.
  * -----------------------------------------------------------------------------
- * @Author Julian Andres Alvaran Valencia <jalvaran@gmail.com>
+ * Modelo de la tabla sucursales de la empresa
+ * -----------------------------------------------------------------------------
+ * @Author Julian Andres Alvarán Valencia <jalvaran@gmail.com>
+ * @created 2021-09-17
+ * @updated 2021-09-17
  * @link https://www.technosoluciones.com.co
  * @Version 1.0
  * @since PHP 7, PHP 8
@@ -28,23 +32,26 @@ namespace App\Modules\Access\Models;
 
 use CodeIgniter\Model;
 
-class UsersCompanies extends Model
+class CompaniesBranches extends Model
 {
 
-    protected $table = 'access_control_users_companies';
+    protected $table = 'app_companies_branches';
     protected $primaryKey = 'id';
 
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
 
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
         'id',
-        'app_company',
-        'access_control_user_id',
+        'company_id',
+        'name',
+        'app_cat_municipalities_id',
         'author',
         'backed_at',
+        'created_at',
+        'updated_at'
 
     ];
 
@@ -60,49 +67,47 @@ class UsersCompanies extends Model
     protected $DBGroup = "techno";
 
     /**
-     * Obtiene las empresas asociadas a un usuario
-     * @param $user_id
+     * Obtiene los módulos asociados a una empresa
+     * @param $company_id
      * @return array
      */
-    public function get_UserCompanies($user_id){
-        $result=$this
-            ->join('app_companies', 'app_companies.id=app_company' )
-            ->where("access_control_user_id", $user_id)
+    public function get_CompaniesBranches($company_id)
+    {
+        $result = $this
+            
+            ->where("company_id", $company_id)
+            
             ->findAll();
-        return($result);
-    }
-
-    /**
-     * Valida si un usuario tiene una empresa asignada
-     * @param $user_id
-     * @param $company_id
-     * @return bool
-     */
-    public function validate_user_company($user_id,$company_id){
-        $result=$this->select('id')
-            ->where("access_control_user_id", $user_id)
-            ->where("app_company", $company_id)
-            ->find();
-        if(isset($result[0]["id"])){
-            return(true);
-        }else{
-            return(false);
-        }
-
+        return ($result);
     }
     
-    public function get_Company_id($user_id){
-        $result=$this->select('app_company')            
-            ->where("access_control_user_id", $user_id)
+    /**
+     * Obtiene los datos de una sucursal
+     * @param $company_id
+     * @return array
+     */
+    public function get_DataBranch($id)
+    {
+        $result = $this->select("app_companies_branches.*,app_cat_municipalities.name as municipalitie_name")
+            ->join("app_cat_municipalities","app_cat_municipalities.id=app_companies_branches.app_cat_municipalities_id")
+            ->where("app_companies_branches.id", $id)
+            
             ->first();
-        if(isset($result["app_company"])){
-            return($result["app_company"]);
-        }else{
-            return(false);
-        }
-        
+        return ($result);
     }
 
+    public function get_Authority($id, $author)
+    {
+        $row = $this->select("id")
+                ->where("id", $id)
+                ->where("author", $author)
+                ->first();
+        if (@$row["id"] == $id) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
 
 }
 

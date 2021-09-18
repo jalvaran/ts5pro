@@ -37,7 +37,10 @@
                         if($key=="id"){
                             print('<td>');
                                 if(isset($actions["edit"])){
-                                    print('<button data-id="'.$id.'" class="btn btn-white ms-2 ts_btn_actions" ><li class="fa fa-edit text-primary"></li>');
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_edit').'" class="btn btn-white ms-2 ts_btn_actions" ><li class="fa fa-edit text-primary"></li>');
+                                }
+                                if(isset($actions["branches"])){
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_branch').'" class="btn btn-white ms-2 ts_btn_branches" ><li class="fa fa-crop text-success"></li>');
                                 }
                             print('</td>');
                         }

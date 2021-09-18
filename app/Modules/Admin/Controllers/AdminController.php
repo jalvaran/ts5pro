@@ -233,6 +233,52 @@ class AdminController extends BaseController
 
         return(view($this->views_path_module.'\Admin\frm_role',$data));
     }
+    
+    /**
+     * Formulario para crear o editar una sucursal
+     * @return string
+     */
+    function frm_create_branch(){
+
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+
+        $request=service('request');
+        $id=$request->getVar('id');
+        $module_id=$this->module_id;
+        $data=[];
+        if($id==''){ //Crear
+            $permission_id='613a570cd6fb0614772306';  //Crear una sucursal
+            if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+                $data_error["error_title"]=lang('Access.access_view_error_title');
+                $data_error["msg_error"]=lang('Access.access_view_error');
+                return (view($this->views_path."\alert_error",$data_error));
+            }
+        }else{       //Editar
+
+            $Model=model('App\Modules\Access\Models\CompaniesBranches');
+
+            $permission_id='6144b19b2b80d401305742';           //Permiso singular para editar una sucursal
+            $permission_id_all='6144b24255c62277085306';       //Permiso plural para editar una sucursal
+
+            $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+            $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+            $authority=$Model->get_Authority($id,$user_id);
+
+            if(!$p_all and !($p_single and $authority)){
+                $data_error["error_title"]=lang('Access.access_view_error_title');
+                $data_error["msg_error"]=lang('Access.access_view_error');
+                return (view($this->views_path."\alert_error",$data_error));
+            }
+            $data_model=$Model->get_DataBranch($id);
+            
+            $data["data_form"]=$data_model;
+
+        }
+
+        return(view($this->views_path_module.'\Admin\frm_branch',$data));
+    }
 
     /**
      * Formulario para crear o editar un usuario
@@ -366,9 +412,94 @@ class AdminController extends BaseController
         $data["next_page"]=$next_page;
 
         $data["actions"]["edit"]=1;
+        $data["actions"]["branches"]=1;
         $data["data"]=$response;
         echo view($this->views_path.'\table_list',$data);
     }
+    
+    /**
+     * Lista las sucursales que tiene una empresa
+     * @return string|void
+     */
+    function branches_list(){
+
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='6144ac0542c37120859682';  //listar roles
+        $module_id=$this->module_id;      //Admin
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+
+        $i=0;
+        $limit=20;
+
+        $data["cols"][$i++]=lang("fields.actions");
+        $data["cols"][$i++]=lang("fields.id");
+        $data["cols"][$i++]=lang("fields.name");
+        $data["cols"][$i++]=lang("fields.municipalitie_name");
+
+        $request=service('request');
+        $page=$request->getVar('page');
+        $search=$request->getVar('search');
+        $fields=array(  'app_companies_branches.id as id',
+                        'app_companies_branches.name as name',
+                        'app_cat_municipalities.name as municipalitie_name'
+            
+            );
+        $model=model('App\Modules\Access\Models\CompaniesBranches');
+        $model->select($fields);
+        $model->where('company_id',$company_id);
+        $model->join('app_cat_municipalities','app_cat_municipalities.id=app_companies_branches.app_cat_municipalities_id');
+        $recordsTotal = $model->countAllResults(false);
+
+        $z=0;
+        if($search<>''){
+            foreach ($fields as $field){
+
+                if($z==0){
+                    $z=1;
+                    $model->like($field, $search);
+                }else{
+                    $model->orLike($field, $search);
+                }
+
+            }
+        }
+
+        $recordsFiltered = $model->countAllResults(false);
+        $totalPages= ceil($recordsFiltered/$limit);
+        if($page>1){
+            $previous_page=$page-1;
+        }else{
+            $previous_page=1;
+        }
+        $next_page=$page;
+        $start_point=round($page * $limit - $limit);
+        if($recordsFiltered>($start_point+$limit)){
+            $next_page=$page+1;
+        }
+        $model->orderBy('id DESC');
+        $response=$model->findAll($limit,$start_point);
+
+        $info=lang("msg.info");
+        $info=str_replace("_START_",$page,$info);
+        $info=str_replace("_END_",$totalPages,$info);
+        $info=str_replace("_TOTAL_",$recordsTotal,$info);
+        $data["info_pagination"]=$info;
+        $data["previous_page"]=$previous_page;
+        $data["next_page"]=$next_page;
+
+        $data["actions"]["edit"]=1;
+        $data["data"]=$response;
+        echo view($this->views_path.'\table_list',$data);
+    }
+    
     /**
      * Abre la vista para ver los permisos que tiene un role, ademas de poder agregarlos
      * @return type
@@ -394,6 +525,8 @@ class AdminController extends BaseController
         //return("role");
         return(view($this->views_path_module.'\Admin\role_view',$data));
     }
+    
+    
     /**
      * Lista los permisos que tiene un role
      * @return type
@@ -459,12 +592,61 @@ class AdminController extends BaseController
         }
         $request = service('request');
         $id=$request->getVar('id');
-        $model=model('App\Modules\Access\Models\Herarchies');
+        $model=model('App\Modules\Access\Models\Hierarchies');
         $data_model["data_roles"]=$model->getRolesInUser($id,$company_id);
         
         return(view($this->views_path_module.'\Admin\user_roles_list',$data_model));
 
     }
+    
+    
+    /**
+     * Abre la vista para ver los permisos que tiene un role, ademas de poder agregarlos
+     * @return type
+     */
+    public function branches_user_view(){
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='613adb311ef3a661853259';  //listar usuarios
+        $module_id=$this->module_id;      //Admin
 
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        $request = service('request');
+
+        $id=$request->getVar('id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $data=$mUsers->getDataUser($id);
+                
+        return(view($this->views_path_module.'\Admin\branches_user_view',$data));
+    }
+    
+    public function branches_user_list(){
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='613adb311ef3a661853259';  //listar usuarios
+        $module_id=$this->module_id;      //Admin
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        $request = service('request');
+        $id=$request->getVar('id');
+        $model=model('App\Modules\Access\Models\CompaniesBranchesUsers');
+        $data_model["data_branches"]=$model->getBranchesInUser($id);
+        
+        return(view($this->views_path_module.'\Admin\branches_user_list',$data_model));
+
+    }
+    
 
 }

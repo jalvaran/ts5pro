@@ -92,8 +92,8 @@ class Users extends Model
     public function get_UserRoles($user_id)
     {
         $roles = $this
-            ->select('access_control_herarchies.access_control_role_id')
-            ->join('access_control_herarchies', 'access_control_herarchies.access_control_user_id=access_control_users.id')
+            ->select('access_control_hierarchies.access_control_role_id')
+            ->join('access_control_hierarchies', 'access_control_hierarchies.access_control_user_id=access_control_users.id')
             ->where("access_control_users.id", $user_id)
             ->get()->getResultArray();
 
@@ -126,14 +126,14 @@ class Users extends Model
         $result=$this->select('access_control_users.id')
                 ->join('access_control_users_companies','access_control_users_companies.access_control_user_id=access_control_users.id')
                 ->join('app_companies_modules','access_control_users_companies.app_company=app_companies_modules.app_company_id')
-                ->join('access_control_herarchies','access_control_herarchies.access_control_user_id=access_control_users.id')
-                ->join('access_control_politics','access_control_politics.access_control_role_id=access_control_herarchies.access_control_role_id')
+                ->join('access_control_hierarchies','access_control_hierarchies.access_control_user_id=access_control_users.id')
+                ->join('access_control_politics','access_control_politics.access_control_role_id=access_control_hierarchies.access_control_role_id')
                 ->where('access_control_users.id',$user_id)
                 ->where('access_control_politics.access_control_permissions_id',$permission_id)
                 ->where('access_control_users_companies.app_company',$company_id)
                 ->where('app_companies_modules.app_module_id',$module_id)
                 ->where('access_control_users.deleted_at is null')
-                ->where('access_control_herarchies.deleted_at is null')
+                ->where('access_control_hierarchies.deleted_at is null')
                 ->where('access_control_politics.deleted_at is null')
                 ->where('app_companies_modules.deleted_at is null')
                 ->where('access_control_users_companies.deleted_at is null')

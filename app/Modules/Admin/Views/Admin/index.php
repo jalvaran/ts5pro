@@ -10,6 +10,7 @@
                             <a id="link_users" href="javascript:;" class="list-group-item d-flex align-items-center ts_pages_links"><i class="bx bxs-user me-3 font-20"></i><span><?=lang('fields.users')?></span></a>
 
                             <a id="link_roles" href="javascript:;" class="list-group-item active d-flex align-items-center ts_pages_links"><i class="bx bx-merge me-3 font-20"></i><span><?=lang('fields.roles')?></span></a>
+                            <a id="link_branches" href="javascript:;" class="list-group-item active d-flex align-items-center ts_pages_links"><i class="fa fa-crop me-3 font-20"></i><span><?=lang('fields.branches')?></span></a>
                             
                         </div>
                         <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 345px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 257px;"></div></div></div>

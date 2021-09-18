@@ -37,6 +37,10 @@ return [
     "no" => "No",
     "roles" => "Roles",
     "users" => "Usuarios",
+    "app_module_id"=>"ID del Módulo",
+    "branches"=>"Sucursales",
+    "municipalitie_name"=>"Ciudad",
+    "app_cat_municipalities_id"=>"Ciudad",
 
 
 

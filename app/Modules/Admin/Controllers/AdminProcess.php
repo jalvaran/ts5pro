@@ -223,6 +223,87 @@ class AdminProcess extends BaseController
         return $this->setResponseFormat('json')->respond($response);
     }
 
+    /**
+     * Función para guardar los datos de una sucursal
+     * @return mixed
+     */
+    function save_branch() {
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+
+        $request = service('request');
+        $id=$request->getVar('id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $module_id=$this->module_id;
+        $mBranches=model('App\Modules\Access\Models\CompaniesBranches');
+        if($id==''){ //Crear
+            $permission_id='6144b0886e5d2376189346';   //Permiso para crear una sucursal
+            if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+                $response["status"]=0;
+                $response["msg"]=lang('Access.access_view_error');
+                return $this->setResponseFormat('json')->respond($response);
+            }
+        }else{  //Editar
+
+            $permission_id='6144b19b2b80d401305742';           //Permiso para Editar singular Ver en tabla access_control_permissions
+            $permission_id_all='6144b24255c62277085306';       //Permiso para Editar plural Ver en tabla access_control_permissions
+
+            $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+            $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+            $authority=$mBranches->get_Authority($id,$user_id);
+
+            if(!$p_all and !($p_single and $authority)){
+                $response["status"]=0;
+                $response["msg"]=lang('Access.access_view_error');
+                return $this->setResponseFormat('json')->respond($response);
+
+            }
+
+        }
+
+        $data_form_serialized=$request->getVar('data_form_serialized');
+        parse_str($data_form_serialized,$data_form);
+
+        foreach($data_form as $field => $value){
+            $data_form[$field]=trim($value);
+            if($value=='' and !isset($validator["not_required"][$field])){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
+                $response["msg"]=lang('Ts5.validation_field_empty',$data_lang);
+                $response["object_id"]=$field;
+                if(isset($validator["select2"][$field])){
+                    $response["object_id"]="select2-".$field."-container";
+                }
+                return $this->setResponseFormat('json')->respond($response);
+            }
+            if(isset($validator["numeric"][$field]) and !is_numeric($value)){
+                $response["status"]=0;
+                $data_lang["field_name"]=lang('Access.companies_frm_input_'.$field);
+                $response["msg"]=lang('Ts5.validation_field_numeric_1',$data_lang);
+                $response["object_id"]=$field;
+                return $this->setResponseFormat('json')->respond($response);
+            }
+        }
+        $ts5=new Ts5_class();
+        if($id==''){ //Crear
+            $data_form["id"]=$ts5->getUniqueId("",true);
+            $data_form["author"]=$user_id;
+            $data_form["company_id"]=$company_id;
+            $mBranches->insert($data_form);
+        }else{ //Editar
+            $mBranches->update($id,$data_form);
+        }
+
+        $response["status"]=1;
+        $response["msg"]=lang('msg.save_register');
+        return $this->setResponseFormat('json')->respond($response);
+    }
 
 
     public function permissions_searches(){
@@ -265,6 +346,47 @@ class AdminProcess extends BaseController
         
 
         $results=$model_class->orderBy('name ASC')->findAll(100);
+
+        return $this->setResponseFormat('json')->respond($results);
+
+    }
+    
+    public function municipalities_searches(){
+        if (!$this->session->get_LoggedIn()){
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+
+        $request = service('request');
+
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $permission_id='6144ac0542c37120859682';
+        $module_id='613784ab2471f217811480';
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)) {
+            $error[0]["id"]="";
+            $error[0]["text"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($error);
+        }
+
+
+        $key=$request->getVar('q');
+
+        $text="CONCAT(app_cat_municipalities.name,' || ',app_cat_departments.name)";
+        $model_class=model('App\Modules\Access\Models\Municipalities');
+        $model_class->select("app_cat_municipalities.id,{$text} as text");
+        $model_class->join('app_cat_departments','app_cat_municipalities.department_id=app_cat_departments.id');
+        $k=0;
+        if($key<>''){
+            
+            $model_class->like("app_cat_municipalities.name",$key);
+            $model_class->orWhere("app_cat_municipalities.id",$key);
+        }
+        
+        $results=$model_class->orderBy('app_cat_municipalities.name ASC')->findAll(100);
 
         return $this->setResponseFormat('json')->respond($results);
 
@@ -436,7 +558,7 @@ class AdminProcess extends BaseController
             
         }
         
-        $mHierarchies=model('App\Modules\Access\Models\Herarchies');
+        $mHierarchies=model('App\Modules\Access\Models\Hierarchies');
         $role_id=$request->getVar('role_id');
         $user_id_add=$request->getVar('user_id');
         
@@ -477,7 +599,7 @@ class AdminProcess extends BaseController
         $permission_id='613ada7fad7e7386240937';
         $permission_id_all='613ada93f23b4753305035';
         $module_id='613784ab2471f217811480';
-        $mHierarchies=model('App\Modules\Access\Models\Herarchies');
+        $mHierarchies=model('App\Modules\Access\Models\Hierarchies');
         $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
         $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
         $authority=$mHierarchies->get_Authority($id,$user_id);

@@ -195,5 +195,7 @@ $(document).ready(function () {
     }else{
         $("#div_wrapper").addClass("toggled");
     }
+    
+    
 
 });

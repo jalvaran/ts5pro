@@ -42,7 +42,18 @@ class TS5 extends BaseController
             if ($user_mail <> '' and $pass_pass <> '') {
                 $session = new Session();
                 if ($session->login($user_mail, $pass_pass)) {
-                    return (redirect()->to(base_url('/menu')));
+                    $user_id=$session->get("user");
+                    $mCompanies=model('App\Modules\Access\Models\UsersCompanies');
+                    $company_id=$mCompanies->get_Company_id($user_id);
+                    if($company_id==false){
+                        $data_errors["error_title"]= (lang('Login.error_title'));
+                        $data_errors["msg_error"]=(lang('Login.error_not_company'));
+                        $this->data_template["html_errors"]=view($this->namespace . '\Views\templates\synadmin\alert_error',$data_errors);
+                    }else{
+                        $session->set("company_id",$company_id);
+                        return (redirect()->to(base_url('/menu')));
+                    }
+                    
                 } else {
                     $data_errors["error_title"]= (lang('Login.error_title'));
                     $data_errors["msg_error"]=(lang('Login.error_msg_password'));

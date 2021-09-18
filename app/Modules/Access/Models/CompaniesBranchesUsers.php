@@ -28,10 +28,10 @@ namespace App\Modules\Access\Models;
 
 use CodeIgniter\Model;
 
-class Herarchies extends Model
+class CompaniesBranchesUsers extends Model
 {
 
-    protected $table = 'access_control_herarchies';
+    protected $table = 'app_companies_branches_users';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = true;
@@ -41,9 +41,14 @@ class Herarchies extends Model
 
     protected $allowedFields = [
         'id',
-        'access_control_user_id',
-        'access_control_role_id',
-        'author'
+        'access_control_users_id',
+        'app_companies_branches_id',
+        'author',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'backed_at',
+        
 
     ];
 
@@ -58,30 +63,13 @@ class Herarchies extends Model
     //protected $cache_time = "10";
     protected $DBGroup = "techno";
 
+    
     /**
-     * Valida si el usuario es o no Super administrador
-     * @param $user_id
-     */
-    public function is_super_admin($user_id){
-        $result=$this
-            ->select("id")
-            ->where("access_control_user_id", $user_id)
-            ->where("access_control_role_id", 1)
-            ->find();
-        if(isset($result[0]["id"])){
-            return(true);
-        }else{
-            return(false);
-        }
-
-    }
-
-    /**
-     * Devuelve los roles de un usuario
+     * Devuelve las sucursales de un usuario
      * @param $user_id
      * @return array
      */
-    public function get_roles_user($user_id){
+    public function get_branches_user($user_id){
         $result=$this->select('id')
             ->where("access_control_user_id", $user_id)
             ->findAll();
@@ -108,20 +96,19 @@ class Herarchies extends Model
         }
     }
     
-    public function getRolesInUser($user_id,$company_id) {
-        $result=$this->select('access_control_herarchies.id,access_control_roles.name as role_name,access_control_herarchies.access_control_user_id as user_id')
-                ->join('access_control_roles','access_control_roles.id=access_control_herarchies.access_control_role_id')
-                ->where("access_control_herarchies.access_control_user_id", $user_id)
-                ->where("access_control_roles.app_company_id", $company_id)
-                //->where("isnull(access_control_roles.deleted_at) ")
+    public function getBranchesInUser($user_id) {
+        $result=$this->select('app_companies_branches_users.id,app_companies_branches.name as branch_name,app_companies_branches_users.access_control_users_id as user_id')
+                ->join('app_companies_branches','app_companies_branches.id=app_companies_branches_users.app_companies_branches_id')
+                ->where("app_companies_branches_users.access_control_users_id", $user_id)
+                
                 ->findAll();
         return($result);
     }
     
     
-    public function role_in_user($role_id,$user_id) {
+    public function branch_in_user($branch_id,$user_id) {
         $result=$this->select('id')
-                ->where('access_control_role_id',$role_id)
+                ->where('app_companies_branches_id',$branch_id)
                 ->where('access_control_user_id',$user_id)
                 ->first();
                 ;

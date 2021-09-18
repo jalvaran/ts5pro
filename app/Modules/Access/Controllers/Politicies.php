@@ -130,7 +130,7 @@ class Politicies extends BaseController
 
             $data["table_id"]='table_hierarchies';
             $data["function_name"]=$data["table_id"].'_draw';
-            $data["data"]["model"]='App\Modules\Access\Models\Herarchies';
+            $data["data"]["model"]='App\Modules\Access\Models\Hierarchies';
             $data["data"]["permissions"]["list"]=$permission_list;
             $data["data"]["permissions"]["create"]='613784ab2471f217811509';
             $data["data"]["permissions"]["edit"]='613784ab2471f217811511';
@@ -178,9 +178,9 @@ class Politicies extends BaseController
             $data["data"]["buttons"]["view"]["disabled"]=1;
             $data["data"]["module_id"]='613784ab2471f217811472';
             $data["data"]["table_id"]=$data["table_id"];
-            $data["data"]["fields"]["access_control_user_id"]["type"]='select2';
-            $data["data"]["fields"]["access_control_user_id"]["model"]='App\Modules\Access\Models\Users';
-            $data["data"]["fields"]["access_control_user_id"]["labels"]='name';
+            $data["data"]["fields"]["app_module_id"]["type"]='select2';
+            $data["data"]["fields"]["app_module_id"]["model"]='App\Modules\Access\Models\Modules';
+            $data["data"]["fields"]["app_module_id"]["labels"]='name';
             $data["data"]["fields"]["access_control_role_id"]["type"]='select2';
             $data["data"]["fields"]["access_control_role_id"]["model"]='App\Modules\Access\Models\Roles';
             $data["data"]["fields"]["access_control_role_id"]["labels"]='name';

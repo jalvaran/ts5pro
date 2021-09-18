@@ -60,8 +60,12 @@ class Ts5_class{
     function getDataTemplate($session){
         //$this->access->create_json_menu($this->user_id);
         $company_id=$this->session->get("company_id");
+        if($company_id==''){
+            $company_id='cp_6128f69283025963104543';
+        }
         $mCompany=model('App\Modules\Access\Models\Companies');
         $data_company=$mCompany->get_DataCompany($company_id);
+        
         $data["lang"] = $data_company["code_language"];
         $data["page"] = "index";
         $data["favicon"] = "/companies/{$company_id}/img/favicon.png";

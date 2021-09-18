@@ -9,6 +9,7 @@ return [
     "button_signin_value"   => "Entrar",
     "error_title"   => "Error",
     "error_msg_field_empty"   => "Los campos Usuario y Contraseña no pueden estar vacíos",
+    "error_not_company" => "El usuario no tiene una empresa asignada",
     "error_msg_password" => "El Usuario o la Contraseña no coinciden",
     "page_title_index" => "Menú de Administración",
     "logout_title" => "Salir",

@@ -13,4 +13,8 @@ return [
     "user_roles_list" => "Lista de Roles en este Usuario",
     "role_exists"=>"El role ya está agregado a este usuario",
     
+    "ranches_user_view_title" => "Agregar sucursal a un usuario",
+    "select_branch"=>"Seleccione una sucursal para agregarle a este usuario",
+    "branches_user_list"=>"Lista de Sucursales agregadas a este usuario"
+    
 ];

@@ -28,10 +28,10 @@ namespace App\Modules\Access\Models;
 
 use CodeIgniter\Model;
 
-class UsersCompanies extends Model
+class Hierarchies extends Model
 {
 
-    protected $table = 'access_control_users_companies';
+    protected $table = 'access_control_hierarchies';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = true;
@@ -41,10 +41,9 @@ class UsersCompanies extends Model
 
     protected $allowedFields = [
         'id',
-        'app_company',
         'access_control_user_id',
-        'author',
-        'backed_at',
+        'access_control_role_id',
+        'author'
 
     ];
 
@@ -60,28 +59,14 @@ class UsersCompanies extends Model
     protected $DBGroup = "techno";
 
     /**
-     * Obtiene las empresas asociadas a un usuario
+     * Valida si el usuario es o no Super administrador
      * @param $user_id
-     * @return array
      */
-    public function get_UserCompanies($user_id){
+    public function is_super_admin($user_id){
         $result=$this
-            ->join('app_companies', 'app_companies.id=app_company' )
+            ->select("id")
             ->where("access_control_user_id", $user_id)
-            ->findAll();
-        return($result);
-    }
-
-    /**
-     * Valida si un usuario tiene una empresa asignada
-     * @param $user_id
-     * @param $company_id
-     * @return bool
-     */
-    public function validate_user_company($user_id,$company_id){
-        $result=$this->select('id')
-            ->where("access_control_user_id", $user_id)
-            ->where("app_company", $company_id)
+            ->where("access_control_role_id", 1)
             ->find();
         if(isset($result[0]["id"])){
             return(true);
@@ -90,19 +75,62 @@ class UsersCompanies extends Model
         }
 
     }
-    
-    public function get_Company_id($user_id){
-        $result=$this->select('app_company')            
+
+    /**
+     * Devuelve los roles de un usuario
+     * @param $user_id
+     * @return array
+     */
+    public function get_roles_user($user_id){
+        $result=$this->select('id')
             ->where("access_control_user_id", $user_id)
+            ->findAll();
+        return($result);
+    }
+
+    /**
+     * Retorna falso o verdadero si el usuario activo ne la sesión es el
+     * autor del registro que se desea acceder, editar o eliminar.
+     * @param type $id código primario del registro a consultar
+     * @param type $author código del usuario del cual se pretende establecer la autoría
+     * @return boolean falso o verdadero según sea el caso
+     */
+    public function get_Authority($id, $author)
+    {
+        $row = $this->select("id")
+            ->where("id", $id)
+            ->where("author", $author)
             ->first();
-        if(isset($result["app_company"])){
-            return($result["app_company"]);
+        if (@$row["id"] == $id) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+    
+    public function getRolesInUser($user_id,$company_id) {
+        $result=$this->select('access_control_hierarchies.id,access_control_roles.name as role_name,access_control_hierarchies.access_control_user_id as user_id')
+                ->join('access_control_roles','access_control_roles.id=access_control_hierarchies.access_control_role_id')
+                ->where("access_control_hierarchies.access_control_user_id", $user_id)
+                ->where("access_control_roles.app_company_id", $company_id)
+                //->where("isnull(access_control_roles.deleted_at) ")
+                ->findAll();
+        return($result);
+    }
+    
+    
+    public function role_in_user($role_id,$user_id) {
+        $result=$this->select('id')
+                ->where('access_control_role_id',$role_id)
+                ->where('access_control_user_id',$user_id)
+                ->first();
+                ;
+        if(isset($result["id"])){
+            return(true);
         }else{
             return(false);
         }
-        
     }
-
 
 }
 

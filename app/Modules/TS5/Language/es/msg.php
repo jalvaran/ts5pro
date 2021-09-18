@@ -22,7 +22,11 @@ return [
     "info" => "Página _START_ de _END_, Registros Totales: _TOTAL_ ",
     "create_role" => "Crear o Editar un Role ",
     "create_user" => "Crear o Editar un Usuario ",
+    "create_branch" => "Crear o Editar una Sucursal ",
     "save_register"=>"Registro Guardando Correctamente",
     "delete_register" => "Registro Eliminado Correctamente",
+    "option_select" => "Seleccione una Opción",
+    "btn_title_edit" => "Editar",
+    "btn_title_branch" => "Asignar a una sucursal",
 
 ];
