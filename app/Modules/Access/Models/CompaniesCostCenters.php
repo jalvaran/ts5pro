@@ -28,21 +28,21 @@ namespace App\Modules\Access\Models;
 
 use CodeIgniter\Model;
 
-class CompaniesBranchesUsers extends Model
+class CompaniesCostCenters extends Model
 {
 
-    protected $table = 'app_companies_branches_users';
+    protected $table = 'app_companies_cost_centers';
     protected $primaryKey = 'id';
 
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
 
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
         'id',
-        'access_control_users_id',
-        'app_companies_branches_id',
+        'company_id',
+        'name',
         'author',
         'created_at',
         'updated_at',
@@ -65,18 +65,6 @@ class CompaniesBranchesUsers extends Model
 
     
     /**
-     * Devuelve las sucursales de un usuario
-     * @param $user_id
-     * @return array
-     */
-    public function get_branches_user($user_id){
-        $result=$this->select('id')
-            ->where("access_control_user_id", $user_id)
-            ->findAll();
-        return($result);
-    }
-
-    /**
      * Retorna falso o verdadero si el usuario activo ne la sesión es el
      * autor del registro que se desea acceder, editar o eliminar.
      * @param type $id código primario del registro a consultar
@@ -96,28 +84,6 @@ class CompaniesBranchesUsers extends Model
         }
     }
     
-    public function getBranchesInUser($user_id) {
-        $result=$this->select('app_companies_branches_users.id,app_companies_branches.name as branch_name,app_companies_branches_users.access_control_users_id as user_id')
-                ->join('app_companies_branches','app_companies_branches.id=app_companies_branches_users.app_companies_branches_id')
-                ->where("app_companies_branches_users.access_control_users_id", $user_id)
-                
-                ->findAll();
-        return($result);
-    }
     
-    
-    public function branch_in_user($branch_id,$user_id) {
-        $result=$this->select('id')
-                ->where('app_companies_branches_id',$branch_id)
-                ->where('access_control_users_id',$user_id)
-                ->first();
-                ;
-        if(isset($result["id"])){
-            return(true);
-        }else{
-            return(false);
-        }
-    }
-
 }
 

@@ -33,6 +33,10 @@ return [
 
     "card_title_component_4" => "Administración de la Plataforma",
     "card_sub_title_component_4" => "Administra el control de acceso a la plataforma",
+    
+    
+    "card_title_component_6" => "Hojas de Negocio",
+    "card_sub_title_component_6" => "Gestión de las hojas de negocio",
 
 
 

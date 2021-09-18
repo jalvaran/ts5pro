@@ -20,8 +20,65 @@
         if(list_id==3){
             branches_draw();
         }
+        if(list_id==4){
+            cost_centers_draw();
+        }
     }
+    
+    /**
+     * Dubuja los centros de costos de una empresa
+     */
+    function cost_centers_draw(){
 
+        $(".ts_pages_links").removeClass("active");
+        $("#link_cost_centers").addClass("active");
+
+        var search=$('#search').val();
+
+        var urlControllerDraw ='<?= base_url('admin/cost_centers_list')?>';
+        var form_data = new FormData();
+            form_data.append('page',page);
+            form_data.append('search',search);
+
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#'+general_div).html(data);
+                event_add_list();
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
+    
     /**
      * Dubuja los roles del sistema
      */
@@ -183,6 +240,52 @@
         });
     }
 
+    function frm_create_edit_cost_center(id=''){
+        $('#modal_md').modal("show");
+        $(".ts_btn_save_modals").attr("data-id",id);
+        var urlControllerDraw ='<?= base_url('admin/frm_create_cost_center')?>';
+        var form_data = new FormData();
+            form_data.append('id',id);
+
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#modal_xl_body').html('');
+                $('#modal_md_body').html(data);
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                hide_spinner();
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
 
     function frm_create_edit_role(id=''){
         $('#modal_md').modal("show");
@@ -348,6 +451,97 @@
                 cache: true
             }
         });
+    }
+    
+    function confirm_save_cost_center(id){
+
+        Swal.fire({
+            title: '<?php echo lang('Ts5.confirm_title')?>',
+            //text: "<?php echo lang('Ts5.confirm_text')?>",
+            icon: 'warning',
+
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '<?php echo lang('Ts5.confirm_button_ok')?>',
+            cancelButtonText: '<?php echo lang('Ts5.confirm_button_cancel')?>'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                save_cost_center(id);
+            }else{
+
+                toastr.error('<?php echo lang('Ts5.confirm_process_cancel_text')?>');
+            }
+        });
+    }
+
+    function save_cost_center(id){
+
+        var urlControllerProcess='<?php echo base_url('/admin/save_cost_center') ?>';
+        var btnSave = $(".ts_btn_save_modals");
+        var data_form_serialized=$('.ts_input').serialize();
+        var form_data = new FormData();
+
+            form_data.append('id',id);
+            form_data.append('data_form_serialized',data_form_serialized);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#modal_md').modal("hide");
+                        if(id==''){
+                            page=1;
+                        }
+                        select_list();
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
     }
 
     function confirm_save_role(id){
@@ -1060,6 +1254,136 @@
         });
     }
 
+
+    function add_branch_user(user_id){
+
+        var urlControllerProcess='<?php echo base_url('/admin/add_branch_user') ?>';
+        var btnSave = $("#btn_add_branch");
+        var branch_id=$('#branch_id').val();
+        var form_data = new FormData();
+
+            form_data.append('user_id',user_id);
+            form_data.append('branch_id',branch_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        branches_user_list(user_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+    
+    
+    function delete_branch_user(user_id,id){
+
+        var urlControllerProcess='<?php echo base_url('/admin/delete_branch_user') ?>';
+        var btnSave = $("#btn_add_permission");
+        
+        var form_data = new FormData();            
+            form_data.append('id',id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        branches_user_list(user_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id);
+                        }
+
+                    }
+                }else{
+                    alert(data);
+
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
     
     function add_role_user(user_id){
 
@@ -1190,7 +1514,26 @@
     }
 
 
+    function select2_branches(){
+        $('#branch_id').select2({
+            ajax: {
+                url: '<?= base_url('admin/branches_searches');?>',
+                dataType: 'json',
+                delay: 250,
 
+
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+    }
+    
+    
     function select2_permission(){
         $('#permission_id').select2({
             ajax: {
@@ -1257,7 +1600,7 @@
         $(".ts_btn_delete").on('click',function () {
             var user_id = $(this).attr("data-user_id");
             var id = $(this).attr("data-id");
-            delete_role_user(user_id,id);
+            delete_branch_user(user_id,id);
         });
     }
 
@@ -1298,6 +1641,9 @@
             }
             if(list_id==3){
                 frm_create_edit_branch(id);
+            }
+            if(list_id==4){
+                frm_create_edit_cost_center(id);
             }
         });
         
@@ -1355,6 +1701,15 @@
         });
         
         /**
+         * Se le agrega evento al link que muestra las sucursales
+         */
+        $('#link_cost_centers').on('click',function () {
+            list_id=4;
+            page=1;
+            select_list();
+        });
+        
+        /**
          * se agregan eventos a la caja de busquedas
          */
         $("#search").keypress(function(e) {
@@ -1376,6 +1731,9 @@
             if(list_id==3){
                 frm_create_edit_branch();
             }
+            if(list_id==4){
+                frm_create_edit_cost_center();
+            }
         });
 
 
@@ -1394,7 +1752,9 @@
             if(list_id==3){
                 confirm_save_branch(id);
             }
-
+            if(list_id==4){
+                confirm_save_cost_center(id);
+            }
         });
 
 

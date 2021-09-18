@@ -28,5 +28,7 @@ return [
     "option_select" => "Seleccione una Opción",
     "btn_title_edit" => "Editar",
     "btn_title_branch" => "Asignar a una sucursal",
+    
+    "create_cost_center" => "Crear un Centro de Costos",
 
 ];

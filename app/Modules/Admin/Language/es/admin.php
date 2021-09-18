@@ -1,6 +1,6 @@
 <?php
 return [
-    "admin_title" => "Políticas de Acceso",
+    "admin_title" => "Administración de la Plataforma",
     "admin" => "Admin",
     "role_view_title" => "Agregar o Eliminar Permisos a Roles",
     "role_permissions_list" => "Lista de Permisos en este Role",
@@ -15,6 +15,7 @@ return [
     
     "ranches_user_view_title" => "Agregar sucursal a un usuario",
     "select_branch"=>"Seleccione una sucursal para agregarle a este usuario",
-    "branches_user_list"=>"Lista de Sucursales agregadas a este usuario"
+    "branches_user_list"=>"Lista de Sucursales agregadas a este usuario",
+    "branch_exists"=>"La sucursal selecciona ya está agregada a este usuario",
     
 ];

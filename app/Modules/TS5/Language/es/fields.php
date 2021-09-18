@@ -41,6 +41,7 @@ return [
     "branches"=>"Sucursales",
     "municipalitie_name"=>"Ciudad",
     "app_cat_municipalities_id"=>"Ciudad",
+    "cost_centers"=>"Centros de Costo",
 
 
 

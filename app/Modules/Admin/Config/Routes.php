@@ -37,28 +37,39 @@ $routes->group("admin", [
         $subroutes->add("list/(:any)", "AdminController::list/$1");
         $subroutes->add("roles_list", "AdminController::roles_list");
         $subroutes->add("users_list", "AdminController::users_list");
-        $subroutes->add("branches_list", "AdminController::branches_list");
+        
         $subroutes->add("frm_create_role", "AdminController::frm_create_role");
         $subroutes->add("frm_create_user", "AdminController::frm_create_user");
-        $subroutes->add("frm_create_branch", "AdminController::frm_create_branch");
+        
         $subroutes->add("save_role", "AdminProcess::save_role");
         $subroutes->add("save_user", "AdminProcess::save_user");
-        $subroutes->add("save_branch", "AdminProcess::save_branch");
+        
         $subroutes->add("permissions_searches", "AdminProcess::permissions_searches");
         $subroutes->add("municipalities_searches", "AdminProcess::municipalities_searches");
         $subroutes->add("add_permission_role", "AdminProcess::add_permission_role");
         $subroutes->add("delete_permission_role", "AdminProcess::delete_permission_role");
         $subroutes->add("role_view", "AdminController::role_view");
         $subroutes->add("roles_permissions_list", "AdminController::roles_permissions_list");
+        
         $subroutes->add("user_view", "AdminController::user_view");
         $subroutes->add("user_roles_list", "AdminController::user_roles_list");  
         $subroutes->add("roles_searches", "AdminProcess::roles_searches");
-        
-        $subroutes->add("branches_user_view", "AdminController::branches_user_view");
-        $subroutes->add("branches_user_list", "AdminController::branches_user_list");
-        
         $subroutes->add("add_role_user", "AdminProcess::add_role_user");
         $subroutes->add("delete_role_user", "AdminProcess::delete_role_user");
+        
+        
+        $subroutes->add("branches_list", "AdminController::branches_list");
+        $subroutes->add("frm_create_branch", "AdminController::frm_create_branch");
+        $subroutes->add("save_branch", "AdminProcess::save_branch");
+        $subroutes->add("branches_user_view", "AdminController::branches_user_view");
+        $subroutes->add("branches_user_list", "AdminController::branches_user_list");
+        $subroutes->add("branches_searches", "AdminProcess::branches_searches");
+        $subroutes->add("add_branch_user", "AdminProcess::add_branch_user");
+        $subroutes->add("delete_branch_user", "AdminProcess::delete_branch_user");
+        
+        $subroutes->add("cost_centers_list", "AdminController::cost_centers_list");
+        $subroutes->add("frm_create_cost_center", "AdminController::frm_create_cost_center");
+        $subroutes->add("save_cost_center", "AdminProcess::save_cost_center");     
         
 
     }

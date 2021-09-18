@@ -648,5 +648,127 @@ class AdminController extends BaseController
 
     }
     
+    /**
+     * Lista los centros de costos de una empresa
+     * @return string|void
+     */
+    function cost_centers_list(){
+
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='614649907026d651400407';  //listar centros de costo
+        $module_id=$this->module_id;      //Admin
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+
+        $i=0;
+        $limit=20;
+
+        $data["cols"][$i++]=lang("fields.actions");
+        $data["cols"][$i++]=lang("fields.id");
+        $data["cols"][$i++]=lang("fields.name");
+
+        $request=service('request');
+        $page=$request->getVar('page');
+        $search=$request->getVar('search');
+        $fields=array('id','name');
+        $model=model('App\Modules\Access\Models\CompaniesCostCenters');
+        $model->select($fields);
+        $model->where('company_id',$company_id);
+        $recordsTotal = $model->countAllResults(false);
+
+        $z=0;
+        if($search<>''){
+            foreach ($fields as $field){
+
+                if($z==0){
+                    $z=1;
+                    $model->like($field, $search);
+                }else{
+                    $model->orLike($field, $search);
+                }
+
+            }
+        }
+
+        $recordsFiltered = $model->countAllResults(false);
+        $totalPages= ceil($recordsFiltered/$limit);
+        if($page>1){
+            $previous_page=$page-1;
+        }else{
+            $previous_page=1;
+        }
+        $next_page=$page;
+        $start_point=round($page * $limit - $limit);
+        if($recordsFiltered>($start_point+$limit)){
+            $next_page=$page+1;
+        }
+        $model->orderBy('id DESC');
+        $response=$model->findAll($limit,$start_point);
+
+        $info=lang("msg.info");
+        $info=str_replace("_START_",$page,$info);
+        $info=str_replace("_END_",$totalPages,$info);
+        $info=str_replace("_TOTAL_",$recordsTotal,$info);
+        $data["info_pagination"]=$info;
+        $data["previous_page"]=$previous_page;
+        $data["next_page"]=$next_page;
+
+        $data["actions"]["edit"]=1;
+        $data["data"]=$response;
+        echo view($this->views_path.'\table_list',$data);
+    }
+    
+    
+    /**
+     * Formulario para crear o editar un centro de costo
+     * @return string
+     */
+    function frm_create_cost_center(){
+
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+
+        $request=service('request');
+        $id=$request->getVar('id');
+        $module_id=$this->module_id;
+        $data=[];
+        if($id==''){ //Crear
+            $permission_id='61464cc79b682950076810';  //Crear un role
+            if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+                $data_error["error_title"]=lang('Access.access_view_error_title');
+                $data_error["msg_error"]=lang('Access.access_view_error');
+                return (view($this->views_path."\alert_error",$data_error));
+            }
+        }else{       //Editar
+
+            $model=model('App\Modules\Access\Models\CompaniesCostCenters');
+
+            $permission_id='61464d03292ed065782871';           //Permiso singular para editar la configuración de una empresa
+            $permission_id_all='61464d2b20dbd231599744';       //Permiso plural para editar la configuración de una empresa
+
+            $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+            $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+            $authority=$model->get_Authority($id,$user_id);
+
+            if(!$p_all and !($p_single and $authority)){
+                $data_error["error_title"]=lang('Access.access_view_error_title');
+                $data_error["msg_error"]=lang('Access.access_view_error');
+                return (view($this->views_path."\alert_error",$data_error));
+            }
+            $data_model=$model->where('id',$id)->first();
+            $data["data_form"]=$data_model;
+
+        }
+
+        return(view($this->views_path_module.'\Admin\frm_cost_center',$data));
+    }
 
 }

@@ -47,6 +47,7 @@ class Autoload extends AutoloadConfig
         'TS5' => APPPATH . 'Modules/TS5',
         'Admin' => APPPATH . 'Modules/Admin',
         'Accounting' => APPPATH . 'Modules/Accounting',
+        'Inverpacific' => APPPATH . 'Modules/Inverpacific',
     ];
 
     /**
