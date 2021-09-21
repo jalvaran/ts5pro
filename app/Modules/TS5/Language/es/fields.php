@@ -42,7 +42,22 @@ return [
     "municipalitie_name"=>"Ciudad",
     "app_cat_municipalities_id"=>"Ciudad",
     "cost_centers"=>"Centros de Costo",
-
-
+    "history"=>"Historial",
+    "on_request"=>"En solicitud",
+    "in_analisys"=>"En Análisis",
+    "pre_approved"=>"Pre Aprobado",
+    "pre_approved_denied"=>"Pre Aprobado Negado",
+    "approved"=>"Aprobado",
+    "invoiced"=>"Facturado",
+    "documents_delivered"=>"Documentos Entregados",
+    "signed_documents"=>"Documentos Firmados",
+    "for_delivery"=>"Para Entrega",
+    "delivered"=>"Entregado",
+    "archived_by_commercial"=>"Archivado por Comercial",
+    "official_documents"=>"Esperando Documentos Oficiales",
+    
+    
+    
+    
 
 ];

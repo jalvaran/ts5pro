@@ -71,7 +71,7 @@ class InverPacificDraw extends BaseController
      */
     function list($company_id) {
             
-        return("Lista");
+        
         if (!$this->session->get_LoggedIn()) {
             return (redirect()->to(base_url('/ts5/signin')));
         }
@@ -95,22 +95,140 @@ class InverPacificDraw extends BaseController
         $data=$ts5->getDataTemplate($this->session);
         $data["data_template"]=$ts5->getDataTemplate($this->session);
 
-        $admin_js=view($this->views_path_module.'\Admin\admin_js',$data);
-
-        $data["data_template"]["my_js"]=$admin_js;
+        $list_js=view($this->views_path_module.'\list\list_js',$data);
+        
+        $data["data_template"]["my_js"]=$list_js;
         $data["view_path"]=$this->views_path;
         $data["view_path_module"]=$this->views_path_module;
-        $data["page_title"]=lang('admin.admin_title');
-        $data["module_name"]=lang('admin.admin');
+        $data["page_title"]=lang('creditmoto.creditmoto_title');
+        $data["module_name"]=lang('creditmoto.creditmoto');
 
-        $html=view($this->views_path_module.'\Admin\index',$data);
+        $html=view($this->views_path_module.'\list\index',$data);
 
 
         $data["page_content"]=$html;
         echo view($this->views_path."\blank",$data);
 
+    }
+    
+    function business_sheet_draw(){
+        
+        $request=service('request');
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        
+        $list_id=$request->getVar('list_id');
+        $permission_id="";
+        switch ($list_id) {
+            case "A": //Listar el historial de las hojas de negocio
+                $permission_id='6149022bf2bff062214145'; 
+            break;
+            case 1: //Listar el historial de las hojas de negocio en estado solicitada
+                $permission_id='61494b3150ea6632631526'; 
+            break;
+            case 2: //Listar el historial de las hojas de negocio en estado de analisis
+                $permission_id='61495079796f2594150933'; 
+            break;
+            case 3: //Listar el historial de las hojas de negocio en estado pre aprobado
+                $permission_id='61494bc55c2e3827172881'; 
+            break;
+            case 4: //Listar el historial de las hojas de negocio en estado pre aprobado negado
+                $permission_id='61494c45d60d3090342990'; 
+            break;
+            case 5: //Listar el historial de las hojas de negocio en estado APROBADO
+                $permission_id='61494ca3c94e1534968211'; 
+            break;
+            case 6: //Listar el historial de las hojas de negocio en estado facturado
+                $permission_id='61494d51dc110940219084'; 
+            break;
+            case 7: //Listar el historial de las hojas de negocio en estado documentos generados
+                $permission_id='61494da5de2c8189330103'; 
+            break;
+            case 8: //Listar el historial de las hojas de negocio en estado documentos firmados
+                $permission_id='61494e5303d43932249969'; 
+            break;
+            case 9: //Listar el historial de las hojas de negocio en estado a la espera de documentos oficiales
+                $permission_id='6149523eb5fe5302607425'; 
+            break;
+            case 10: //Listar el historial de las hojas de negocio en estado para entrega
+                $permission_id='6149536021af6056488420'; 
+            break;
+            case 11: //Listar el historial de las hojas de negocio en estado entregado
+                $permission_id='614953c4736a5433999033'; 
+            break;
+            case 12: //Listar el historial de las hojas de negocio en estado archivado por comercial
+                $permission_id='61495412c072e613111003'; 
+            break;
+           
+           
+        }
+                
+        $module_id=$this->module_id;      //Admin
 
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
 
+        }
+
+        $i=0;
+        $limit=20;
+
+        $data["cols"][$i++]=lang("fields.actions");
+        $data["cols"][$i++]=lang("fields.id");
+        $data["cols"][$i++]=lang("fields.name");
+
+        
+        $page=$request->getVar('page');
+        $search=$request->getVar('search');
+        $fields=array('id','name');
+        $model=model('App\Modules\Access\Models\Roles');
+        $model->select($fields);
+        $model->where('app_company_id',$company_id);
+        $recordsTotal = $model->countAllResults(false);
+
+        $z=0;
+        if($search<>''){
+            foreach ($fields as $field){
+
+                if($z==0){
+                    $z=1;
+                    $model->like($field, $search);
+                }else{
+                    $model->orLike($field, $search);
+                }
+
+            }
+        }
+
+        $recordsFiltered = $model->countAllResults(false);
+        $totalPages= ceil($recordsFiltered/$limit);
+        if($page>1){
+            $previous_page=$page-1;
+        }else{
+            $previous_page=1;
+        }
+        $next_page=$page;
+        $start_point=round($page * $limit - $limit);
+        if($recordsFiltered>($start_point+$limit)){
+            $next_page=$page+1;
+        }
+        $model->orderBy('id DESC');
+        $response=$model->findAll($limit,$start_point);
+
+        $info=lang("msg.info");
+        $info=str_replace("_START_",$page,$info);
+        $info=str_replace("_END_",$totalPages,$info);
+        $info=str_replace("_TOTAL_",$recordsTotal,$info);
+        $data["info_pagination"]=$info;
+        $data["previous_page"]=$previous_page;
+        $data["next_page"]=$next_page;
+
+        $data["actions"]["edit"]=1;
+        $data["data"]=$response;
+        echo view($this->views_path.'\table_list',$data);
     }
 
     

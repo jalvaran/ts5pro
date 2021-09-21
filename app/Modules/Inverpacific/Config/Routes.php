@@ -35,6 +35,7 @@ $routes->group("inverpacific", [
     function ($subroutes) {
         $subroutes->add("", "InverPacificDraw::index");
         $subroutes->add("list/(:any)", "InverPacificDraw::list/$1");
+        $subroutes->add("business_sheet_draw", "InverPacificDraw::business_sheet_draw");
                
 
     }
