@@ -499,6 +499,53 @@
        });
        
     });    
+    
+    
+    function frm_thirds(id=""){
+        $('#modal_xl').modal("show");
+        var Controller='<?php echo base_url('/ts5/frm_thirds') ?>';
+        $(this).attr("data-form_id",100);
+        
+        $(".ts_btn_save_modals").attr("data-id",id);
+        var form_data = new FormData();        
+        form_data.append('id',id);        
+
+        $.ajax({
+            url: Controller,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.loading')?>');
+            },
+            success: function(data){
+
+                hide_spinner();                
+                $('.ts_modal_body').html('');
+                $('#modal_xl_body').html(data);
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
    
 
 </script>

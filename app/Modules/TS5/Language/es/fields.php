@@ -11,7 +11,6 @@ return [
     "sync" => "Sincronizado",
     "actions" => "Acciones",
     "id" => "id",
-    "author" => "Autor",
     "view" => "Ver",
     "edit" => "Editar",
     "delete" => "Borrar",
@@ -56,8 +55,38 @@ return [
     "archived_by_commercial"=>"Archivado por Comercial",
     "official_documents"=>"Esperando Documentos Oficiales",
     
+    "third_name"=>"Nombre del Tercero",
+    "third_identification"=>"Identificación",
+    "motorcycle"=>"Moto",
+    "color"=>"Color",
+    "maker"=>"Marca",
+    "status_name"=>"Estado",
+    "total_to_pay"=>"Total a Pagar",
+    "term"=>"Plazo",
+    "fee_value_monthly"=>"Valor Mensual de Cuota",
+    "observations"=>"Observaciones",
+    "created_at"=>"Fecha de Creación",
+    "consecutive"=>"Consecutivo",
+    "author_name"=>"Creador",
     
+    "type_organization_id"=>"Tipo de Organización",
+    "type_regime_id"=>"Tipo de Regimén",
+    "type_liabilitie_id"=>"Responsabilidad",
+    "type_document_identification_id"=>"Tipo de Documento",
     
-    
+    "dv"=>"Digito de Verificación",
+    "firts_name"=>"Primer Nombre",
+    "second_name"=>"Segundo Nombre",
+    "surname"=>"Primer Apellido",
+    "second_surname"=>"Segundo Apellido",        
+    "municipalities_id"=>"Municipio",
+    "departments_id"=>"Departamento",
+    "countries_id"=>"País",
+    "address"=>"Dirección",
+    "neighborhood"=>"Barrio",
+    "telephone1"=>"Teléfono 1",
+    "telephone2"=>"Teléfono 2",
+    "mail"=>"Correo",
+        
 
 ];

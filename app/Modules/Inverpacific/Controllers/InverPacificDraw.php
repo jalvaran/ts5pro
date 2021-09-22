@@ -91,6 +91,10 @@ class InverPacificDraw extends BaseController
         $ts5=new Ts5_class();
 
         $this->session->set('company_id',$company_id);
+        $mCompanies=model('App\Modules\Access\Models\Companies');        
+        $db_company=$mCompanies->get_database($company_id); 
+        
+        $this->session->set("DB_CLIENT", $db_company);
 
         $data=$ts5->getDataTemplate($this->session);
         $data["data_template"]=$ts5->getDataTemplate($this->session);
@@ -117,7 +121,7 @@ class InverPacificDraw extends BaseController
         $company_id=$this->session->get('company_id');
         $mUsers=model('App\Modules\Access\Models\Users');
         $user_id=$this->session->get('user');
-        
+        $module_id=$this->module_id;                        //inverpacific
         $list_id=$request->getVar('list_id');
         $permission_id="";
         switch ($list_id) {
@@ -164,8 +168,7 @@ class InverPacificDraw extends BaseController
            
         }
                 
-        $module_id=$this->module_id;      //Admin
-
+        
         if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
             $data_error["error_title"]=lang('Access.access_view_error_title');
             $data_error["msg_error"]=lang('Access.access_view_error');
@@ -178,18 +181,49 @@ class InverPacificDraw extends BaseController
 
         $data["cols"][$i++]=lang("fields.actions");
         $data["cols"][$i++]=lang("fields.id");
-        $data["cols"][$i++]=lang("fields.name");
-
+        $data["cols"][$i++]=lang("fields.consecutive");
+        $data["cols"][$i++]=lang("fields.created_at");
+        $data["cols"][$i++]=lang("fields.third_name");
+        $data["cols"][$i++]=lang("fields.third_identification");
+        $data["cols"][$i++]=lang("fields.motorcycle");
+        $data["cols"][$i++]=lang("fields.color");
+        $data["cols"][$i++]=lang("fields.maker");        
+        $data["cols"][$i++]=lang("fields.status_name");
+        $data["cols"][$i++]=lang("fields.total_to_pay");
+        $data["cols"][$i++]=lang("fields.term");
+        $data["cols"][$i++]=lang("fields.fee_value_monthly");
+        $data["cols"][$i++]=lang("fields.observations");
+        $data["cols"][$i++]=lang("fields.author_name");
         
         $page=$request->getVar('page');
         $search=$request->getVar('search');
-        $fields=array('id','name');
-        $model=model('App\Modules\Access\Models\Roles');
+        $fields=array(  'id',
+                        'consecutive',
+                        'created_at',
+                        'third_name',
+                        'third_identification',
+                        'motorcycle',
+                        'color',
+                        'maker',
+                        'status_name',
+                        'total_to_pay',
+                        'term',
+                        'fee_value_monthly',
+                        'observations',
+                        'author_name',    
+                        
+            
+            );
+        
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');
+                
         $model->select($fields);
-        $model->where('app_company_id',$company_id);
+                
+        //$model->where('author',$user_id);   //Por si se quiere que solo se vean los negocios del mismo usuario
         $recordsTotal = $model->countAllResults(false);
-
+        
         $z=0;
+       
         if($search<>''){
             foreach ($fields as $field){
 
@@ -202,7 +236,8 @@ class InverPacificDraw extends BaseController
 
             }
         }
-
+         
+        
         $recordsFiltered = $model->countAllResults(false);
         $totalPages= ceil($recordsFiltered/$limit);
         if($page>1){
@@ -215,9 +250,11 @@ class InverPacificDraw extends BaseController
         if($recordsFiltered>($start_point+$limit)){
             $next_page=$page+1;
         }
-        $model->orderBy('id DESC');
+        $model->orderBy('consecutive DESC');
         $response=$model->findAll($limit,$start_point);
-
+        
+        //print($model->getCompiledSelect());
+        //print_r($response);
         $info=lang("msg.info");
         $info=str_replace("_START_",$page,$info);
         $info=str_replace("_END_",$totalPages,$info);
@@ -228,7 +265,7 @@ class InverPacificDraw extends BaseController
 
         $data["actions"]["edit"]=1;
         $data["data"]=$response;
-        echo view($this->views_path.'\table_list',$data);
+        echo view($this->views_path_module.'\list\table_list',$data);
     }
 
     

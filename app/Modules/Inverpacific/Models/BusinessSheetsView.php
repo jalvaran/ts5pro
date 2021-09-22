@@ -32,10 +32,10 @@ namespace App\Modules\Inverpacific\Models;
 
 use CodeIgniter\Model;
 
-class BusinessSheets extends Model
+class BusinessSheetsView extends Model
 {
 
-    protected $table = 'creditmoto_business_sheet';
+    protected $table = 'view_creditmoto_business_sheet';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = false;
@@ -47,6 +47,8 @@ class BusinessSheets extends Model
         'id',
         'consecutive',
         'app_thirds_id',
+        'third_name',
+        'third_identification',
         'motorcycle',
         'color',
         'maker',
@@ -95,8 +97,10 @@ class BusinessSheets extends Model
         'simit',
         'runt',
         'author',
+        'author_name',
         
         'status',
+        'status_name',
         'created_at',
         'updated_at',
         'deleted_at',

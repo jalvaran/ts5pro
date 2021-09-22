@@ -13,6 +13,7 @@
  | NOTE: changing this will require manually modifying the
  | existing namespaces of App\* namespaced-classes.
  */
+@session_start();
 defined('APP_NAMESPACE') || define('APP_NAMESPACE', 'App');
 
 if (isset($_SERVER['HTTPS'])) {
@@ -31,14 +32,14 @@ if (!defined('APPNODE')) {   //Anssible
     define('APPNODE', "{$fsn}_");
 }
 
-if (!defined('TS_APPNODE')) {
+if (!defined('DB_CLIENT_TS')) {
     if(isset($_SESSION['DB_CLIENT'])){
         $fsn =$_SESSION['DB_CLIENT'];
     }else{
-        $fsn ="";
+        $fsn ='';
     }
 
-    define('TS_APPNODE', "{$fsn}");
+    define('DB_CLIENT_TS', "{$fsn}");
 }
 
 if (!defined('TS_CACHE_TIME')) {

@@ -8,7 +8,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
                     </div>
                     <div class="modal-body">
-                       <div id="modal_fullscreen_body" class="row">
+                       <div id="modal_fullscreen_body" class="row ts_modal_body">
                            <?php
                                if(isset($modal_body)){
                                    echo $modal_body;

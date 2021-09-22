@@ -56,7 +56,7 @@ class Database extends Config
 		'hostname' => 'localhost',
 		'username' => 'techno',
 		'password' => 'techno',
-		'database' => 'techno_ts5_pro',
+		'database' => DB_CLIENT_TS,
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,

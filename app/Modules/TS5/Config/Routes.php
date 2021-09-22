@@ -15,6 +15,7 @@ $routes->group("ts5", [
         $routes->add("tables_create_register", "TablesProcess::tables_create_register");
         $routes->add("tables_edit_register", "TablesProcess::tables_edit_register");
         $routes->add("tables_searchs", "TablesProcess::tables_searchs");
+        $routes->add("frm_thirds", "FormsDraw::frm_thirds");
 
     }
 );
