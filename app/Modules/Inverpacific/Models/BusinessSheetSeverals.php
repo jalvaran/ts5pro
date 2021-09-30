@@ -18,36 +18,79 @@
  * DESDE, FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS
  * NEGOCIACIONES EN EL SOFTWARE.
  * -----------------------------------------------------------------------------
- * Router del módulo InverPacific para gestión de créditos de motos
+ * Modelo para los tips de hojas de negocio
  * -----------------------------------------------------------------------------
  * @Author Julian Andres Alvarán Valencia <jalvaran@gmail.com>
- * @created 2021-09-18
- * @updated 2021-09-18
+ * @created 2021-09-29
+ * @updated 2021-09-29 
  * @link https://www.technosoluciones.com.co
  * @Version 1.0
  * @since PHP 7, PHP 8
  */
 
-use Config\Services;
-$routes=!isset($routes)?service("routes"):$routes;
-$routes->group("inverpacific", [
-    "namespace" => "App\Modules\Inverpacific\Controllers"],
-    function ($subroutes) {
-        $subroutes->add("", "InverPacificDraw::index");
-        $subroutes->add("list/(:any)", "InverPacificDraw::list/$1");
-        $subroutes->add("business_sheet_draw", "InverPacificDraw::business_sheet_draw");
-        $subroutes->add("form_business_sheet", "InverPacificDraw::form_business_sheet");
-        $subroutes->add("business_sheet_severals_list", "InverPacificDraw::business_sheet_severals_list");
-        $subroutes->add("business_several_add", "InverPacificProcess::business_several_add");
-        $subroutes->add("business_sheet_severals_list_added", "InverPacificDraw::business_sheet_severals_list_added");
-        
-        $subroutes->add("business_sheet_field_edit", "InverPacificProcess::business_sheet_field_edit");
-        $subroutes->add("business_several_adds_delete", "InverPacificProcess::business_several_adds_delete");
-        
-        $subroutes->add("thirds_searches", "InverPacificSearches::thirds_searches");
-        $subroutes->add("type_sheets_searches", "InverPacificSearches::type_sheets_searches");
-        $subroutes->add("financials_searches", "InverPacificSearches::financials_searches");
-               
+namespace App\Modules\Inverpacific\Models;
 
+use CodeIgniter\Model;
+
+class BusinessSheetSeverals extends Model
+{
+
+    protected $table = 'creditmoto_business_sheet_severals';
+    protected $primaryKey = 'id';
+
+    protected $useAutoIncrement = true;
+
+    protected $returnType = 'array';
+    protected $useSoftDeletes = true;
+
+    protected $allowedFields = [
+        'id',
+        'name',
+        'value',
+        'iva',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'backed_at',
+        
+
+    ];
+
+    protected $useTimestamps = true;
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
+    protected $deletedField = 'deleted_at';
+
+    protected $validationRules = [];
+    protected $validationMessages = [];
+    protected $skipValidation = false;
+    //protected $cache_time = "10";
+    protected $DBGroup = "techno_client";
+    
+    /**
+     * retorna el listado de los adicionales
+     * @param type $condition
+     * @return type
+     */
+    public function get_List($condition='') {
+        
+        if($condition<>''){
+            $this->where($condition);
+        }
+        $result=$this
+                ->findAll();
+        return($result);
+    }    
+    /**
+     * Retorna los datos de un id especifico
+     * @param type $id
+     * @return type
+     */
+    public function get_Data($id) {
+        return($this->where('id',$id)->first());
     }
-);
+    
+    
+    
+}
+

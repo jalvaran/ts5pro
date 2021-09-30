@@ -58,6 +58,12 @@
                 $('.ts_modal_body').html('');
                 $('#modal_xl_body').html(data);
                 select2_form_business_sheet();
+                form_business_sheet_events();
+                if(id==''){
+                    id=$('#app_thirds_id').attr('data-business_sheet_id');
+                }
+                business_sheet_severals_list(id);
+                business_sheet_severals_list_added(id);
             },
             error: function(xhr, ajaxOptions, thrownError){
                 hide_spinner();
@@ -80,6 +86,86 @@
     
    }
    
+    
+    function form_business_sheet_events(){
+        $(".ts_edit_sheet").unbind();
+        
+        $(".ts_edit_sheet").on('change',function () {
+            var field = $(this).attr("id");
+            var business_sheet_id = $(this).attr("data-business_sheet_id");
+            business_sheet_field_edit(field,business_sheet_id);
+        });
+        
+    }
+   
+    function business_sheet_field_edit(field,business_sheet_id){
+         
+        
+        var urlControllerProcess='<?php echo base_url('/inverpacific/business_sheet_field_edit') ?>';
+        var value = $('#'+field).val();
+        
+        
+        var form_data = new FormData();
+            form_data.append('business_sheet_id',business_sheet_id);
+            form_data.append('field',field);
+            form_data.append('value',value);
+               
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                
+            },
+            success: function(data){
+
+                hide_spinner();
+               
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        error_unmark(field);
+                        sheet_totals_draw(business_sheet_id);
+                    }else{
+                        toastr.error(data.msg);
+                        if(data.object_id){
+                            error_mark(data.object_id,0);
+                        }
+                        if(data.value_old){
+                            $('#'+field).val(data.value_old);
+                        }
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+        
+    }
    
     function select2_form_business_sheet(){
         
@@ -135,6 +221,275 @@
         });
         
     }
+    
+    
+    
+    function business_sheet_severals_list(id=''){
+        
+        var div="div_business_sheet_several";        
+        var Controller='<?php echo base_url('/inverpacific/business_sheet_severals_list') ?>';
+        
+        var form_data = new FormData();        
+        form_data.append('id',id);        
+
+        $.ajax({
+            url: Controller,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.loading')?>');
+            },
+            success: function(data){
+
+                hide_spinner();                
+                
+                $('#'+div).html(data);
+                business_sheet_severals_event_add();
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
    
+    
+   }
+   
+   
+    function business_sheet_severals_event_add(){
+        
+        $(".ts_btn_add_severals").unbind();
+        
+        $(".ts_btn_add_severals").on('click',function () {
+            var id = $(this).attr("data-id");
+            var business_sheet_id = $(this).attr("data-business_sheet_id");
+            business_several_add(id,business_sheet_id);
+        });
+        
+    }
+    /**
+    * agrega un adicional a la hoja de negocio
+
+     * @param {type} id
+     * @param {type} business_sheet_id
+     * @returns {undefined}     */
+    function business_several_add(id,business_sheet_id){
+        var box_id="several_value_"+id;
+        var concept_id="several_concept_"+id;
+        
+        var urlControllerProcess='<?php echo base_url('/inverpacific/business_several_add') ?>';
+        var btnSave = $(".ts_btn_add_severals");
+        
+        var value=$('#'+box_id).val();
+        var concept=$('#'+concept_id).val();
+        
+        var form_data = new FormData();
+
+        form_data.append('several_id',id);
+        form_data.append('value',value);
+        form_data.append('concept',concept);
+        form_data.append('business_sheet_id',business_sheet_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        business_sheet_severals_list_added(business_sheet_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+        
+    }
+    
+    /**
+    * Lista los adicionales de una hoja de negocio
+     * @param {type} business_sheet_id
+     * @returns {undefined}     
+     * 
+     * */
+    function business_sheet_severals_list_added(business_sheet_id){
+        
+        var div="div_business_sheet_several_added";        
+        var Controller='<?php echo base_url('/inverpacific/business_sheet_severals_list_added') ?>';
+        
+        var form_data = new FormData();        
+        form_data.append('business_sheet_id',business_sheet_id);        
+
+        $.ajax({
+            url: Controller,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.loading')?>');
+            },
+            success: function(data){
+
+                hide_spinner();                
+                
+                $('#'+div).html(data);
+                business_sheet_severals_event_added();
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+   
+    
+   }
+   
+   function business_sheet_severals_event_added(){
+        
+        $(".ts_btn_delete_several").unbind();
+        
+        $(".ts_btn_delete_several").on('click',function () {
+            var id = $(this).attr("data-id");
+            var business_sheet_id = $(this).attr("data-business_sheet_id");
+            business_several_delete(id,business_sheet_id);
+        });
+        
+    }
+   
+   
+   function business_several_delete(id,business_sheet_id){
+               
+        var urlControllerProcess='<?php echo base_url('/inverpacific/business_several_adds_delete') ?>';
+        
+        var form_data = new FormData();
+
+        form_data.append('id',id);
+        
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                
+            },
+            success: function(data){
+
+                hide_spinner();
+               
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.error(data.msg);                        
+                        business_sheet_severals_list_added(business_sheet_id);
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+        
+    }
+    
 </script>
 

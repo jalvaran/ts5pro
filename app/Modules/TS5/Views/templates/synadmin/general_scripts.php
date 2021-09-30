@@ -61,17 +61,24 @@
         $("#spinner1").remove();
     }
 
-    function error_mark(obj_id){
+    function error_mark(obj_id,unmark_all=1){
         var select2_id='select2-'+obj_id+'-container';
-
-        $(".ts_input").css("background-color","transparent");
-        $(".select2-selection__rendered").css("background-color","transparent");
+        if(unmark_all==1){
+            $(".ts_input").css("background-color","transparent");
+            $(".select2-selection__rendered").css("background-color","transparent");
+        }
+        
         $("#"+obj_id).css("background-color","pink");
         $("#"+select2_id).css("background-color","pink");
         $("#"+obj_id).focus();
     }
 
-
+    function error_unmark(obj_id){
+        var select2_id='select2-'+obj_id+'-container';
+        $("#"+obj_id).css("background-color","transparent");
+        $("#"+select2_id).css("background-color","transparent");
+        
+    }  
     function data_table_init_2(table_id,urlControllerJson){
 
         $('#'+table_id).DataTable({

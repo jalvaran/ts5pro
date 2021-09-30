@@ -31,5 +31,6 @@ return [
     
     "create_cost_center" => "Crear un Centro de Costos",
     "loading" => "Cargando",
+    "exists" => "El registro ya existe",
 
 ];

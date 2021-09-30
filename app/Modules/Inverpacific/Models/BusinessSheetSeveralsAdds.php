@@ -18,11 +18,11 @@
  * DESDE, FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS
  * NEGOCIACIONES EN EL SOFTWARE.
  * -----------------------------------------------------------------------------
- * Modelo para las hojas de trabajo
+ * Modelo para los valores adicionales de una hoja de negocio
  * -----------------------------------------------------------------------------
  * @Author Julian Andres Alvarán Valencia <jalvaran@gmail.com>
- * @created 2021-09-20
- * @updated 2021-09-20 
+ * @created 2021-09-29
+ * @updated 2021-09-29 
  * @link https://www.technosoluciones.com.co
  * @Version 1.0
  * @since PHP 7, PHP 8
@@ -32,10 +32,10 @@ namespace App\Modules\Inverpacific\Models;
 
 use CodeIgniter\Model;
 
-class BusinessSheetsView extends Model
+class BusinessSheetSeveralsAdds extends Model
 {
 
-    protected $table = 'view_creditmoto_business_sheet';
+    protected $table = 'creditmoto_business_sheet_severals_adds';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = false;
@@ -45,64 +45,13 @@ class BusinessSheetsView extends Model
 
     protected $allowedFields = [
         'id',
-        'creditmoto_business_sheet_types_id',
-        'creditmoto_business_sheet_types_name',
-        'consecutive',
-        'app_thirds_id',
-        'third_name',
-        'third_identification',
-        'motorcycle',
-        'color',
-        'maker',
-        'invoice',
-        'sticker',
-        'motor_number',
-        'motorcycle_value',
-        'motorcycle_value_before_taxes',
-        'tax_percent_value',
-        'discount',
-        'subtotal',
-        'iva_value',
-        'total_motorcycle',
-        'several_value',
-        'total_more_several',
-        'initial_fee',
-        'retake',
-        'subtotal_general',
-        'guarantee_fund_percent',
-        'guarantee_fund_percent_iva',
-        'guarantee_fund_value',        
-        'guarantee_fund_iva_value',        
-        'total_administration_expenses',
-        'total_general',
-        'capital_xtra',
-        
-        'financing_balance',
-        'financing_value',
-        'financing_value_adjustment',
-        'life_insurance_percent',
-        'life_insurance_value',
-        'total_to_pay',
-        'type_of_sale',
-        'financial_id',
-        'financing_rate',
-        'term',
-        'solidarity_debtor',
-        'responsible_in_financial',
-        'promissory_note_value',
-        'fee_value',
-        'fee_value_life_insurance',
-        'fee_value_monthly',
-        'observations',
-        'cifin',
-        'fosiga',
-        'simit',
-        'runt',
+        'business_sheet_id',
+        'several_id',
+        'value',
+        'iva',
+        'concept',
+        'bill_number',
         'author',
-        'author_name',
-        
-        'status',
-        'status_name',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -142,22 +91,39 @@ class BusinessSheetsView extends Model
             return (false);
         }
     }
-    
     /**
-     * Obtener los datos de una hoja de trabajo
-     * @param type $id
+     * Valida si un adicional ya fué agregado a una hoja de negocio
+     * @param type $several_id
+     * @param type $business_sheet_id
      * @return type
      */
-    public function get_Data($id) {
-        $result=$this
-                ->where('id',$id)
+    public function is_add($several_id,$business_sheet_id) {
+        $row = $this->select("id")
+                ->where("several_id", $several_id)
+                ->where("business_sheet_id", $business_sheet_id)
                 ->first();
-        if(@$result["id"]<>''){
-            return($result);            
-        }else{
-            return(false);
+        if (@$row["id"] <>'') {
+            return (true);
+        } else {
+            return (false);
         }
     }
+    /**
+     * Retorna los adicionales agregados a una hoja de negocio
+     * @param type $condition
+     * @return type
+     */
+    public function get_List($condition='') {
+        
+        if($condition<>''){
+            $this->where($condition);
+        }
+        $result=$this->select('creditmoto_business_sheet_severals_adds.*,creditmoto_business_sheet_severals.name as several_name')
+                ->join('creditmoto_business_sheet_severals','creditmoto_business_sheet_severals.id=creditmoto_business_sheet_severals_adds.several_id')
+                ->findAll();
+        return($result);
+    }   
+    
 
 }
 

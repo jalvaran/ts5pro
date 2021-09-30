@@ -115,7 +115,10 @@ class InverPacificDraw extends BaseController
         echo view($this->views_path."\blank",$data);
 
     }
-    
+    /**
+     * Dibuja las hojas de negocio segun el listado seleccionado
+     * @return type
+     */
     function business_sheet_draw(){
         
         $request=service('request');
@@ -270,7 +273,10 @@ class InverPacificDraw extends BaseController
     }
     
     
-    
+    /**
+     * Formulario para una hoja de negocio
+     * @return type
+     */
     public function form_business_sheet() {
         
         $request=service('request');
@@ -278,18 +284,95 @@ class InverPacificDraw extends BaseController
         $mUsers=model('App\Modules\Access\Models\Users');
         $user_id=$this->session->get('user');
         $module_id=$this->module_id;                        //inverpacific
+        $id=$request->getVar('id');
         
-        $permission_id="61548efe7ee2c964405841";
+        if($id==''){  //Formulario de Creación
+            $permission_id="61548efe7ee2c964405841";
+            
+            if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+                $data_error["error_title"]=lang('Access.access_view_error_title');
+                $data_error["msg_error"]=lang('Access.access_view_error');
+                return (view($this->views_path."\alert_error",$data_error));
+
+            }
+            $ts5=new Ts5_class();
+            $data["id"]=$ts5->getUniqueId("bs_", true);
+            
+        }else{
+            $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');
+            $permission_id='6156159284c77599840464';           //Permiso para Editar singular Ver en tabla access_control_permissions
+            $permission_id_all='615615ad6efa6294907733';       //Permiso para Editar plural Ver en tabla access_control_permissions
+
+            $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+            $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+            $authority=$model->get_Authority($id,$user_id);
+
+            if(!$p_all and !($p_single and $authority)){
+                $data_error["error_title"]=lang('Access.access_view_error_title');
+                $data_error["msg_error"]=lang('Access.access_view_error');
+                return (view($this->views_path."\alert_error",$data_error));
+
+            }
+            $data["id"]=$id;
+            $data["data_form"]=$model->where('id',$id)->first();
+            
+        }
         
+        
+        
+        return view($this->views_path_module.'\forms\business_sheet',$data);
+    }
+    
+    /**
+     * Dibuja el listado de los elementos o items adicionales para agregar en una hoja de trabajo 
+     * @return type
+     */
+    public function business_sheet_severals_list() {
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='6149022bf2bff062214145';  //listar el historial de hojas de negocio
+        $module_id=$this->module_id;      //inverpacific
+
         if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
             $data_error["error_title"]=lang('Access.access_view_error_title');
             $data_error["msg_error"]=lang('Access.access_view_error');
             return (view($this->views_path."\alert_error",$data_error));
 
         }
-
-        
-        return view($this->views_path_module.'\forms\business_sheet');
+        $request = service('request');
+        $id=$request->getVar('id');
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetSeverals');
+        $data_model["data_severals"]=$model->get_List();
+        $data_model["business_sheet_id"]=$id;
+        return(view($this->views_path_module.'\list\business_sheet_severals',$data_model));
     }
+    
+    /**
+     * Dibuja el listado de los elementos o items adicionales agregados en una hoja de trabajo 
+     * @return type
+     */
+    public function business_sheet_severals_list_added() {
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='6149022bf2bff062214145';  //listar el historial de hojas de negocio
+        $module_id=$this->module_id;      //inverpacific
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        $request = service('request');
+        $business_sheet_id=$request->getVar('business_sheet_id');
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetSeveralsAdds');
+        $condition="business_sheet_id='{$business_sheet_id}'";
+        $data_model["data_severals"]=$model->get_List($condition);
+        $data_model["business_sheet_id"]=$business_sheet_id;
+        return(view($this->views_path_module.'\list\business_sheet_severals_added',$data_model));
+    }
+    
 
 }

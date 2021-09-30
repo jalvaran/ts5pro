@@ -30,14 +30,20 @@
 
 DROP VIEW IF EXISTS `view_creditmoto_business_sheet`;
 CREATE VIEW view_creditmoto_business_sheet AS
-SELECT t1.*,t3.`name` as third_name,t3.identification as third_identification,
-    t2.`name` as status_name,t4.`name` as creditmoto_business_sheet_types_name,
+SELECT t1.*,
+    t2.`name` as status_name,
+    (SELECT `name` FROM app_thirds t6 WHERE t6.id=t1.app_thirds_id limit 1) as third_name,
+    (SELECT `identification` FROM app_thirds t6 WHERE t6.id=t1.app_thirds_id limit 1) as third_identification,
+     
+    (SELECT `name` FROM creditmoto_business_sheet_types t5 WHERE t5.id=t1.creditmoto_business_sheet_types_id limit 1) as creditmoto_business_sheet_types_name,
+    (SELECT `name` FROM creditmoto_financial t7 WHERE t7.id=t1.financial_id limit 1) as financial_name,
+         
     (SELECT `name` FROM techno_ts5_pro.access_control_users t4 WHERE t4.id=t1.author limit 1) as author_name
-        
+    
     FROM `creditmoto_business_sheet` t1 
-    INNER JOIN creditmoto_business_sheet_status t2 ON t1.status=t2.id
-    INNER JOIN creditmoto_business_sheet_types t4 ON t1.creditmoto_business_sheet_types_id=t4.id
-    INNER JOIN app_thirds t3 ON t3.id=t1.app_thirds_id;
+    INNER JOIN creditmoto_business_sheet_status t2 ON t1.status=t2.id;
+    
+    
 
 
 

@@ -62,7 +62,7 @@ return [
     "maker"=>"Marca",
     "status_name"=>"Estado",
     "total_to_pay"=>"Total a Pagar",
-    "term"=>"Plazo",
+    "term"=>"Cuotas",
     "fee_value_monthly"=>"Valor Mensual de Cuota",
     "observations"=>"Observaciones",
     "created_at"=>"Fecha de Creación",
@@ -102,7 +102,9 @@ return [
     "discount"=>"Descuento",
     "initial_fee"=>"Cuota Inicial",
     "financial_id"=>"Finaciera",
-    
+    "add"=>"Agregar",
+    "value"=>"Valor",
+    "concept"=>"Concepto",
     
         
 

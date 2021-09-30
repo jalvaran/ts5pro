@@ -137,8 +137,63 @@ class BusinessSheets extends Model
             return (false);
         }
     }
+    /**
+     * Obtener los datos de una hoja de trabajo
+     * @param type $id
+     * @return type
+     */
+    public function get_Data($id) {
+        $result=$this
+                ->where('id',$id)
+                ->first();
+        if(@$result["id"]<>''){
+            return($result);            
+        }else{
+            return(false);
+        }
+    }
+    /**
+     * Verifica si existe una hoja de negocio
+     * @param type $id
+     * @return type
+     */
+    public function exists_id($id) {
+        $result=$this->select('id')
+                ->where('id',$id)
+                ->first();
+        if(@$result["id"]<>''){
+            return(true);            
+        }else{
+            return(false);
+        }
+    }
     
-    
+    /**
+     * Retorna el valor de un campo
+     * @param type $id
+     * @return type
+     */
+    public function get_Field($id,$field) {
+        $result=$this->select($field)
+                ->where('id',$id)
+                ->first();
+        if(@$result[$field]){
+            return($result[$field]);           
+        }else{
+            return(false);
+        }
+    }
+    /**
+     * 
+     * @param type $id
+     * @param type $field
+     * @return type
+     */
+    public function sheet_init($data){        
+        $data["status"]=1;
+        $data["author"]=$_SESSION["user"];
+        $this->insert($data);
+    }
 
 }
 
