@@ -43,7 +43,8 @@ class Municipalities extends Model
         'id',
         'department_id',
         'name',
-        'code'
+        'code',
+        'country_id',
 
     ];
 
@@ -58,6 +59,15 @@ class Municipalities extends Model
     //protected $cache_time = "10";
     protected $DBGroup = "techno";
 
-
+    
+    public function getDataMunicipalitie($id) {
+        $result=$this
+                ->where('id',$id)
+                ->first();
+        return($result);
+    }
+    
+    
+    
 }
 

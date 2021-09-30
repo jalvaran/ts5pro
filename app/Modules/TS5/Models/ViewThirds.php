@@ -18,24 +18,24 @@
  * DESDE, FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS
  * NEGOCIACIONES EN EL SOFTWARE.
  * -----------------------------------------------------------------------------
- * Modelo para las hojas de trabajo
+ * Modelo para gestionar la tabla de terceros
  * -----------------------------------------------------------------------------
  * @Author Julian Andres Alvarán Valencia <jalvaran@gmail.com>
- * @created 2021-09-20
- * @updated 2021-09-20 
+ * @created 2021-09-21
+ * @updated 2021-09-21
  * @link https://www.technosoluciones.com.co
  * @Version 1.0
  * @since PHP 7, PHP 8
  */
 
-namespace App\Modules\Inverpacific\Models;
+namespace App\Modules\TS5\Models;
 
 use CodeIgniter\Model;
 
-class BusinessSheets extends Model
+class ViewThirds extends Model
 {
 
-    protected $table = 'creditmoto_business_sheet';
+    protected $table = 'view_app_thirds';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = false;
@@ -45,59 +45,34 @@ class BusinessSheets extends Model
 
     protected $allowedFields = [
         'id',
-        'consecutive',
-        'creditmoto_business_sheet_types_id',
-        'app_thirds_id',
-        'motorcycle',
-        'color',
-        'maker',
-        'invoice',
-        'sticker',
-        'motor_number',
-        'motorcycle_value',
-        'motorcycle_value_before_taxes',
-        'tax_percent_value',
-        'discount',
-        'subtotal',
-        'iva_value',
-        'total_motorcycle',
-        'several_value',
-        'total_more_several',
-        'initial_fee',
-        'retake',
-        'subtotal_general',
-        'guarantee_fund_percent',
-        'guarantee_fund_percent_iva',
-        'guarantee_fund_value',        
-        'guarantee_fund_iva_value',        
-        'total_administration_expenses',
-        'total_general',
-        'capital_xtra',
-        
-        'financing_balance',
-        'financing_value',
-        'financing_value_adjustment',
-        'life_insurance_percent',
-        'life_insurance_value',
-        'total_to_pay',
-        'type_of_sale',
-        'financial_id',
-        'financing_rate',
-        'term',
-        'solidarity_debtor',
-        'responsible_in_financial',
-        'promissory_note_value',
-        'fee_value',
-        'fee_value_life_insurance',
-        'fee_value_monthly',
-        'observations',
-        'cifin',
-        'fosiga',
-        'simit',
-        'runt',
+        'type_organization_id',
+        'type_organization_name',
+        'type_regime_id',
+        'type_regime_name',
+        'type_liabilitie_id',
+        'type_liabilitie_name',
+        'type_document_identification_id',
+        'type_document_identification_name',
+        'identification',
+        'dv',
+        'firts_name',
+        'second_name',
+        'surname',
+        'second_surname',
+        'name',
+        'municipalities_id',
+        'municipalities_name',
+        'departments_id',
+        'departments_name',
+        'countries_id',
+        'countries_name',
+        'address',
+        'neighborhood',
+        'telephone1',
+        'telephone2',
+        'mail',
         'author',
-        
-        'status',
+        'author_name',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -116,7 +91,9 @@ class BusinessSheets extends Model
     protected $skipValidation = false;
     //protected $cache_time = "10";
     protected $DBGroup = "techno_client";
-    
+
+
+
     /**
      * Retorna falso o verdadero si el usuario activo ne la sesión es el
      * autor del registro que se desea acceder, editar o eliminar.
@@ -126,7 +103,6 @@ class BusinessSheets extends Model
      */
     public function get_Authority($id, $author)
     {
-        //$this->db->setDatabase($_SESSION["DB_CLIENT"]);
         $row = $this->select("id")
                 ->where("id", $id)
                 ->where("author", $author)
@@ -137,8 +113,22 @@ class BusinessSheets extends Model
             return (false);
         }
     }
-    
-    
 
+   
+    public function identification_exists($identification) {
+        $result=$this
+                ->where('identification',$identification)
+                ->first();
+        if(isset($result['id'])){
+            if($result['id']<>''){
+                return(true);
+            }else{
+                return(false);
+            }
+        }
+        
+        
+    }    
+    
 }
 

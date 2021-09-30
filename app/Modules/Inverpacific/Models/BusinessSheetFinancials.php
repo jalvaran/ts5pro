@@ -18,11 +18,11 @@
  * DESDE, FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS
  * NEGOCIACIONES EN EL SOFTWARE.
  * -----------------------------------------------------------------------------
- * Modelo para las hojas de trabajo
+ * Modelo para las financieras que se manejan en las hojas de negocio
  * -----------------------------------------------------------------------------
  * @Author Julian Andres Alvarán Valencia <jalvaran@gmail.com>
- * @created 2021-09-20
- * @updated 2021-09-20 
+ * @created 2021-09-29
+ * @updated 2021-09-29 
  * @link https://www.technosoluciones.com.co
  * @Version 1.0
  * @since PHP 7, PHP 8
@@ -32,10 +32,10 @@ namespace App\Modules\Inverpacific\Models;
 
 use CodeIgniter\Model;
 
-class BusinessSheets extends Model
+class BusinessSheetFinancials extends Model
 {
 
-    protected $table = 'creditmoto_business_sheet';
+    protected $table = 'creditmoto_financial';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = false;
@@ -45,59 +45,8 @@ class BusinessSheets extends Model
 
     protected $allowedFields = [
         'id',
-        'consecutive',
-        'creditmoto_business_sheet_types_id',
-        'app_thirds_id',
-        'motorcycle',
-        'color',
-        'maker',
-        'invoice',
-        'sticker',
-        'motor_number',
-        'motorcycle_value',
-        'motorcycle_value_before_taxes',
-        'tax_percent_value',
-        'discount',
-        'subtotal',
-        'iva_value',
-        'total_motorcycle',
-        'several_value',
-        'total_more_several',
-        'initial_fee',
-        'retake',
-        'subtotal_general',
-        'guarantee_fund_percent',
-        'guarantee_fund_percent_iva',
-        'guarantee_fund_value',        
-        'guarantee_fund_iva_value',        
-        'total_administration_expenses',
-        'total_general',
-        'capital_xtra',
-        
-        'financing_balance',
-        'financing_value',
-        'financing_value_adjustment',
-        'life_insurance_percent',
-        'life_insurance_value',
-        'total_to_pay',
-        'type_of_sale',
-        'financial_id',
-        'financing_rate',
-        'term',
-        'solidarity_debtor',
-        'responsible_in_financial',
-        'promissory_note_value',
-        'fee_value',
-        'fee_value_life_insurance',
-        'fee_value_monthly',
-        'observations',
-        'cifin',
-        'fosiga',
-        'simit',
-        'runt',
-        'author',
-        
-        'status',
+        'name',
+        'interest_rate',
         'created_at',
         'updated_at',
         'deleted_at',

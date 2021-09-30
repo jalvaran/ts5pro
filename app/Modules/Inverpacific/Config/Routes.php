@@ -36,6 +36,11 @@ $routes->group("inverpacific", [
         $subroutes->add("", "InverPacificDraw::index");
         $subroutes->add("list/(:any)", "InverPacificDraw::list/$1");
         $subroutes->add("business_sheet_draw", "InverPacificDraw::business_sheet_draw");
+        $subroutes->add("form_business_sheet", "InverPacificDraw::form_business_sheet");
+        
+        $subroutes->add("thirds_searches", "InverPacificSearches::thirds_searches");
+        $subroutes->add("type_sheets_searches", "InverPacificSearches::type_sheets_searches");
+        $subroutes->add("financials_searches", "InverPacificSearches::financials_searches");
                
 
     }

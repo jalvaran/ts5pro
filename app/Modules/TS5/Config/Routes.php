@@ -15,7 +15,18 @@ $routes->group("ts5", [
         $routes->add("tables_create_register", "TablesProcess::tables_create_register");
         $routes->add("tables_edit_register", "TablesProcess::tables_edit_register");
         $routes->add("tables_searchs", "TablesProcess::tables_searchs");
+        
         $routes->add("frm_thirds", "FormsDraw::frm_thirds");
+        $routes->add("thirds_draw", "TablesDraw::thirds_draw");
+        $routes->add("municipalities_searches", "FormsSearchers::municipalities_searches");
+        $routes->add("type_organization_searches", "FormsSearchers::type_organization_searches");
+        $routes->add("type_regimes_searches", "FormsSearchers::type_regimes_searches");
+        $routes->add("type_document_identification_searches", "FormsSearchers::type_document_identification_searches");
+        $routes->add("type_liabilities_searches", "FormsSearchers::type_liabilities_searches");
+        $routes->add("save_third", "FormsProcess::save_third");
+        
+        
+        
 
     }
 );

@@ -45,6 +45,8 @@ class BusinessSheetsView extends Model
 
     protected $allowedFields = [
         'id',
+        'creditmoto_business_sheet_types_id',
+        'creditmoto_business_sheet_types_name',
         'consecutive',
         'app_thirds_id',
         'third_name',

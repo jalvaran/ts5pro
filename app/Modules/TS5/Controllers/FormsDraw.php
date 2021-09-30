@@ -50,7 +50,7 @@ class FormsDraw extends BaseController
             }
         }else{       //Editar
 
-            $mThirds=model('App\Modules\TS5\Models\Thirds');
+            $mThirds=model('App\Modules\TS5\Models\ViewThirds');
 
             $permission_id='614a8f02ca149481212955';           //Permiso singular para editar la configuración de una empresa
             $permission_id_all='614a8f1d7e7c2698916521';       //Permiso plural para editar la configuración de una empresa
@@ -64,8 +64,11 @@ class FormsDraw extends BaseController
                 $data_error["msg_error"]=lang('Access.access_view_error');
                 return (view($this->views_path."\alert_error",$data_error));
             }
+            
             $data_model=$mThirds->where('id',$id)->first();
             $data["data_form"]=$data_model;
+                       
+            
 
         }
         

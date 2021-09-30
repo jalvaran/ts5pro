@@ -7,6 +7,7 @@
                 <div class="email-sidebar-content">
                     <div class="email-navigation" style="overflow:auto">
                         <div class="list-group list-group-flush">
+                            <a id="link_thirds" data-id="100" href="javascript:;" class="list-group-item d-flex align-items-center ts_pages_links"><i class="fa fa-users me-3 font-20"></i><span><?=lang('fields.thirds')?></span></a>
                             <a id="link_history" data-id="A" href="javascript:;" class="list-group-item active d-flex align-items-center ts_pages_links"><i class="fa fa-history me-3 font-20"></i><span><?=lang('fields.history')?></span></a>
                             <a id="link_on_request" data-id="1" href="javascript:;" class="list-group-item  d-flex align-items-center ts_pages_links"><i class="fa fa-inbox me-3 font-20"></i><span><?=lang('fields.on_request')?></span></a>
                             <a id="link_analysis" data-id="2" href="javascript:;" class="list-group-item  d-flex align-items-center ts_pages_links"><i class="fa fa-crop me-3 font-20"></i><span><?=lang('fields.in_analisys')?></span></a>

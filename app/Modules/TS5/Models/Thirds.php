@@ -143,7 +143,20 @@ class Thirds extends Model
         }
     }
 
+    public function identification_exists($identification) {
+        $result=$this
+                ->where('identification',$identification)
+                ->first();
+        if(isset($result['id'])){
+            if($result['id']<>''){
+                return(true);
+            }else{
+                return(false);
+            }
+        }
         
+        
+    }    
     
 }
 

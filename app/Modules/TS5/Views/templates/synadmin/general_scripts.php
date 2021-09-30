@@ -266,7 +266,9 @@
             }
         });
     }
-
+    
+    
+    
     function confirm_save_register(data_table,table_id){
 
         Swal.fire({
@@ -504,7 +506,7 @@
     function frm_thirds(id=""){
         $('#modal_xl').modal("show");
         var Controller='<?php echo base_url('/ts5/frm_thirds') ?>';
-        $(this).attr("data-form_id",100);
+        $(".ts_btn_save_modals").attr("data-form_id",100);
         
         $(".ts_btn_save_modals").attr("data-id",id);
         var form_data = new FormData();        
@@ -526,7 +528,8 @@
                 hide_spinner();                
                 $('.ts_modal_body').html('');
                 $('#modal_xl_body').html(data);
-
+                select2_form_thirds();
+                auto_complete_third_name_events_add();
             },
             error: function(xhr, ajaxOptions, thrownError){
                 hide_spinner();
@@ -546,6 +549,267 @@
             }
         });
     }
+    
+    function select2_form_thirds(){
+        $('#municipalities_id').select2({
+            dropdownParent: $('#modal_xl'),
+            
+            width: '100%',
+            ajax: {
+                
+                url: '<?= base_url('ts5/municipalities_searches');?>',
+                dataType: 'json',
+                delay: 250,
+
+
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+        
+        $('#type_organization_id').select2({
+            dropdownParent: $('#modal_xl'),
+            
+            width: '100%',
+            ajax: {
+                
+                url: '<?= base_url('ts5/type_organization_searches');?>',
+                dataType: 'json',
+                delay: 250,
+
+
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+        
+        $('#type_regime_id').select2({
+            dropdownParent: $('#modal_xl'),
+            
+            width: '100%',
+            ajax: {
+                
+                url: '<?= base_url('ts5/type_regimes_searches');?>',
+                dataType: 'json',
+                delay: 250,
+
+
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+        
+        $('#type_document_identification_id').select2({
+            dropdownParent: $('#modal_xl'),
+            
+            width: '100%',
+            ajax: {
+                
+                url: '<?= base_url('ts5/type_document_identification_searches');?>',
+                dataType: 'json',
+                delay: 250,
+
+
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+        
+        $('#type_liabilitie_id').select2({
+            dropdownParent: $('#modal_xl'),
+            
+            width: '100%',
+            ajax: {
+                
+                url: '<?= base_url('ts5/type_liabilities_searches');?>',
+                dataType: 'json',
+                delay: 250,
+
+
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+        
+    }
+    
+    function save_third(id){
+
+        var urlControllerProcess='<?php echo base_url('/ts5/save_third') ?>';
+        var btnSave = $(".ts_btn_save_modals");
+        var data_form_serialized=$('.ts_input').serialize();
+        var form_data = new FormData();
+
+        form_data.append('id',id);
+        form_data.append('data_form_serialized',data_form_serialized);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#modal_xl').modal("hide");
+                        select_list();
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+    
+    function thirds_draw(div="div_content_list"){
+        
+        var Controller='<?php echo base_url('/ts5/thirds_draw') ?>';
+        var search=$('#search').val();
+        
+        var form_data = new FormData();        
+         
+        form_data.append('page',page);        
+        form_data.append('search',search);
+        $.ajax({
+            url: Controller,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.loading')?>');
+            },
+            success: function(data){
+
+                hide_spinner();  
+                $('#'+div).html(data);
+                event_add_list();
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
+    
+    function auto_complete_third_name(){
+        var firts_name=$('#firts_name').val();
+        var second_name=$('#second_name').val();
+        var surname=$('#surname').val();
+        var second_surname=$('#second_surname').val();
+        var name="";
+        if(firts_name!=''){
+            name=firts_name;
+        }
+        if(second_name!=''){
+            name=name+' '+second_name;
+        }
+        if(surname!=''){
+            name=name+' '+surname;
+        }
+        
+        if(second_surname!=''){
+            name=name+' '+second_surname;
+        }
+        
+        $('#name').val(name);
+    }
    
+    function auto_complete_third_name_events_add(){
+        $("#firts_name").unbind();
+        $("#second_name").unbind();
+        $("#surname").unbind();
+        $("#second_surname").unbind();
+
+        $("#firts_name").on('keyup',function () {
+            auto_complete_third_name();
+        });
+        $("#second_name").on('keyup',function () {
+            auto_complete_third_name();
+        });
+        $("#surname").on('keyup',function () {
+            auto_complete_third_name();
+        });
+        $("#second_surname").on('keyup',function () {
+            auto_complete_third_name();
+        });
+    }
 
 </script>

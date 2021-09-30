@@ -68,7 +68,7 @@ return [
     "created_at"=>"Fecha de Creación",
     "consecutive"=>"Consecutivo",
     "author_name"=>"Creador",
-    
+    "totals"=>"Totales",
     "type_organization_id"=>"Tipo de Organización",
     "type_regime_id"=>"Tipo de Regimén",
     "type_liabilitie_id"=>"Responsabilidad",
@@ -87,6 +87,23 @@ return [
     "telephone1"=>"Teléfono 1",
     "telephone2"=>"Teléfono 2",
     "mail"=>"Correo",
+    
+    "thirds"=>"Terceros",
+    "type_organization_name"=>"Tipo de Organización",
+    "type_regime_name"=>"Tipo de Régimen",
+    "type_liabilitie_name"=>"Tipo de Responsabilidad",
+    "type_document_identification_name"=>"Tipo de Documento",
+    "municipalities_name"=>"Municipio",
+    "departments_name"=>"Departamento",
+    
+    "app_thirds_id"=>"Tercero",
+    "creditmoto_business_sheet_types_id"=>"Tipo de Hoja de Negocio",
+    "motorcycle_value"=>"Valor de la Moto",
+    "discount"=>"Descuento",
+    "initial_fee"=>"Cuota Inicial",
+    "financial_id"=>"Finaciera",
+    
+    
         
 
 ];

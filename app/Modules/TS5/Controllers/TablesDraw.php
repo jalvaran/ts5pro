@@ -140,6 +140,118 @@ class TablesDraw extends BaseController
 
     }
 
+    /**
+     * Dibuja el listado de terceros
+     * @return type
+     */
+    public function thirds_draw() {
+        $request=service('request');
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $module_id='613784ab2471f217811472';                       
+          
+        $permission_id="61533883cbabd775315806";
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
 
+        }
+
+        $i=0;
+        $limit=20;
+
+        $data["cols"][$i++]=lang("fields.actions");
+        $data["cols"][$i++]=lang("fields.id");
+        $data["cols"][$i++]=lang("fields.name");
+        $data["cols"][$i++]=lang("fields.identification");
+        $data["cols"][$i++]=lang("fields.dv");
+        $data["cols"][$i++]=lang("fields.type_organization_name");
+        $data["cols"][$i++]=lang("fields.type_regime_name");
+        $data["cols"][$i++]=lang("fields.type_liabilitie_name");
+        $data["cols"][$i++]=lang("fields.type_document_identification_name");        
+        $data["cols"][$i++]=lang("fields.municipalities_name");
+        $data["cols"][$i++]=lang("fields.departments_name");
+        $data["cols"][$i++]=lang("fields.address");
+        $data["cols"][$i++]=lang("fields.telephone1");
+        $data["cols"][$i++]=lang("fields.telephone2");
+        $data["cols"][$i++]=lang("fields.mail");
+        $data["cols"][$i++]=lang("fields.created_at");
+        
+        $page=$request->getVar('page');
+        $search=$request->getVar('search');
+        $fields=array(  'id',
+                        'name',
+                        'identification',
+                        'dv',
+                        'type_organization_name',
+                        'type_regime_name',
+                        'type_liabilitie_name',
+                        'type_document_identification_name',
+                        'municipalities_name',
+                        'departments_name',
+                        'address',
+                        'telephone1',
+                        'telephone2',
+                        'mail',
+                        'created_at',    
+                        
+            
+            );
+        
+        $model=model('App\Modules\TS5\Models\ViewThirds');
+                
+        $model->select($fields);
+                
+        //$model->where('author',$user_id);   //Por si se quiere que solo se vean los negocios del mismo usuario
+        $recordsTotal = $model->countAllResults(false);
+        
+        $z=0;
+       
+        if($search<>''){
+            foreach ($fields as $field){
+
+                if($z==0){
+                    $z=1;
+                    $model->like($field, $search);
+                }else{
+                    $model->orLike($field, $search);
+                }
+
+            }
+        }
+         
+        
+        $recordsFiltered = $model->countAllResults(false);
+        $totalPages= ceil($recordsFiltered/$limit);
+        if($page>1){
+            $previous_page=$page-1;
+        }else{
+            $previous_page=1;
+        }
+        $next_page=$page;
+        $start_point=round($page * $limit - $limit);
+        if($recordsFiltered>($start_point+$limit)){
+            $next_page=$page+1;
+        }
+        $model->orderBy('id DESC');
+        $response=$model->findAll($limit,$start_point);
+        
+        //print($model->getCompiledSelect());
+        //print_r($response);
+        $info=lang("msg.info");
+        $info=str_replace("_START_",$page,$info);
+        $info=str_replace("_END_",$totalPages,$info);
+        $info=str_replace("_TOTAL_",$recordsTotal,$info);
+        $data["info_pagination"]=$info;
+        $data["previous_page"]=$previous_page;
+        $data["next_page"]=$next_page;
+
+        $data["actions"]["edit"]=1;
+        $data["data"]=$response;
+        echo view($this->views_path.'\table_list',$data);
+    }    
+    
 
 }

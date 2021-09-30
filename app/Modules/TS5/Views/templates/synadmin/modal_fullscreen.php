@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col">
         <div class="modal fade " id="modal_fullscreen"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-fullscreen">
+            <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title"><?php echo $modal_title ?></h5>

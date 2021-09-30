@@ -44,7 +44,12 @@
                                 }
                             print('</td>');
                         }
-                        print('<td class="ts_col_table" style="cursor:pointer;" data-id="'.$id.'">'.$value_col.'</td>');
+                        if(is_numeric($value_col) and $key<>'phone' and $key<>'telephone' and $key<>'telephone1' and $key<>'telephone2'){
+                            print('<td class="ts_col_table" style="cursor:pointer;" data-id="'.$id.'" align="right">'.number_format($value_col).'</td>');
+                        }else{
+                            print('<td class="ts_col_table" style="cursor:pointer;" data-id="'.$id.'">'.$value_col.'</td>');
+                        }
+                        
                     }
                     print('</tr>');
                 }

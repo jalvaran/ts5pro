@@ -100,8 +100,9 @@ class InverPacificDraw extends BaseController
         $data["data_template"]=$ts5->getDataTemplate($this->session);
 
         $list_js=view($this->views_path_module.'\list\list_js',$data);
+        $forms_js=view($this->views_path_module.'\forms\forms_js',$data);
         
-        $data["data_template"]["my_js"]=$list_js;
+        $data["data_template"]["my_js"]=$list_js.$forms_js;
         $data["view_path"]=$this->views_path;
         $data["view_path_module"]=$this->views_path_module;
         $data["page_title"]=lang('creditmoto.creditmoto_title');
@@ -267,7 +268,28 @@ class InverPacificDraw extends BaseController
         $data["data"]=$response;
         echo view($this->views_path_module.'\list\table_list',$data);
     }
-
     
+    
+    
+    public function form_business_sheet() {
+        
+        $request=service('request');
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $module_id=$this->module_id;                        //inverpacific
+        
+        $permission_id="61548efe7ee2c964405841";
+        
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+
+        
+        return view($this->views_path_module.'\forms\business_sheet');
+    }
 
 }

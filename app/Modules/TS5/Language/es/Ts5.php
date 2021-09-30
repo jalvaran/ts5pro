@@ -30,5 +30,6 @@ return [
     "validation_field_numeric_1" => "El campo {field_name} debe ser un valor numérico mayor a cero.",
     "validation_field_numeric_2" => "El campo {field_name} debe ser un valor numérico mayor o igual a cero.",
     "validation_field_numeric_3" => "El campo {field_name} debe ser un valor numérico",
+    "identification_exist" => "El número de identificación ya existe",
 
 ];

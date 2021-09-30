@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col">
         <div class="modal fade " id="modal_xl"  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-xl">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title"><?php echo $modal_title ?></h5>
