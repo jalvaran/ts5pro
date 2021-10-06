@@ -20,7 +20,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 	<link href="/themes/synadmin/assets/css/app.css" rel="stylesheet">
 	<link href="/themes/synadmin/assets/css/icons.css" rel="stylesheet">
-	<title>TS5 Pro</title>
+	<title><?=$menu_title?></title>
 </head>
 
 <body>
@@ -39,7 +39,7 @@
                                     </div>
 								<div class="p-4 rounded">
 									<div class="text-center">
-										<h3 class=""><?php echo lang('Login.login_welcome');?></h3>
+										<h3 class=""><?php echo lang('Login.login_welcome');?> <?=$menu_title?></h3>
 
 									</div>
                                     <?php echo $html_errors; ?>

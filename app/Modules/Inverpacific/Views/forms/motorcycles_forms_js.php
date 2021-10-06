@@ -32,11 +32,11 @@
 
 <script>
     
-   function form_business_sheet(id=''){
-        $('#modal_xl').modal("show");
+   function trademark_form(id=''){
+        $('#modal_md').modal("show");
         
-        var Controller='<?php echo base_url('/inverpacific/form_business_sheet') ?>';
-        $(".ts_btn_save_modals").attr("data-form_id",1);        
+        var Controller='<?php echo base_url('/inverpacific/trademark_form') ?>';
+               
         $(".ts_btn_save_modals").attr("data-id",id);
         var form_data = new FormData();        
         form_data.append('id',id);        
@@ -56,16 +56,8 @@
 
                 hide_spinner();                
                 $('.ts_modal_body').html('');
-                $('#modal_xl_body').html(data);
-                select2_form_business_sheet();
-                form_business_sheet_events();
+                $('#modal_md_body').html(data);
                 
-                if(id==''){
-                    id=$('#app_thirds_id').attr('data-business_sheet_id');
-                }
-                business_sheet_severals_list(id);
-                business_sheet_severals_list_added(id);
-                business_sheet_totals(id);
             },
             error: function(xhr, ajaxOptions, thrownError){
                 hide_spinner();
@@ -88,150 +80,12 @@
     
    }
    
-    
-    function form_business_sheet_events(){
-        $(".ts_edit_sheet").unbind();
+   function color_form(id=''){
+        $('#modal_md').modal("show");
         
-        $(".ts_edit_sheet").on('change',function () {
-            var field = $(this).attr("id");
-            var business_sheet_id = $(this).attr("data-business_sheet_id");
-            business_sheet_field_edit(field,business_sheet_id);
-        });
-        
-    }
-   
-    function business_sheet_field_edit(field,business_sheet_id){
-         
-        
-        var urlControllerProcess='<?php echo base_url('/inverpacific/business_sheet_field_edit') ?>';
-        var value = $('#'+field).val();
-        
-        
-        var form_data = new FormData();
-            form_data.append('business_sheet_id',business_sheet_id);
-            form_data.append('field',field);
-            form_data.append('value',value);
+        var Controller='<?php echo base_url('/inverpacific/color_form') ?>';
                
-        $.ajax({
-            url: urlControllerProcess,
-
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: form_data,
-            type: 'post',
-            beforeSend: function() {
-                show_spinner('<?=lang('msg.saving')?>');
-                
-            },
-            success: function(data){
-
-                hide_spinner();
-               
-                if(typeof(data)=='object'){
-                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
-                        toastr.success(data.msg);                        
-                        error_unmark(field);
-                        sheet_totals_draw(business_sheet_id);
-                        business_sheet_totals(business_sheet_id);
-                    }else{
-                        toastr.error(data.msg);
-                        if(data.object_id){
-                            error_mark(data.object_id,0);
-                        }
-                        if(data.value_old){
-                            $('#'+field).val(data.value_old);
-                        }
-                    }
-                }else{
-                    alert(data);
-                    $('#'+div_messages).html(data);
-                }
-
-
-            },
-            error: function(xhr, ajaxOptions, thrownError){
-                hide_spinner();
-                
-                var code_error=xhr.status;
-                if(code_error==0){
-                    alert('No connect, verify Network.');
-                }else if(code_error==404){
-                    alert('Page not found [404]');
-                }else if(code_error==500){
-                    alert(xhr.responseText+' '+thrownError);
-                }else{
-                    alert(code_error +' '+xhr.responseText+' '+thrownError);
-                }
-
-
-            }
-        });
-        
-    }
-   
-    function select2_form_business_sheet(){
-        
-        $('#app_thirds_id').select2({
-            dropdownParent: $('#modal_xl'),
-            width: '100%',
-            ajax: {
-                url: '<?php echo base_url('/inverpacific/thirds_searches') ?>',
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) {
-
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-        
-        $('#creditmoto_business_sheet_types_id').select2({
-            dropdownParent: $('#modal_xl'),
-            width: '100%',
-            ajax: {
-                url: '<?php echo base_url('/inverpacific/type_sheets_searches') ?>',
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) {
-
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-        
-        $('#financial_id').select2({
-            dropdownParent: $('#modal_xl'),
-            width: '100%',
-            ajax: {
-                url: '<?php echo base_url('/inverpacific/financials_searches') ?>',
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) {
-
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-        
-    }
-    
-    
-    
-    function business_sheet_severals_list(id=''){
-        
-        var div="div_business_sheet_several";        
-        var Controller='<?php echo base_url('/inverpacific/business_sheet_severals_list') ?>';
-        
+        $(".ts_btn_save_modals").attr("data-id",id);
         var form_data = new FormData();        
         form_data.append('id',id);        
 
@@ -249,9 +103,9 @@
             success: function(data){
 
                 hide_spinner();                
+                $('.ts_modal_body').html('');
+                $('#modal_md_body').html(data);
                 
-                $('#'+div).html(data);
-                business_sheet_severals_event_add();
             },
             error: function(xhr, ajaxOptions, thrownError){
                 hide_spinner();
@@ -274,111 +128,14 @@
     
    }
    
-   
-    function business_sheet_severals_event_add(){
+   function motorcycle_form(id=''){
+        $('#modal_md').modal("show");
         
-        $(".ts_btn_add_severals").unbind();
-        
-        $(".ts_btn_add_severals").on('click',function () {
-            var id = $(this).attr("data-id");
-            var business_sheet_id = $(this).attr("data-business_sheet_id");
-            business_several_add(id,business_sheet_id);
-        });
-        
-    }
-    /**
-    * agrega un adicional a la hoja de negocio
-
-     * @param {type} id
-     * @param {type} business_sheet_id
-     * @returns {undefined}     */
-    function business_several_add(id,business_sheet_id){
-        var box_id="several_value_"+id;
-        var concept_id="several_concept_"+id;
-        
-        var urlControllerProcess='<?php echo base_url('/inverpacific/business_several_add') ?>';
-        var btnSave = $(".ts_btn_add_severals");
-        
-        var value=$('#'+box_id).val();
-        var concept=$('#'+concept_id).val();
-        
-        var form_data = new FormData();
-
-        form_data.append('several_id',id);
-        form_data.append('value',value);
-        form_data.append('concept',concept);
-        form_data.append('business_sheet_id',business_sheet_id);
-
-        $.ajax({
-            url: urlControllerProcess,
-
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: form_data,
-            type: 'post',
-            beforeSend: function() {
-                show_spinner('<?=lang('msg.saving')?>');
-                btnSave.attr("disabled","disabled");
-
-            },
-            success: function(data){
-
-                hide_spinner();
-                btnSave.removeAttr("disabled");
-                if(typeof(data)=='object'){
-                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
-                        toastr.success(data.msg);                        
-                        business_sheet_severals_list_added(business_sheet_id);
-                        business_sheet_totals(business_sheet_id);
-                    }else{
-                        toastr.error(data.msg);
-
-                        if(data.object_id){
-                            error_mark(data.object_id)
-                        }
-
-                    }
-                }else{
-                    alert(data);
-                    $('#'+div_messages).html(data);
-                }
-
-
-            },
-            error: function(xhr, ajaxOptions, thrownError){
-                hide_spinner();
-                btnSave.removeAttr("disabled");
-                var code_error=xhr.status;
-                if(code_error==0){
-                    alert('No connect, verify Network.');
-                }else if(code_error==404){
-                    alert('Page not found [404]');
-                }else if(code_error==500){
-                    alert(xhr.responseText+' '+thrownError);
-                }else{
-                    alert(code_error +' '+xhr.responseText+' '+thrownError);
-                }
-
-
-            }
-        });
-        
-    }
-    
-    /**
-    * Lista los adicionales de una hoja de negocio
-     * @param {type} business_sheet_id
-     * @returns {undefined}     
-     * 
-     * */
-    function business_sheet_severals_list_added(business_sheet_id){
-        
-        var div="div_business_sheet_several_added";        
-        var Controller='<?php echo base_url('/inverpacific/business_sheet_severals_list_added') ?>';
-        
+        var Controller='<?php echo base_url('/inverpacific/motorcycle_form') ?>';
+               
+        $(".ts_btn_save_modals").attr("data-id",id);
         var form_data = new FormData();        
-        form_data.append('business_sheet_id',business_sheet_id);        
+        form_data.append('id',id);        
 
         $.ajax({
             url: Controller,
@@ -394,10 +151,9 @@
             success: function(data){
 
                 hide_spinner();                
-                
-                $('#'+div).html(data);
-                business_sheet_severals_event_added();
-                
+                $('.ts_modal_body').html('');
+                $('#modal_md_body').html(data);
+                select2_trademarks();
             },
             error: function(xhr, ajaxOptions, thrownError){
                 hide_spinner();
@@ -420,27 +176,38 @@
     
    }
    
-   function business_sheet_severals_event_added(){
+    
+    function select2_trademarks(){
         
-        $(".ts_btn_delete_several").unbind();
-        
-        $(".ts_btn_delete_several").on('click',function () {
-            var id = $(this).attr("data-id");
-            var business_sheet_id = $(this).attr("data-business_sheet_id");
-            business_several_delete(id,business_sheet_id);
+        $('#trademark').select2({
+            dropdownParent: $('#modal_md'),
+            width: '100%',
+            ajax: {
+                url: '<?php echo base_url('/inverpacific/trademarks_searches') ?>',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
         });
         
-    }
-   
-   
-   function business_several_delete(id,business_sheet_id){
-               
-        var urlControllerProcess='<?php echo base_url('/inverpacific/business_several_adds_delete') ?>';
         
+    }
+    
+    
+   function save_trademark(id){
+               
+        var urlControllerProcess='<?php echo base_url('/inverpacific/save_trademark') ?>';
+        var data_form_serialized=$('.ts_input').serialize();
         var form_data = new FormData();
 
         form_data.append('id',id);
-        form_data.append('business_sheet_id',business_sheet_id);
+        form_data.append('data_form_serialized',data_form_serialized);
         
         $.ajax({
             url: urlControllerProcess,
@@ -457,12 +224,11 @@
             success: function(data){
 
                 hide_spinner();
-               
+                $('#modal_md').modal("hide");
                 if(typeof(data)=='object'){
                     if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
-                        toastr.error(data.msg);                        
-                        business_sheet_severals_list_added(business_sheet_id);
-                        business_sheet_totals(business_sheet_id);
+                        toastr.success(data.msg);                        
+                        select_list();
                     }else{
                         toastr.error(data.msg);
 
@@ -497,17 +263,18 @@
         });
         
     }
-        
-    function business_sheet_totals(id){
-        
-        var div="div_business_sheet_totals";        
-        var Controller='<?php echo base_url('/inverpacific/business_sheet_totals') ?>';
-        
-        var form_data = new FormData();        
-        form_data.append('id',id);        
+    
+    function save_color(id){
+               
+        var urlControllerProcess='<?php echo base_url('/inverpacific/save_color') ?>';
+        var data_form_serialized=$('.ts_input').serialize();
+        var form_data = new FormData();
 
+        form_data.append('id',id);
+        form_data.append('data_form_serialized',data_form_serialized);
+        
         $.ajax({
-            url: Controller,
+            url: urlControllerProcess,
 
             cache: false,
             contentType: false,
@@ -515,14 +282,31 @@
             data: form_data,
             type: 'post',
             beforeSend: function() {
-                show_spinner('<?=lang('msg.loading')?>');
+                show_spinner('<?=lang('msg.saving')?>');
+                
             },
             success: function(data){
 
-                hide_spinner();                
-                
-                $('#'+div).html(data);
-                business_sheet_severals_event_add();
+                hide_spinner();
+                $('#modal_md').modal("hide");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        select_list();
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
             },
             error: function(xhr, ajaxOptions, thrownError){
                 hide_spinner();
@@ -541,9 +325,72 @@
 
             }
         });
-   
+        
+    }
     
-   }
+    function save_motorcycle(id){
+               
+        var urlControllerProcess='<?php echo base_url('/inverpacific/save_motorcycle') ?>';
+        var data_form_serialized=$('.ts_input').serialize();
+        var form_data = new FormData();
+
+        form_data.append('id',id);
+        form_data.append('data_form_serialized',data_form_serialized);
+        
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                
+            },
+            success: function(data){
+
+                hide_spinner();
+                $('#modal_md').modal("hide");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        select_list();
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+        
+    }
     
 </script>
 

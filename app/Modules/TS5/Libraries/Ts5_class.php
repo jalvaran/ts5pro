@@ -61,7 +61,13 @@ class Ts5_class{
         //$this->access->create_json_menu($this->user_id);
         $company_id=$this->session->get("company_id");
         if($company_id==''){
-            $company_id='cp_6128f69283025963104543';
+            $domain=$_SERVER['HTTP_HOST'];
+            $mDomain=model('App\Modules\Access\Models\CompaniesDomains');            
+            $company_id=$mDomain->get_company_domain($domain); 
+            if($company_id==false){
+                $company_id='cp_6128f69283025963104543';
+            }
+            
         }
         $mCompany=model('App\Modules\Access\Models\Companies');
         $data_company=$mCompany->get_DataCompany($company_id);

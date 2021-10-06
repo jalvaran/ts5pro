@@ -43,7 +43,9 @@
                             print('</td>');
                         }
                         if(is_numeric($value_col)){
-                            print('<td class="ts_col_table text-dark" style="cursor:pointer" data-id="'.$id.'" align="right"><span>'.number_format($value_col).'</span></td>');
+                            $decimals=2;
+                            
+                            print('<td class="ts_col_table text-dark" style="cursor:pointer" data-id="'.$id.'" align="right"><span>'.number_format($value_col,$decimals).'</span></td>');
                         }else{
                             print('<td class="ts_col_table" style="cursor:pointer;" data-id="'.$id.'">'.$value_col.'</td>');
                         }

@@ -33,6 +33,7 @@ namespace App\Modules\Inverpacific\Controllers;
 use App\Modules\TS5\Libraries\Session;
 use App\Controllers\BaseController;
 use App\Modules\TS5\Libraries\Ts5_class;
+use App\Modules\Inverpacific\Libraries\Creditmoto_class;
 use CodeIgniter\API\ResponseTrait;
 
 
@@ -130,6 +131,8 @@ class InverPacificProcess extends BaseController
         
         $model->insert($data_form);
         
+        $obBusiness=new Creditmoto_class();
+        $obBusiness->totals_calculate($data_form["business_sheet_id"]);
 
         $response["status"]=1;
         $response["msg"]=lang('msg.save_register');
@@ -161,10 +164,12 @@ class InverPacificProcess extends BaseController
             return $this->setResponseFormat('json')->respond($response);
         }
         $id=$request->getVar('id');
+        $business_sheet_id=$request->getVar('business_sheet_id');
         $model=model('App\Modules\Inverpacific\Models\BusinessSheetSeveralsAdds');
         
         $model->delete($id);        
-
+        $obBusiness=new Creditmoto_class();
+        $obBusiness->totals_calculate($business_sheet_id);
         $response["status"]=1;
         $response["msg"]=lang('msg.delete_register');
         return $this->setResponseFormat('json')->respond($response);
@@ -249,6 +254,9 @@ class InverPacificProcess extends BaseController
             $data_form["status"]=1;
             
             $model->update($business_sheet_id,$data_form);
+            
+            $obBusiness=new Creditmoto_class();
+            $obBusiness->totals_calculate($business_sheet_id);
             $msg=lang('msg.edit_register_ok');
             
         }
@@ -261,6 +269,7 @@ class InverPacificProcess extends BaseController
         
         
     }
+    
     
     public function validations($data_form,$validator='') {
         foreach($data_form as $field => $value){

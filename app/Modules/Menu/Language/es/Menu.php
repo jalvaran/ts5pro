@@ -37,6 +37,9 @@ return [
     
     "card_title_component_6" => "Hojas de Negocio",
     "card_sub_title_component_6" => "Gestión de las hojas de negocio",
+    
+    "card_title_component_7" => "Listado de Motocicletas",
+    "card_sub_title_component_7" => "Listado de las motos disponibles",
 
 
 

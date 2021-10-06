@@ -374,5 +374,32 @@ class InverPacificDraw extends BaseController
         return(view($this->views_path_module.'\list\business_sheet_severals_added',$data_model));
     }
     
+    
+    /**
+     * Dibuja los totales de una hoja de trabajo
+     * @return type
+     */
+    public function business_sheet_totals() {
+        
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='6149022bf2bff062214145';  //listar el historial de hojas de negocio
+        $module_id=$this->module_id;      //inverpacific
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        $request = service('request');
+        $business_sheet_id=$request->getVar('id');
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');
+        $data_model["data"]=$model->where('id',$business_sheet_id)->first();
+        
+        return(view($this->views_path_module.'\list\business_sheet_totals',$data_model));
+    }
+    
 
 }

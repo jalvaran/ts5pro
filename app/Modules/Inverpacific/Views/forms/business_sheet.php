@@ -63,7 +63,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <label for="creditmoto_business_sheet_types_id" class="form-label"><?=lang('fields.creditmoto_business_sheet_types_id')?></label>
                             <div class="input-group"> 
 
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                         
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <label for="financial_id" class="form-label"><?=lang('fields.financial_id')?></label>
                             <div class="input-group"> 
 
@@ -103,19 +103,81 @@
                             </div>
                         </div>
                         
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <label for="solidarity_debtor" class="form-label"><?=lang('fields.solidarity_debtor')?></label>
+                            <div class="input-group"> 
+
+                                <select id="solidarity_debtor" name="solidarity_debtor" data-business_sheet_id="<?=$id?>" class="form-select ts_input ts_edit_sheet">
+                                        
+                                    
+                                    <?php
+                                        $sel="";
+                                        if(isset($data_form["solidarity_debtor"])){                                            
+                                            if($data_form["solidarity_debtor"]==0){
+                                                $sel="selected";
+                                            }
+                                        }
+                                        print('<option value="0" '.$sel.'>'.lang('fields.no').'</option>');
+                                        $sel="";
+                                        if(isset($data_form["solidarity_debtor"])){                                            
+                                            if($data_form["solidarity_debtor"]==1){
+                                                $sel="selected";
+                                            }
+                                        }
+                                        print('<option value="1" '.$sel.'>'.lang('fields.yes').'</option>');
+                                        
+                                        
+                                    ?>
+
+                                </select>    
+
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label for="holder" class="form-label"><?=lang('fields.holder')?></label>
+                            <div class="input-group"> 
+
+                                <select id="holder" name="holder" data-business_sheet_id="<?=$id?>" class="form-select ts_input ts_edit_sheet">
+                                        
+                                    
+                                    <?php
+                                        $sel="";
+                                        if(isset($data_form["holder"])){                                            
+                                            if($data_form["holder"]==0){
+                                                $sel="selected";
+                                            }
+                                        }
+                                        print('<option value="0" '.$sel.'>'.lang('fields.no').'</option>');
+                                        $sel="";
+                                        if(isset($data_form["holder"])){                                            
+                                            if($data_form["holder"]==1){
+                                                $sel="selected";
+                                            }
+                                        }
+                                        print('<option value="1" '.$sel.'>'.lang('fields.yes').'</option>');
+                                        
+                                        
+                                    ?>
+
+                                </select>    
+
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
                                 <label for="motorcycle" class="form-label"><?=lang('fields.motorcycle')?></label>
                                 <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-motorcycle "></i></span>
                                     <input value="<?= (isset($data_form["motorcycle"])) ? $data_form["motorcycle"] : ''; ?>" type="text" class="form-control border-start-0 ts_input ts_edit_sheet" id="motorcycle" name="motorcycle" placeholder="<?=lang('fields.motorcycle')?>" data-business_sheet_id="<?=$id?>">
                                 </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                                 <label for="color" class="form-label"><?=lang('fields.color')?></label>
                                 <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-motorcycle "></i></span>
                                     <input value="<?= (isset($data_form["color"])) ? $data_form["color"] : ''; ?>" type="text" class="form-control border-start-0 ts_input ts_edit_sheet" id="color" name="color" placeholder="<?=lang('fields.color')?>" data-business_sheet_id="<?=$id?>">
                                 </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                                 <label for="maker" class="form-label"><?=lang('fields.maker')?></label>
                                 <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-motorcycle "></i></span>
                                     <input value="<?= (isset($data_form["maker"])) ? $data_form["maker"] : ''; ?>" type="text" class="form-control border-start-0 ts_input ts_edit_sheet" id="maker" name="maker" placeholder="<?=lang('fields.maker')?>" data-business_sheet_id="<?=$id?>">
@@ -139,6 +201,12 @@
                                 <label for="initial_fee" class="form-label"><?=lang('fields.initial_fee')?></label>
                                 <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-dollar-sign "></i></span>
                                     <input value="<?= (isset($data_form["initial_fee"])) ? $data_form["initial_fee"] : ''; ?>" type="text" class="form-control border-start-0 ts_input ts_edit_sheet" id="initial_fee" name="initial_fee" placeholder="<?=lang('fields.initial_fee')?>" style="text-align: right" data-business_sheet_id="<?=$id?>">
+                                </div>
+                        </div>
+                        <div class="col-md-3">
+                                <label for="retake" class="form-label"><?=lang('fields.retake')?></label>
+                                <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-dollar-sign "></i></span>
+                                    <input value="<?= (isset($data_form["retake"])) ? $data_form["retake"] : ''; ?>" type="text" class="form-control border-start-0 ts_input ts_edit_sheet" id="retake" name="retake" placeholder="<?=lang('fields.retake')?>" style="text-align: right" data-business_sheet_id="<?=$id?>">
                                 </div>
                         </div>
 

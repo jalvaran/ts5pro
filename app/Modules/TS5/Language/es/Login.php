@@ -1,6 +1,6 @@
 <?php
 return [
-    "login_welcome" => "Bienvenido a TS5 Pro",
+    "login_welcome" => "Bienvenido a ",
     "login_title"   => "Por favor digite su correo y contraseña",
     "login_title_field_mail"   => "Digite su Correo",
     "login_title_field_username"=>"Digite su Usuario",

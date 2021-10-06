@@ -19,28 +19,37 @@
  * NEGOCIACIONES EN EL SOFTWARE.
  * -----------------------------------------------------------------------------
  * @Author Julian Andres Alvaran Valencia <jalvaran@gmail.com>
+ * @created 2021-08-13
+ * @updated 2021-08-14
  * @link https://www.technosoluciones.com.co
  * @Version 1.0
  * @since PHP 7, PHP 8
  */
 
-$smarty = service("smarty");
+namespace App\Modules\Inverpacific\Libraries;
 
-$html_errors = "";
-$smarty->assign("lang", $data_template["lang"]);
-$smarty->assign("favicon", $data_template["favicon"]);
-$smarty->assign("company_logo", $data_template["company_logo"]);
-$smarty->assign("menu_title", $data_template["menu_title"]);
-if($data_template["error"]==1){
-    $smarty->assign("error_title", lang('Login.error_title'));
-    $smarty->assign("msg_error", lang('Login.error_msg_field_empty'));
-    $html_errors = $smarty->view('alert_error.tpl');
-}
-if($data_template["error"]==2){
-    $smarty->assign("error_title", lang('Login.error_title'));
-    $smarty->assign("msg_error", lang('Login.error_msg_password'));
-    $html_errors = $smarty->view('alert_error.tpl');
+use App\Modules\TS5\Libraries\Session;
+
+class Creditmoto_class{
+
+    private $session;
+    private $user_id;
+
+    public function __construct(){
+        $this->session = new Session();
+        $this->user_id=$this->session->get('user');
+
+    }
+    /**
+     * Calcula los totales de una hoja de negocio
+     * @param type $id
+     * @return type
+     */
+    function totals_calculate($business_sheet_id){
+        
+        return('OK');
+    }
+
+    
 }
 
-$smarty->assign("html_errors", $html_errors);
-echo($smarty->view('login.tpl'));

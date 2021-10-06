@@ -61,5 +61,16 @@ SELECT t1.*,
     (SELECT `name` FROM techno_ts5_pro.access_control_users t4 WHERE t4.id=t1.author limit 1) as author_name 
     
     FROM `app_thirds` t1 ;
+
+
+
+
+DROP VIEW IF EXISTS `view_creditmoto_motorcycles`;
+CREATE VIEW view_creditmoto_motorcycles AS
+SELECT t1.*,
+    (SELECT `name` FROM creditmoto_trademarks t2 WHERE t2.id=t1.trademark limit 1) as trademark_name,    
+    (SELECT `name` FROM techno_ts5_pro.access_control_users t4 WHERE t4.id=t1.author limit 1) as author_name 
+    
+    FROM `creditmoto_motorcycles` t1 ;
     
 

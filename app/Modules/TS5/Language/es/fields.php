@@ -97,7 +97,7 @@ return [
     "departments_name"=>"Departamento",
     
     "app_thirds_id"=>"Tercero",
-    "creditmoto_business_sheet_types_id"=>"Tipo de Hoja de Negocio",
+    "creditmoto_business_sheet_types_id"=>"Tipo de Negocio",
     "motorcycle_value"=>"Valor de la Moto",
     "discount"=>"Descuento",
     "initial_fee"=>"Cuota Inicial",
@@ -105,7 +105,15 @@ return [
     "add"=>"Agregar",
     "value"=>"Valor",
     "concept"=>"Concepto",
+    "retake"=>"Retoma",
+    "holder"=>"Tenedor",
+    "solidarity_debtor"=>"Codeudor",
+    "no"=>"No",
+    "yes"=>"Si",
     
+    "trademark_name"=>"Marca",
+    "tax_percent"=>"IVA",
+    "trademark"=>"Marca",
         
 
 ];
