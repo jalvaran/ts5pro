@@ -43,7 +43,10 @@
                             print('</td>');
                         }
                         if(is_numeric($value_col)){
-                            $decimals=2;
+                            $decimals=0;
+                            if($key=="tax_percent"){
+                                $decimals=2;
+                            }                           
                             
                             print('<td class="ts_col_table text-dark" style="cursor:pointer" data-id="'.$id.'" align="right"><span>'.number_format($value_col,$decimals).'</span></td>');
                         }else{

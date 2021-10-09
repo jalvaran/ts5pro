@@ -88,6 +88,18 @@ class BusinessSheetFinancials extends Model
     }
     
     
+    function get_rate($id){
+        $row = $this->select("interest_rate")
+                ->where("id", $id)
+                ->first();
+        if (@$row["interest_rate"]) {
+            return ($row["interest_rate"]);
+        } else {
+            return (0);
+        }
+                
+    }
+    
 
 }
 

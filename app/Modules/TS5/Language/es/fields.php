@@ -112,8 +112,28 @@ return [
     "yes"=>"Si",
     
     "trademark_name"=>"Marca",
+    "color_name"=>"Color",
+    "motorcycle_name"=>"Moto Cicleta",
     "tax_percent"=>"IVA",
     "trademark"=>"Marca",
+    "motorcycle_value_before_taxes"=>"Valor de la Moto Antes de Impuestos",
+    "subtotal"=>"Subtotal",
+    "iva_value"=>"Valor de Impuestos",
+    "subtotal_general"=>"Sutotal General",
+    
+    "total_motorcycle"=>"Total Moto",
+    "several_value"=>"Total Varios",
+    "total_more_several"=>"Total Mas Varios",
+    "guarantee_fund_value"=>"Fondo de Garantía",
+    "guarantee_fund_iva_value"=>"IVA Fondo de Garantía",
+    "total_administration_expenses"=>"Total Gastos de Administración",
+    "total_general"=>"Total General",
+    "financing_balance"=>"Saldo a Financiar",
+    "financing_value"=>"Valor de la Financiación",
+    "financing_value_adjustment"=>"Valor Financiación por ajuste al peso",
+    "life_insurance_value"=>"Valor Seguro de Vida",
+    "fee_value"=>"Valor de la Cuota",
+    "fee_value_life_insurance"=>"Valor Cuota del seguro vida",
         
 
 ];

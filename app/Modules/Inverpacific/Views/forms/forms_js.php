@@ -96,6 +96,11 @@
             var field = $(this).attr("id");
             var business_sheet_id = $(this).attr("data-business_sheet_id");
             business_sheet_field_edit(field,business_sheet_id);
+            if(field=='motorcycle_id'){
+                var motorcycle_id = $(this).val();
+                get_motorcycle_value(motorcycle_id,business_sheet_id);
+            }
+            
         });
         
     }
@@ -132,8 +137,8 @@
                     if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
                         toastr.success(data.msg);                        
                         error_unmark(field);
-                        sheet_totals_draw(business_sheet_id);
                         business_sheet_totals(business_sheet_id);
+                       
                     }else{
                         toastr.error(data.msg);
                         if(data.object_id){
@@ -171,6 +176,11 @@
     }
    
     function select2_form_business_sheet(){
+        $('#app_thirds_id').unbind();
+        $('#creditmoto_business_sheet_types_id').unbind();
+        $('#financial_id').unbind();
+        $('#color_id').unbind();
+        $('#motorcycle_id').unbind();
         
         $('#app_thirds_id').select2({
             dropdownParent: $('#modal_xl'),
@@ -223,9 +233,110 @@
             }
         });
         
+        $('#color_id').select2({
+            dropdownParent: $('#modal_xl'),
+            width: '100%',
+            ajax: {
+                url: '<?php echo base_url('/inverpacific/colors_searches') ?>',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+        
+        $('#motorcycle_id').select2({
+            dropdownParent: $('#modal_xl'),
+            width: '100%',
+            ajax: {
+                url: '<?php echo base_url('/inverpacific/motorcycles_searches') ?>',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    
+                    return {
+                        results: data
+                    };
+                },
+                
+                cache: true
+            }
+        });
+        
+        
+               
+        
     }
     
-    
+    function get_motorcycle_value(id,business_sheet_id){
+   
+        var urlControllerProcess='<?php echo base_url('/inverpacific/get_motorcycle_value') ?>';
+          
+        var form_data = new FormData();
+            form_data.append('business_sheet_id',business_sheet_id);
+            form_data.append('id',id);
+                           
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                
+            },
+            success: function(data){
+
+                hide_spinner();
+               
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        
+                        $('#motorcycle_value').val(data.value);
+                        business_sheet_field_edit('motorcycle_value',business_sheet_id);
+                       
+                    }else{
+                        toastr.error(data.msg);
+                        if(data.object_id){
+                            error_mark(data.object_id,0);
+                        }
+                        if(data.value_old){
+                            $('#'+field).val(data.value_old);
+                        }
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
     
     function business_sheet_severals_list(id=''){
         

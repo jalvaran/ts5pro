@@ -189,9 +189,9 @@ class InverPacificDraw extends BaseController
         $data["cols"][$i++]=lang("fields.created_at");
         $data["cols"][$i++]=lang("fields.third_name");
         $data["cols"][$i++]=lang("fields.third_identification");
-        $data["cols"][$i++]=lang("fields.motorcycle");
-        $data["cols"][$i++]=lang("fields.color");
-        $data["cols"][$i++]=lang("fields.maker");        
+        $data["cols"][$i++]=lang("fields.motorcycle_name");
+        $data["cols"][$i++]=lang("fields.color_name");
+        $data["cols"][$i++]=lang("fields.trademark_name");        
         $data["cols"][$i++]=lang("fields.status_name");
         $data["cols"][$i++]=lang("fields.total_to_pay");
         $data["cols"][$i++]=lang("fields.term");
@@ -206,9 +206,9 @@ class InverPacificDraw extends BaseController
                         'created_at',
                         'third_name',
                         'third_identification',
-                        'motorcycle',
-                        'color',
-                        'maker',
+                        'motorcycle_name',
+                        'color_name',
+                        'trademark_name',
                         'status_name',
                         'total_to_pay',
                         'term',

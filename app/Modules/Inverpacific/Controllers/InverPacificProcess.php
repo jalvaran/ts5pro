@@ -33,6 +33,7 @@ namespace App\Modules\Inverpacific\Controllers;
 use App\Modules\TS5\Libraries\Session;
 use App\Controllers\BaseController;
 use App\Modules\TS5\Libraries\Ts5_class;
+
 use App\Modules\Inverpacific\Libraries\Creditmoto_class;
 use CodeIgniter\API\ResponseTrait;
 
@@ -172,6 +173,42 @@ class InverPacificProcess extends BaseController
         $obBusiness->totals_calculate($business_sheet_id);
         $response["status"]=1;
         $response["msg"]=lang('msg.delete_register');
+        return $this->setResponseFormat('json')->respond($response);
+    }
+    
+    
+    function get_motorcycle_value() {
+        
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+
+        $request = service('request');
+        
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $module_id=$this->module_id;
+        
+       
+        $permission_id='61548efe7ee2c964405841';   //Permiso para crear una hoja de negocio
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+        }
+        $id=$request->getVar('id');
+        
+        $model=model('App\Modules\Inverpacific\Models\Motorcycles');
+        
+        $result=$model->select('value')->where('id',$id)->first();        
+        
+        $response["status"]=1;
+        $response["msg"]='OK';
+        $response["value"]=$result["value"];
         return $this->setResponseFormat('json')->respond($response);
     }
     

@@ -37,6 +37,11 @@ SELECT t1.*,
      
     (SELECT `name` FROM creditmoto_business_sheet_types t5 WHERE t5.id=t1.creditmoto_business_sheet_types_id limit 1) as creditmoto_business_sheet_types_name,
     (SELECT `name` FROM creditmoto_financial t7 WHERE t7.id=t1.financial_id limit 1) as financial_name,
+    
+    (SELECT `name` FROM creditmoto_motorcycles t7 WHERE t7.id=t1.motorcycle_id limit 1) as motorcycle_name,
+    (SELECT `trademark` FROM creditmoto_motorcycles t7 WHERE t7.id=t1.motorcycle_id limit 1) as trademark,
+    (SELECT `name` FROM creditmoto_trademarks t7 WHERE t7.id=(SELECT trademark) limit 1) as trademark_name,
+    (SELECT `name` FROM creditmoto_colors t7 WHERE t7.id=t1.color_id limit 1) as color_name,
          
     (SELECT `name` FROM techno_ts5_pro.access_control_users t4 WHERE t4.id=t1.author limit 1) as author_name
     

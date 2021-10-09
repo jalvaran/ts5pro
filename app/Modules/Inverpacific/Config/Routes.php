@@ -44,10 +44,14 @@ $routes->group("inverpacific", [
         
         $subroutes->add("business_sheet_field_edit", "InverPacificProcess::business_sheet_field_edit");
         $subroutes->add("business_several_adds_delete", "InverPacificProcess::business_several_adds_delete");
+        $subroutes->add("get_motorcycle_value", "InverPacificProcess::get_motorcycle_value");
+        
        
         $subroutes->add("thirds_searches", "InverPacificSearches::thirds_searches");
         $subroutes->add("type_sheets_searches", "InverPacificSearches::type_sheets_searches");
         $subroutes->add("financials_searches", "InverPacificSearches::financials_searches");
+        $subroutes->add("motorcycles_searches", "InverPacificSearches::motorcycles_searches");
+        $subroutes->add("colors_searches", "InverPacificSearches::colors_searches");
                
         
         $subroutes->add("motorcycles_list/(:any)", "MotorcyclesDraw::list/$1");

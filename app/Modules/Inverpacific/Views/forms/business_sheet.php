@@ -165,25 +165,43 @@
                             </div>
                         </div>
                         
-                        <div class="col-md-3">
-                                <label for="motorcycle" class="form-label"><?=lang('fields.motorcycle')?></label>
-                                <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-motorcycle "></i></span>
-                                    <input value="<?= (isset($data_form["motorcycle"])) ? $data_form["motorcycle"] : ''; ?>" type="text" class="form-control border-start-0 ts_input ts_edit_sheet" id="motorcycle" name="motorcycle" placeholder="<?=lang('fields.motorcycle')?>" data-business_sheet_id="<?=$id?>">
-                                </div>
-                        </div>
-                        <div class="col-md-3">
-                                <label for="color" class="form-label"><?=lang('fields.color')?></label>
-                                <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-motorcycle "></i></span>
-                                    <input value="<?= (isset($data_form["color"])) ? $data_form["color"] : ''; ?>" type="text" class="form-control border-start-0 ts_input ts_edit_sheet" id="color" name="color" placeholder="<?=lang('fields.color')?>" data-business_sheet_id="<?=$id?>">
-                                </div>
-                        </div>
-                        <div class="col-md-3">
-                                <label for="maker" class="form-label"><?=lang('fields.maker')?></label>
-                                <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-motorcycle "></i></span>
-                                    <input value="<?= (isset($data_form["maker"])) ? $data_form["maker"] : ''; ?>" type="text" class="form-control border-start-0 ts_input ts_edit_sheet" id="maker" name="maker" placeholder="<?=lang('fields.maker')?>" data-business_sheet_id="<?=$id?>">
-                                </div>
-                        </div>
+                        <div class="col-md-6">
+                            <label for="motorcycle_id" class="form-label"><?=lang('fields.motorcycle')?></label>
+                            <div class="input-group"> 
 
+                                <select id="motorcycle_id" data-business_sheet_id="<?=$id?>" name="motorcycle_id" class="form-select ts_input ts_edit_sheet">
+
+                                    <option value=""><?=lang('msg.option_select')?></option>
+
+                                    <?php
+                                        if(isset($data_form["motorcycle_id"])){
+                                            print('<option value="'.$data_form["motorcycle_id"].'" selected>'.$data_form["motorcycle_name"].' || '.$data_form["trademark_name"].'</option>');
+                                        }
+                                    ?>
+
+                                </select>    
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="color_id" class="form-label"><?=lang('fields.color')?></label>
+                            <div class="input-group"> 
+
+                                <select id="color_id" data-business_sheet_id="<?=$id?>" name="color_id" class="form-select ts_input ts_edit_sheet">
+
+                                    <option value=""><?=lang('msg.option_select')?></option>
+
+                                    <?php
+                                        if(isset($data_form["color_id"])){
+                                            print('<option value="'.$data_form["color_id"].'" selected>'.$data_form["color_name"].'</option>');
+                                        }
+                                    ?>
+
+                                </select>    
+
+                            </div>
+                        </div>
+                        
                         <div class="col-md-3">
                                 <label for="motorcycle_value" class="form-label"><?=lang('fields.motorcycle_value')?></label>
                                 <div class="input-group"> <span class="input-group-text bg-transparent"><i class="fa fa-dollar-sign "></i></span>

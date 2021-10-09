@@ -18,11 +18,11 @@
  * DESDE, FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS
  * NEGOCIACIONES EN EL SOFTWARE.
  * -----------------------------------------------------------------------------
- * Modelo para las hojas de trabajo
+ * Modelo para los parametros de calculo de una hoja de negocio
  * -----------------------------------------------------------------------------
  * @Author Julian Andres Alvarán Valencia <jalvaran@gmail.com>
- * @created 2021-09-20
- * @updated 2021-09-20 
+ * @created 2021-10-06
+ * @updated 2021-10-06 
  * @link https://www.technosoluciones.com.co
  * @Version 1.0
  * @since PHP 7, PHP 8
@@ -32,10 +32,10 @@ namespace App\Modules\Inverpacific\Models;
 
 use CodeIgniter\Model;
 
-class BusinessSheetsView extends Model
+class Parameters extends Model
 {
 
-    protected $table = 'view_creditmoto_business_sheet';
+    protected $table = 'creditmoto_business_sheet_parameters';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = false;
@@ -45,70 +45,9 @@ class BusinessSheetsView extends Model
 
     protected $allowedFields = [
         'id',
-        'creditmoto_business_sheet_types_id',
-        'creditmoto_business_sheet_types_name',
-        'consecutive',
-        'app_thirds_id',
-        'third_name',
-        'third_identification',
-        'motorcycle_id',
-        'motorcycle_name',
-        'color_id',
-        'color_name',
-        'tademark',
-        'tademark_name',
-        'invoice',
-        'sticker',
-        'motor_number',
-        'motorcycle_value',
-        'motorcycle_value_before_taxes',
-        'tax_percent_value',
-        'discount',
-        'subtotal',
-        'iva_value',
-        'total_motorcycle',
-        'several_value',
-        'total_more_several',
-        'initial_fee',
-        'retake',
-        'subtotal_general',
-        'guarantee_fund_percent',
-        'guarantee_fund_percent_iva',
-        'guarantee_fund_value',        
-        'guarantee_fund_iva_value',        
-        'total_administration_expenses',
-        'total_general',
-        'capital_xtra',
-        
-        'financing_balance',
-        'financing_value',
-        'financing_value_adjustment',
-        'life_insurance_percent',
-        'life_insurance_value',
-        'total_to_pay',
-        'type_of_sale',
-        'financial_id',
-        'financing_rate',
-        'term',
-        'solidarity_debtor',
-        'responsible_in_financial',
-        'promissory_note_value',
-        'fee_value',
-        'fee_value_life_insurance',
-        'fee_value_monthly',
-        'observations',
-        'maximum_legal_rate',
-        'annual_effective_rate',
-        'nominal_rate',
-        'cifin',
-        'fosiga',
-        'simit',
-        'runt',
+        'concept',
+        'value',
         'author',
-        'author_name',
-        
-        'status',
-        'status_name',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -148,22 +87,73 @@ class BusinessSheetsView extends Model
             return (false);
         }
     }
-    
     /**
-     * Obtener los datos de una hoja de trabajo
-     * @param type $id
+     * Obtiene el porcentaje del fondo de garantias
      * @return type
      */
-    public function get_Data($id) {
-        $result=$this
-                ->where('id',$id)
+    public function get_guarantee_fund_percent() {
+        $result=$this->select('value')
+                ->where('id',2)
                 ->first();
-        if(@$result["id"]<>''){
-            return($result);            
-        }else{
-            return(false);
+        if (isset($result["value"])) {
+            return ($result["value"]);
+        } else {
+            return (0);
         }
     }
-
+    
+    /**
+     * Obtiene el porcentaje del fondo de garantias
+     * @return type
+     */
+    public function guarantee_fund_percent_iva() {
+        $result=$this->select('value')
+                ->where('id',3)
+                ->first();
+        if (isset($result["value"])) {
+            return ($result["value"]);
+        } else {
+            return (0);
+        }
+    }
+    
+    /**
+     * Obtiene el valor del porcentaje del seguro segun si es con tenedor o sin tenedor o portador
+     * @return type
+     */
+    public function life_insurance_percent($holder) {
+        if($holder==0){
+            $id=4;
+        }else{
+            $id=5;
+        }
+        $result=$this->select('value')
+                ->where('id',$id)
+                ->first();
+        if (isset($result["value"])) {
+            return ($result["value"]);
+        } else {
+            return (0);
+        }
+    }
+    
+    /**
+     * Obtiene la tasa maxima legal vigente
+     * @return type
+     */
+    public function get_maximum_legal_rate() {
+        
+        $result=$this->select('value')
+                ->where('id',6)
+                ->first();
+        if (isset($result["value"])) {
+            return ($result["value"]);
+        } else {
+            return (0);
+        }
+    }
+    
+    
+    
 }
 
