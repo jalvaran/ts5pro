@@ -127,6 +127,7 @@ class InverPacificDraw extends BaseController
         $user_id=$this->session->get('user');
         $module_id=$this->module_id;                        //inverpacific
         $list_id=$request->getVar('list_id');
+        
         $permission_id="";
         switch ($list_id) {
             case "A": //Listar el historial de las hojas de negocio
@@ -134,9 +135,12 @@ class InverPacificDraw extends BaseController
             break;
             case 1: //Listar el historial de las hojas de negocio en estado solicitada
                 $permission_id='61494b3150ea6632631526'; 
+                $data["actions"]["attachments"]=1;
+                
             break;
             case 2: //Listar el historial de las hojas de negocio en estado de analisis
                 $permission_id='61495079796f2594150933'; 
+                $data["actions"]["uploads"]=1;
             break;
             case 3: //Listar el historial de las hojas de negocio en estado pre aprobado
                 $permission_id='61494bc55c2e3827172881'; 
@@ -198,6 +202,7 @@ class InverPacificDraw extends BaseController
         $data["cols"][$i++]=lang("fields.fee_value_monthly");
         $data["cols"][$i++]=lang("fields.observations");
         $data["cols"][$i++]=lang("fields.author_name");
+        $data["cols"][$i++]=lang("fields.status");
         
         $page=$request->getVar('page');
         $search=$request->getVar('search');
@@ -214,15 +219,18 @@ class InverPacificDraw extends BaseController
                         'term',
                         'fee_value_monthly',
                         'observations',
-                        'author_name',    
+                        'author_name', 
+                        'status', 
                         
             
             );
         
-        $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');
-                
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');                
         $model->select($fields);
-                
+        if($list_id<>'A'){
+            $model->where('author',$user_id);
+            $model->where('status',$list_id); 
+        }        
         //$model->where('author',$user_id);   //Por si se quiere que solo se vean los negocios del mismo usuario
         $recordsTotal = $model->countAllResults(false);
         
@@ -257,8 +265,6 @@ class InverPacificDraw extends BaseController
         $model->orderBy('consecutive DESC');
         $response=$model->findAll($limit,$start_point);
         
-        //print($model->getCompiledSelect());
-        //print_r($response);
         $info=lang("msg.info");
         $info=str_replace("_START_",$page,$info);
         $info=str_replace("_END_",$totalPages,$info);
@@ -268,6 +274,8 @@ class InverPacificDraw extends BaseController
         $data["next_page"]=$next_page;
 
         $data["actions"]["edit"]=1;
+        $data["actions"]["pdf"]=1;
+        
         $data["data"]=$response;
         echo view($this->views_path_module.'\list\table_list',$data);
     }
@@ -401,5 +409,130 @@ class InverPacificDraw extends BaseController
         return(view($this->views_path_module.'\list\business_sheet_totals',$data_model));
     }
     
+    /**
+     * dibuje el formulario para subir los adjuntos en una hoja de negocio
+     * @return type
+     */
+    public function attachments_draw() {
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='6149022bf2bff062214145';  
+        $module_id=$this->module_id;      
 
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+        }
+        $request = service('request');
+        $business_sheet_id=$request->getVar('id');
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');
+        $mSheetDocumentss=model('App\Modules\Inverpacific\Models\BusinessSheetsTypesDocuments');
+        $mAttachments=model('App\Modules\Inverpacific\Models\Attachments');
+        $data_sheet=$model->get_Data($business_sheet_id);
+        $necessary_attachments=$mSheetDocumentss->get_Necessary_attachments($data_sheet["creditmoto_business_sheet_types_id"],$data_sheet["status"]);
+        $data["data_sheet"]=$data_sheet;
+        $data["necessary_attachments"]=$necessary_attachments;
+        
+        foreach ($data["necessary_attachments"] as $key => $value) {
+            
+            $necessary_attachments_id=$value["id"];
+            $data_attachment=$mAttachments
+                                ->where('business_sheet_id',$business_sheet_id)
+                                ->where('document_id',$necessary_attachments_id)
+                                ->first();
+            $data["necessary_attachments"][$key]["attachment_id"]="";
+            $data["necessary_attachments"][$key]["attachment_name"]="";
+            $data["necessary_attachments"][$key]["attachment_size"]="";
+            $data["necessary_attachments"][$key]["attachment_type"]="";
+            $data["necessary_attachments"][$key]["attachment_link"]="";
+            $data["necessary_attachments"][$key]["attachment_extension"]="";
+            if(isset($data_attachment["id"])){                
+                $data["necessary_attachments"][$key]["attachment_id"]=$data_attachment["id"];
+                $data["necessary_attachments"][$key]["attachment_name"]=$data_attachment["name"];
+                $data["necessary_attachments"][$key]["attachment_size"]=$data_attachment["size"];
+                $data["necessary_attachments"][$key]["attachment_type"]=$data_attachment["type"];
+                $data["necessary_attachments"][$key]["attachment_link"]=$data_attachment["link"];
+                $data["necessary_attachments"][$key]["attachment_extension"]=$data_attachment["extension"];
+            }
+        }
+        
+        return(view($this->views_path_module.'\list\attachments_list',$data));
+        
+    }
+    /**
+     * Dibuja el Dropzone para subir un archivo
+     */
+    public function frm_upload_file() {
+        $request = service('request');
+        $business_sheet_id=$request->getVar('business_sheet_id');
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+        
+        $module_id=$this->module_id;
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');
+        $permission_id='6156159284c77599840464';           //Permiso para Editar singular Ver en tabla access_control_permissions
+        $permission_id_all='615615ad6efa6294907733';       //Permiso para Editar plural Ver en tabla access_control_permissions
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$model->get_Authority($business_sheet_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        
+        $document_id=$request->getVar('id');
+        $mSheetDocuments=model('App\Modules\Inverpacific\Models\BusinessSheetsTypesDocuments');
+        $mAttachments=model('App\Modules\Inverpacific\Models\Attachments');
+        $data_Attachments_Document_id=  $mAttachments->get_Attachment_Document_id($business_sheet_id,$document_id);
+        $attachment_id='';
+        if(isset($data_Attachments_Document_id["id"])){
+            $attachment_id=$data_Attachments_Document_id["id"];
+        }
+        $data_document=$mSheetDocuments->get_Data($document_id);
+        $data_dropzone["cols"]=12;
+        $data_dropzone["tags_form"]='data-business_sheet_id="'.$business_sheet_id.'" data-document_id="'.$document_id.'"  data-attachment_id="'.$attachment_id.'" ' ;
+        $data_dropzone["id"]="sheet_attachment";
+        $data_dropzone["title"]=$data_document["name"];
+        $data_dropzone["sub_title"]=lang('creditmoto.dropzone_attachment_subtitle');
+        echo view($this->views_path.'\dropzone_upload',$data_dropzone);
+    }
+    /**
+     * Permite ver un documento adjunto
+     * @param type $attachment_id
+     * @return type
+     */
+    public function attachment_view($attachment_id) {
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='6149022bf2bff062214145';  
+        $module_id=$this->module_id;      
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+        }
+        $mAttachments=model('App\Modules\Inverpacific\Models\Attachments');
+        $data_attachment=$mAttachments->get_Data($attachment_id);
+        if(is_file(WRITEPATH.$data_attachment["link"])){
+            $file = fopen(WRITEPATH.$data_attachment["link"], "r");
+            $content="";
+            while (($bufer = fgets($file, 4096)) !== false) {
+                $content.= $bufer;
+            }            
+            return $this->response->download($data_attachment["name"], $content);
+            
+        }else{
+            echo('file no found');
+        }
+        
+    }
+    
 }

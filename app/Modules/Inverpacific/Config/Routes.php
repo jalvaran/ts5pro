@@ -41,11 +41,15 @@ $routes->group("inverpacific", [
         $subroutes->add("business_several_add", "InverPacificProcess::business_several_add");
         $subroutes->add("business_sheet_severals_list_added", "InverPacificDraw::business_sheet_severals_list_added");
         $subroutes->add("business_sheet_totals", "InverPacificDraw::business_sheet_totals");
+        $subroutes->add("attachments_draw", "InverPacificDraw::attachments_draw");
+        $subroutes->add("frm_upload_file", "InverPacificDraw::frm_upload_file");
+        $subroutes->add("attachment_view/(:any)", "InverPacificDraw::attachment_view/$1"); 
         
         $subroutes->add("business_sheet_field_edit", "InverPacificProcess::business_sheet_field_edit");
         $subroutes->add("business_several_adds_delete", "InverPacificProcess::business_several_adds_delete");
         $subroutes->add("get_motorcycle_value", "InverPacificProcess::get_motorcycle_value");
-        
+        $subroutes->add("save_business_sheet", "InverPacificProcess::save_business_sheet");  
+        $subroutes->add("upload_file", "InverPacificProcess::upload_file");        
        
         $subroutes->add("thirds_searches", "InverPacificSearches::thirds_searches");
         $subroutes->add("type_sheets_searches", "InverPacificSearches::type_sheets_searches");
@@ -67,6 +71,9 @@ $routes->group("inverpacific", [
         $subroutes->add("motorcycle_form", "MotorcyclesDraw::motorcycle_form");
         $subroutes->add("save_motorcycle", "MotorcyclesProcess::save_motorcycle");
         $subroutes->add("trademarks_searches", "InverPacificSearches::trademarks_searches");
+        
+        $subroutes->add("business_sheet_pdf/(:any)", "InverPacificPDF::business_sheet_pdf/$1");
+        
         
         
     }

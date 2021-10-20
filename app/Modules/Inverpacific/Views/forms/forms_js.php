@@ -655,6 +655,77 @@
    
     
    }
+   
+   
+   function save_business_sheet(id){
+                
+        var urlControllerProcess='<?php echo base_url('/inverpacific/save_business_sheet') ?>';
+        var btnSave = $(".ts_btn_add_severals");
+        var data_form_serialized=$('.ts_input').serialize();        
+        var form_data = new FormData();
+
+            form_data.append('id',id);
+            form_data.append('data_form_serialized',data_form_serialized);
+        
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#modal_xl').modal("hide");
+                        $(".ts_pages_links").removeClass("active");
+                        $('#link_on_request').addClass("active");     
+                        list_id=1;
+                        select_list();
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+        
+    }
     
 </script>
 

@@ -29,15 +29,28 @@
                 <tbody>
 
                 <?php
-
+                
                 foreach ($data as $data_col){
                     print('<tr >');
                     $id=$data_col["id"];
                     foreach ($data_col as $key => $value_col){
                         if($key=="id"){
                             print('<td>');
-                                if(isset($actions["edit"])){
-                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_edit').'" class="btn btn-white ms-2 ts_btn_actions" ><li class="fa fa-edit text-primary"></li>');
+                                if(isset($actions["edit"]) and $data_col["status"]==1){
+                                    
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_edit').'" class="btn btn-white ms-2 ts_btn_actions" ><li class="fa fa-edit text-primary"></li></button>');
+                                }
+                                if(isset($actions["pdf"])){
+                                    
+                                    print('<a href="'.base_url('inverpacific/business_sheet_pdf/'.$id).'" target="_blank" data-id="'.$id.'" title="'.lang('msg.btn_title_pdf').'" class="btn btn-white ms-2 ts_btn_pdf" ><li class="fa fa-file-pdf text-danger"></li></a>');
+                                }
+                                if(isset($actions["attachments"])){
+                                    
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_attachments').'" class="btn btn-white ms-2 ts_btn_attachments" ><li class="fa fa-upload text-success"></li></button>');
+                                }
+                                if(isset($actions["uploads"])){
+                                    
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_uploads').'" class="btn btn-white ms-2 ts_btn_uploads" ><li class="fa fa-paperclip text-primary"></li></button>');
                                 }
                                 
                             print('</td>');

@@ -71,12 +71,14 @@ class ExcelFunctions{
         if ($type != 0 && $type != 1) {
             return (false);
         }
-
+        if($nper==0){
+            $nper=1;
+        }
         // Calculate
         if ($rate !== null && $rate != 0) {
             return (-$fv - $pv * pow(1 + $rate, $nper)) / (1 + $rate * $type) / ((pow(1 + $rate, $nper) - 1) / $rate);
         }
-
+        
         return (-$pv - $fv) / $nper;
     }
     /**

@@ -15,6 +15,10 @@ return [
     "color_form_title"=>"Crear o Editar un Color de una moto",
     "motorcycle_form_title"=>"Crear o Editar una Moto",
     
-    
+    "format_consecutive"=>"HOJA DE NEGOCIO No.",
+    "title_form_attachments"=>"ADJUNTAR SOPORTES",
+    "dropzone_attachment_subtitle"=>"Arrastre aquí el archivo Solicitado",
+    "file_recived"=>"Archivo Recibido",
+    "uploads"=>"Archivos Cargados",
     
 ];

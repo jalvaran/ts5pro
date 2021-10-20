@@ -307,7 +307,12 @@ class InverPacificProcess extends BaseController
         
     }
     
-    
+    /**
+     * Valida los campos recibidos de un formulario
+     * @param type $data_form
+     * @param type $validator
+     * @return type
+     */
     public function validations($data_form,$validator='') {
         foreach($data_form as $field => $value){
             $data_form[$field]=trim($value);
@@ -338,6 +343,139 @@ class InverPacificProcess extends BaseController
         
         return($data_form);
         
+    }
+    
+    /**
+     * Grabar una hoja de negocio
+     */
+    public function save_business_sheet() {
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        
+        $request = service('request');
+        $business_sheet_id=$request->getVar('id');
+        
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheets');
+        
+        $data_form_serialized=$request->getVar('data_form_serialized');
+        parse_str($data_form_serialized,$data_form);
+        
+        $validator["numeric"]["motorcycle_value"]=1;
+        $validator["numeric"]["discount"]=1;
+        $validator["numeric"]["initial_fee"]=1;
+        $validator["numeric"]["term"]=1;
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $module_id=$this->module_id;
+        
+       
+        $permission_id='61548efe7ee2c964405841';                                    //Permiso para crear un role
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+        }
+        $validations=$this->validations($data_form,$validator);
+
+        if(isset($validations["E1"])){
+            return($this->setResponseFormat('json')->respond($validations));
+        }else{
+            $data_form=$validations;
+        }
+                 
+        $msg=lang('msg.saving_register_ok');
+       
+        $response["status"]=1;
+        $response["msg"]=$msg;
+        return $this->setResponseFormat('json')->respond($response);
+        
+    }
+    
+    public function upload_file(){
+
+
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $request = service('request');
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+        $document_id=$request->getVar('document_id');
+        $attachment_id=$request->getVar('attachment_id');
+        $business_sheet_id=$request->getVar('business_sheet_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+       
+
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');
+        $permission_id='6156159284c77599840464';           //Permiso para Editar singular Ver en tabla access_control_permissions
+        $permission_id_all='615615ad6efa6294907733';       //Permiso para Editar plural Ver en tabla access_control_permissions
+        $module_id=$this->module_id;
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$model->get_Authority($business_sheet_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+
+        $file = $this->request->getFile('sheet_attachment');
+        $file_extension=$file->guessExtension();
+        $file_name=$file->getName();
+        $file_type=$file->getMimeType();
+        $file_size=$file->getSize('mb');
+        $file_name_save=$document_id.".".$file_extension;
+        
+        
+        $destiny="companies".DIRECTORY_SEPARATOR.$company_id.DIRECTORY_SEPARATOR.'creditmotos'.DIRECTORY_SEPARATOR."business_sheets".DIRECTORY_SEPARATOR.$business_sheet_id;
+        //$destiny=ROOTPATH.$destiny;
+        $file->move(WRITEPATH.$destiny, $file_name_save,true);
+        $destiny.="/".$file_name_save;
+        
+        $mAttachments=model('App\Modules\Inverpacific\Models\Attachments');
+        $data_attachment=$mAttachments->get_Data($attachment_id);
+        if(!isset($data_attachment["id"])){
+            $ts5=new Ts5_class();
+            $data_attachment["id"]=$ts5->getUniqueId('',true);
+            $data_attachment["business_sheet_id"]=$business_sheet_id;
+            $data_attachment["document_id"]=$document_id;
+            $data_attachment["name"]=$file_name;
+            $data_attachment["extension"]=$file_extension;
+            $data_attachment["size"]=$file_size;
+            $data_attachment["type"]=$file_type;
+            $data_attachment["link"]=$destiny;
+            $data_attachment["author"]=$user_id;
+            $mAttachments->insert($data_attachment);
+        }else{
+            $data_attachment["business_sheet_id"]=$business_sheet_id;
+            $data_attachment["document_id"]=$document_id;
+            $data_attachment["name"]=$file_name;
+            $data_attachment["extension"]=$file_extension;
+            $data_attachment["type"]=$file_type;
+            $data_attachment["size"]=$file_size;
+            $data_attachment["link"]=$destiny;
+            $mAttachments->update($attachment_id,$data_attachment);
+        }
+        $response["status"]=1;
+        $response["msg"]=lang('creditmoto.file_recived');
+
+        return $this->setResponseFormat('json')->respond($response);
+
+
     }
     
     //Fin clase

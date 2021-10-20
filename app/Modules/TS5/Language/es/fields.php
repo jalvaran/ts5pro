@@ -119,11 +119,11 @@ return [
     "motorcycle_value_before_taxes"=>"Valor de la Moto Antes de Impuestos",
     "subtotal"=>"Subtotal",
     "iva_value"=>"Valor de Impuestos",
-    "subtotal_general"=>"Sutotal General",
+    "subtotal_general"=>"Subtotal General",
     
     "total_motorcycle"=>"Total Moto",
-    "several_value"=>"Total Varios",
-    "total_more_several"=>"Total Mas Varios",
+    "several_value"=>"Total Adicionales",
+    "total_more_several"=>"Total Mas Adicionales",
     "guarantee_fund_value"=>"Fondo de Garantía",
     "guarantee_fund_iva_value"=>"IVA Fondo de Garantía",
     "total_administration_expenses"=>"Total Gastos de Administración",
@@ -134,6 +134,31 @@ return [
     "life_insurance_value"=>"Valor Seguro de Vida",
     "fee_value"=>"Valor de la Cuota",
     "fee_value_life_insurance"=>"Valor Cuota del seguro vida",
-        
+    "status"=>"Estado",
+    "date"=>"Fecha",
+    "invoice"=>"Factura",
+    "cifin"=>"CIFIN",
+    "customer"=>"Cliente",
+    "fosiga"=>"Fosiga",
+    
+    "simit"=>"SIMIT",
+    "phone"=>"Teléfono",
+    "runt"=>"RUNT",
+    "mobile"=>"Celular",
+    "motor_number"=>"No. Motor",
+    "financial_name"=>"Financiera",
+    "severals"=>"Adicionales",
+    "total"=>"Total",
+    "several_id"=>"Adicional",
+    "bill_number"=>"Número de Factura",
+    "guarantee_fund"=>"Fondo de Garantía",
+    "tax_percent_value"=>"Porcentaje de Impuestos",
+    "total"=>"Total",
+    
+    "buyer"=>"Comprador",
+    "seller"=>"Vendedor",
+    "verified"=>"Verificado",
+    "reviewed"=>"Revisado",
+    
 
 ];

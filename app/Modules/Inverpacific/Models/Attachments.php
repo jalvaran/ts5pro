@@ -18,24 +18,24 @@
  * DESDE, FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS
  * NEGOCIACIONES EN EL SOFTWARE.
  * -----------------------------------------------------------------------------
- * Modelo para gestionar la tabla de terceros
+ * Modelo para los adjuntos de las hojas de negocio
  * -----------------------------------------------------------------------------
  * @Author Julian Andres Alvarán Valencia <jalvaran@gmail.com>
- * @created 2021-09-21
- * @updated 2021-09-21
+ * @created 2021-10-06
+ * @updated 2021-10-06 
  * @link https://www.technosoluciones.com.co
  * @Version 1.0
  * @since PHP 7, PHP 8
  */
 
-namespace App\Modules\TS5\Models;
+namespace App\Modules\Inverpacific\Models;
 
 use CodeIgniter\Model;
 
-class ViewThirds extends Model
+class Attachments extends Model
 {
 
-    protected $table = 'view_app_thirds';
+    protected $table = 'creditmoto_business_sheet_attachments';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = false;
@@ -45,34 +45,14 @@ class ViewThirds extends Model
 
     protected $allowedFields = [
         'id',
-        'type_organization_id',
-        'type_organization_name',
-        'type_regime_id',
-        'type_regime_name',
-        'type_liabilitie_id',
-        'type_liabilitie_name',
-        'type_document_identification_id',
-        'type_document_identification_name',
-        'identification',
-        'dv',
-        'firts_name',
-        'second_name',
-        'surname',
-        'second_surname',
+        'business_sheet_id',
+        'document_id',
         'name',
-        'municipalities_id',
-        'municipalities_name',
-        'departments_id',
-        'departments_name',
-        'countries_id',
-        'countries_name',
-        'address',
-        'neighborhood',
-        'telephone1',
-        'telephone2',
-        'mail',
+        'extension',
+        'size',
+        'type',
+        'link',
         'author',
-        'author_name',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -91,9 +71,7 @@ class ViewThirds extends Model
     protected $skipValidation = false;
     //protected $cache_time = "10";
     protected $DBGroup = "techno_client";
-
-
-
+    
     /**
      * Retorna falso o verdadero si el usuario activo ne la sesión es el
      * autor del registro que se desea acceder, editar o eliminar.
@@ -103,6 +81,7 @@ class ViewThirds extends Model
      */
     public function get_Authority($id, $author)
     {
+        //$this->db->setDatabase($_SESSION["DB_CLIENT"]);
         $row = $this->select("id")
                 ->where("id", $id)
                 ->where("author", $author)
@@ -113,29 +92,23 @@ class ViewThirds extends Model
             return (false);
         }
     }
-
-    /**
-     * valida si ya existe un tercero con una identificacion
-     * @param type $identification
-     * @return type
-     */
-    public function identification_exists($identification) {
-        $result=$this
-                ->where('identification',$identification)
-                ->first();
-        if(isset($result['id'])){
-            if($result['id']<>''){
-                return(true);
-            }else{
-                return(false);
-            }
-        }       
-        
-    }
+    
     
     public function get_Data($id) {
-        return($this->where('id',$id)->first());
+        $result=$this
+                ->where('id',$id)
+                ->first();
+        return($result);
     }
     
+    public function get_Attachment_Document_id($business_sheet_id,$document_id) {
+        $result=$this
+                ->where('business_sheet_id',$business_sheet_id)
+                ->where('document_id',$document_id)
+                ->first();
+        return($result);
+    }
+    
+
 }
 
