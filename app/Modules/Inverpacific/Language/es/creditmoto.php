@@ -20,5 +20,11 @@ return [
     "dropzone_attachment_subtitle"=>"Arrastre aquí el archivo Solicitado",
     "file_recived"=>"Archivo Recibido",
     "uploads"=>"Archivos Cargados",
+    "error_1"=>"No hay un estado superior",
+    "error_2"=>"No se han adjuntado todos los documentos necesarios",
+    "error_3"=>"A la Hoja de negocio le faltan datos",
+    "error_4"=>"No hay un estado inferior",
+    "status_advanced"=>"Estado Avanzado",
+    "status_returned"=>"Estado Devuelto",
     
 ];

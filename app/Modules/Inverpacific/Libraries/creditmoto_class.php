@@ -137,7 +137,53 @@ class Creditmoto_class{
         }
         return(round($financing_value));
     }
-
+    /**
+     * Valida que los valores de una hoja de negocio estén completos
+     * @param type $data_sheet
+     * @return type
+     */
+    public function sheet_values_validate($data_sheet) {
+        $validation=1;
+        $excluid=array("type_of_sale","invoice", "sticker", "motor_number", "responsible_in_financial", "deleted_at", "backed_at");
+        foreach ($data_sheet as $key => $value) {
+            if(!in_array($key, $excluid)){
+                
+                if($value==''){                    
+                    $validation=0;
+                }
+            }
+            
+        }
+        
+        return($validation);
+    }
+    /**
+     * valida que una hoja de negocio tenga todos los adjuntos solicitados
+     * @param type $data_sheet
+     * @return type
+     */
+    public function attachments_validate($data_sheet) {
+        $validation=1;
+        $business_sheet_id=$data_sheet["id"];
+        $mSheetDocuments=model('App\Modules\Inverpacific\Models\BusinessSheetsTypesDocuments');
+        $mAttachments=model('App\Modules\Inverpacific\Models\Attachments');
+        
+        $necessary_attachments=$mSheetDocuments->get_Necessary_attachments($data_sheet["creditmoto_business_sheet_types_id"],$data_sheet["status"]);
+        
+        foreach ($necessary_attachments as $key => $value) {
+            
+            $necessary_attachments_id=$value["id"];
+            $data_attachment=$mAttachments
+                                ->where('business_sheet_id',$business_sheet_id)
+                                ->where('document_id',$necessary_attachments_id)
+                                ->first();
+            
+            if(!isset($data_attachment["id"])){                
+                $validation=0;
+            }
+        }
+        return($validation);
+    }
     
 }
 

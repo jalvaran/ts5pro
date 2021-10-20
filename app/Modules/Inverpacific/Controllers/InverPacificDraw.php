@@ -136,11 +136,15 @@ class InverPacificDraw extends BaseController
             case 1: //Listar el historial de las hojas de negocio en estado solicitada
                 $permission_id='61494b3150ea6632631526'; 
                 $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
                 
             break;
             case 2: //Listar el historial de las hojas de negocio en estado de analisis
                 $permission_id='61495079796f2594150933'; 
                 $data["actions"]["uploads"]=1;
+                $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
+                $data["actions"]["back"]=1;
             break;
             case 3: //Listar el historial de las hojas de negocio en estado pre aprobado
                 $permission_id='61494bc55c2e3827172881'; 

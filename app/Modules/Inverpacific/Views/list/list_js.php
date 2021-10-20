@@ -192,9 +192,19 @@
         
         $('.ts_btn_attachments').on('click',function () {
             var id=$(this).attr("data-id");            
-            if(list_id==1){
+            //if(list_id==1){
                 attachments_draw(id);
-            }
+            //}
+        });
+        
+        $('.ts_btn_advance').on('click',function () {
+            var id=$(this).attr("data-id");
+            sheet_advance(id);
+        });
+        
+        $('.ts_btn_back').on('click',function () {
+            var id=$(this).attr("data-id");
+            sheet_back(id);
         });
         
     }

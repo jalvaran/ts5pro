@@ -49,8 +49,10 @@ $routes->group("inverpacific", [
         $subroutes->add("business_several_adds_delete", "InverPacificProcess::business_several_adds_delete");
         $subroutes->add("get_motorcycle_value", "InverPacificProcess::get_motorcycle_value");
         $subroutes->add("save_business_sheet", "InverPacificProcess::save_business_sheet");  
-        $subroutes->add("upload_file", "InverPacificProcess::upload_file");        
-       
+        $subroutes->add("upload_file", "InverPacificProcess::upload_file");           
+        $subroutes->add("sheet_advance", "InverPacificProcess::sheet_advance");
+        $subroutes->add("sheet_back", "InverPacificProcess::sheet_back");
+        
         $subroutes->add("thirds_searches", "InverPacificSearches::thirds_searches");
         $subroutes->add("type_sheets_searches", "InverPacificSearches::type_sheets_searches");
         $subroutes->add("financials_searches", "InverPacificSearches::financials_searches");

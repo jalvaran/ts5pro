@@ -34,5 +34,8 @@ return [
     "exists" => "El registro ya existe",
     "btn_title_attachments" => "Adjuntar un Archivo",
     "btn_title_uploads" => "Archivos Cargados",
+    "btn_title_advance" => "Avanzar",
+    "btn_title_back" => "Devolver",
+    
 
 ];

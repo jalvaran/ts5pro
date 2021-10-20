@@ -43,7 +43,8 @@ SELECT t1.*,
     (SELECT `name` FROM creditmoto_trademarks t7 WHERE t7.id=(SELECT trademark) limit 1) as trademark_name,
     (SELECT `name` FROM creditmoto_colors t7 WHERE t7.id=t1.color_id limit 1) as color_name,
          
-    (SELECT `name` FROM techno_ts5_pro.access_control_users t4 WHERE t4.id=t1.author limit 1) as author_name
+    (SELECT `name` FROM techno_ts5_pro.access_control_users t4 WHERE t4.id=t1.author limit 1) as author_name,
+    (SELECT `identification` FROM techno_ts5_pro.access_control_users t4 WHERE t4.id=t1.author limit 1) as author_identification
     
     FROM `creditmoto_business_sheet` t1 
     INNER JOIN creditmoto_business_sheet_status t2 ON t1.status=t2.id;
@@ -77,5 +78,3 @@ SELECT t1.*,
     (SELECT `name` FROM techno_ts5_pro.access_control_users t4 WHERE t4.id=t1.author limit 1) as author_name 
     
     FROM `creditmoto_motorcycles` t1 ;
-    
-

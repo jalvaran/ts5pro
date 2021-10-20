@@ -36,6 +36,9 @@
                     foreach ($data_col as $key => $value_col){
                         if($key=="id"){
                             print('<td>');
+                                if(isset($actions["back"])){                                    
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_back').'" class="btn btn-white ms-2 ts_btn_back" ><li class="fa fa-reply text-dark"></li></button>');
+                                }
                                 if(isset($actions["edit"]) and $data_col["status"]==1){
                                     
                                     print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_edit').'" class="btn btn-white ms-2 ts_btn_actions" ><li class="fa fa-edit text-primary"></li></button>');
@@ -48,10 +51,13 @@
                                     
                                     print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_attachments').'" class="btn btn-white ms-2 ts_btn_attachments" ><li class="fa fa-upload text-success"></li></button>');
                                 }
-                                if(isset($actions["uploads"])){
-                                    
+                                if(isset($actions["uploads"])){                                    
                                     print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_uploads').'" class="btn btn-white ms-2 ts_btn_uploads" ><li class="fa fa-paperclip text-primary"></li></button>');
                                 }
+                                if(isset($actions["advance"])){                                    
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_advance').'" class="btn btn-white ms-2 ts_btn_advance" ><li class="fa fa-share text-dark"></li></button>');
+                                }
+                                
                                 
                             print('</td>');
                         }
