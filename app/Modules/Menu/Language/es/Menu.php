@@ -12,7 +12,10 @@ return [
 
     "error_title_no_module_company" => "Error de Acceso",
     "error_text_no_module_company" => "El módulo solicitado no está asignado a la empresa enviada",
-
+    
+    "siderbar_title_index" => "Empresas Disponibles",
+    "siderbar_title_modules" => "Módulos Disponibles",
+    
     "error_title_no_action" => "Error de Permisos",
     "error_text_no_action" => "Su usuario no tiene permitido realizar esta acción",
     "page_title_module_1" => "Módulo Menú",
@@ -41,9 +44,13 @@ return [
     "card_title_component_7" => "Listado de Motocicletas",
     "card_sub_title_component_7" => "Listado de las motos disponibles",
 
+    "card_title_component_8" => "Parámetros",
+    "card_sub_title_component_8" => "Parametrización del módulo",
+    
+    "card_title_component_9" => "Administrar",
+    "card_sub_title_component_9" => "Administración del módulo",
 
-
-    "siderbar_title_index" => "Empresas Disponibles",
-    "siderbar_title_modules" => "Módulos Disponibles",
-
+    "card_title_component_10" => "Documentos de Nómina", 
+    "card_sub_title_component_10" => "Historial, Creación y Notificación", 
+ 
 ];

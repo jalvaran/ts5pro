@@ -158,6 +158,9 @@ class Creditmoto_class{
                         "pre_approved_date",
                         "author_approved",
                         "approved_date",
+                        "payment_start_date",
+                        "payment_day_month",
+                        
                         
                         "deleted_at", 
                         "backed_at");

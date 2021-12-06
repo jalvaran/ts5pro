@@ -1079,6 +1079,116 @@ class CompaniesProcess extends BaseController
 
         print_r($arrayResponse);
     }
+    
+    /**
+     * Obtiene el software que se ha creado en el api para una empresa
+     * @param $item_id > id de la empresa que se está configurando
+     */
+    public function get_software($item_id){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->get_software($data_company,$item_id,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+        
+        if(is_array($arrayResponse)){
+            //print_r($arrayResponse);
+            $response["status"]=1;
+            $response["msg"]=lang('msg.get_software_ok');
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+
+    }
+    
+    /**
+     * Obtiene el software que se ha creado en el api para una empresa
+     * @param $item_id > id de la empresa que se está configurando
+     */
+    public function get_certificates($item_id){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $mCompanies=model('App\Modules\Access\Models\Companies');
+
+        $permission_id='613784ab2471f217811506';           //Permiso singular para editar la configuración de una empresa
+        $permission_id_all='613784ab2471f217811507';       //Permiso plural para editar la configuración de una empresa
+        $module_id='613784ab2471f217811472'; //Access
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$mCompanies->get_Authority($item_id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            exit();
+        }
+
+        $obEB=new ElectronicBill();
+        $data_company=$mCompanies->get_DataCompany($item_id);
+        $api_response=$obEB->get_certificate($data_company,$item_id,$user_id);
+
+        $arrayResponse = json_decode($api_response,true);
+        
+        if(is_array($arrayResponse)){
+            //print_r($arrayResponse);
+            $response["status"]=1;
+            $response["msg"]=lang('msg.get_certificate_ok');
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }else{
+            $response["status"]=0;
+            $response["msg"]="Error";
+            $response["msg_api"]=$arrayResponse;
+            return $this->setResponseFormat('json')->respond($response);
+        }
+
+
+    }
 
     //Fin clase
 

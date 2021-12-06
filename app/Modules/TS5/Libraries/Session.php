@@ -48,6 +48,7 @@ class Session
             $this->set("user",$user["id"]);
             $this->set("user_name",$user["name"]);
             $this->set("user_designation",$user["designation"]);
+            
             return(true);
         }
 

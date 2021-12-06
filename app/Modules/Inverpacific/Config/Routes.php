@@ -44,6 +44,9 @@ $routes->group("inverpacific", [
         $subroutes->add("attachments_draw", "InverPacificDraw::attachments_draw");
         $subroutes->add("frm_upload_file", "InverPacificDraw::frm_upload_file");
         $subroutes->add("attachment_view/(:any)", "InverPacificDraw::attachment_view/$1"); 
+        $subroutes->add("frm_reject", "InverPacificDraw::frm_reject");     
+        $subroutes->add("uploads_list", "InverPacificDraw::uploads_list");  
+        $subroutes->add("form_payment_start_date", "InverPacificDraw::form_payment_start_date");
         
         $subroutes->add("business_sheet_field_edit", "InverPacificProcess::business_sheet_field_edit");
         $subroutes->add("business_several_adds_delete", "InverPacificProcess::business_several_adds_delete");
@@ -52,6 +55,8 @@ $routes->group("inverpacific", [
         $subroutes->add("upload_file", "InverPacificProcess::upload_file");           
         $subroutes->add("sheet_advance", "InverPacificProcess::sheet_advance");
         $subroutes->add("sheet_back", "InverPacificProcess::sheet_back");
+        $subroutes->add("save_reject", "InverPacificProcess::save_reject");        
+        $subroutes->add("archive_sheet", "InverPacificProcess::archive_sheet");    
         
         $subroutes->add("thirds_searches", "InverPacificSearches::thirds_searches");
         $subroutes->add("type_sheets_searches", "InverPacificSearches::type_sheets_searches");
@@ -75,6 +80,7 @@ $routes->group("inverpacific", [
         $subroutes->add("trademarks_searches", "InverPacificSearches::trademarks_searches");
         
         $subroutes->add("business_sheet_pdf/(:any)", "InverPacificPDF::business_sheet_pdf/$1");
+        $subroutes->add("business_sheet_pdf_liquidator/(:any)", "InverPacificPDF::business_sheet_pdf_liquidator/$1");
         
         
         

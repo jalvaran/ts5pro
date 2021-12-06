@@ -265,7 +265,8 @@ class InverPacificProcess extends BaseController
             }else{
                 $data_form=$validations;
             }
-            $data_form["id"]=$business_sheet_id;                        
+            $data_form["id"]=$business_sheet_id;
+            $data_form["status"]=1;
             $model->sheet_init($data_form);            
             $msg=lang('msg.saving_register_ok');
             
@@ -294,7 +295,7 @@ class InverPacificProcess extends BaseController
             }else{
                 $data_form=$validations;
             }
-            $data_form["status"]=1;
+            
             
             $model->update($business_sheet_id,$data_form);
             
@@ -542,6 +543,14 @@ class InverPacificProcess extends BaseController
         }
         $status_new=$data_sheet["status"]+1;
         
+        if($data_sheet["status"]==2){ //Marco quien hace el preaprobado y en qué fecha
+            $data["author_pre_approved"]=$user_id;
+            $data["pre_approved_date"]=date("Y-m-d H:i:s");
+        }
+        if($data_sheet["status"]==3){ //Marco quien hace el aprobado y en qué fecha
+            $data["author_approved"]=$user_id;
+            $data["approved_date"]=date("Y-m-d H:i:s");
+        }
         $data["status"]=$status_new;
         $model->update($id,$data);
         
@@ -553,7 +562,7 @@ class InverPacificProcess extends BaseController
     
     
     /**
-     * avanza una hoja de negocio a un estado superior
+     * devolver una hoja de negocio a un estado superior
      */
     public function sheet_back(){
         if (!$this->session->get_LoggedIn()) {
@@ -604,6 +613,106 @@ class InverPacificProcess extends BaseController
 
         return $this->setResponseFormat('json')->respond($response);
     }
+    
+    
+    /**
+     * Rechazar una hoja de negocio
+     */
+    public function save_reject() {
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            
+        }
+        $company_id=$this->session->get('company_id');
+        $user_id=$this->session->get('user');
+        
+        $request = service('request');
+        $id=$request->getVar('id');
+        
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheets');
+        
+        $data_form_serialized=$request->getVar('data_form_serialized');
+        parse_str($data_form_serialized,$data_form);
+        
+        
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $module_id=$this->module_id;
+        
+       
+        $permission_id='61703c5ab6f01173757427'; //Permiso para rechazar una hoja de negocio
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+        }
+        $validations=$this->validations($data_form,"");
+
+        if(isset($validations["E1"])){
+            return($this->setResponseFormat('json')->respond($validations));
+        }else{
+            $data_form=$validations;
+        }
+        
+        $data_form["author_reject"]=$user_id;
+        $data_form["reject_date"]=date("Y-m-d H:i:s");
+        $data_form["status"]=11;
+        $model->update($id,$data_form);
+        $msg=lang('msg.saving_register_ok');
+       
+        $response["status"]=1;
+        $response["msg"]=$msg;
+        return $this->setResponseFormat('json')->respond($response);
+        
+    }
+    
+    
+     /**
+     * archivar una hoja de negocio
+     */
+    public function archive_sheet(){
+        if (!$this->session->get_LoggedIn()) {
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_no_logged_in');
+            return $this->setResponseFormat('json')->respond($response);
+            
+        }
+
+        $request = service('request');
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+        $id=$request->getVar('id');
+        
+        $mUsers=model('App\Modules\Access\Models\Users');
+       
+
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheets');
+        $permission_id='6156159284c77599840464';           //Permiso para Editar singular Ver en tabla access_control_permissions
+        $permission_id_all='615615ad6efa6294907733';       //Permiso para Editar plural Ver en tabla access_control_permissions
+        $module_id=$this->module_id;
+
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$model->get_Authority($id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $response["status"]=0;
+            $response["msg"]=lang('Access.access_view_error');
+            return $this->setResponseFormat('json')->respond($response);
+            
+        }
+
+        $data["status"]=12; //estado archivado por comercial
+        $model->update($id,$data);
+        
+        $response["status"]=1;
+        $response["msg"]=lang('creditmoto.status_returned');
+
+        return $this->setResponseFormat('json')->respond($response);
+    }
+    
+    
     //Fin clase
 
 }

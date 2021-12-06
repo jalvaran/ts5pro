@@ -14,6 +14,7 @@
 	<script src="<?php echo base_url("/themes/synadmin/assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js")?>"></script>
     <script src="<?php echo base_url("/themes/synadmin/assets/plugins/datatable/js/jquery.dataTables.min.js")?>"></script>
     <script src="<?php echo base_url("/themes/synadmin/assets/plugins/datatable/js/dataTables.bootstrap5.min.js")?>"></script>
+    <script src="<?php echo base_url("/themes/synadmin/assets/plugins/apexcharts-bundle/js/apexcharts.min.js")?>"></script>
 
     <!--notification js -->
     <script src="<?php echo base_url("/themes/synadmin/assets/plugins/toastr/toastr.js")?>"></script>

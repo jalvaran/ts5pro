@@ -143,9 +143,33 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="col-12">
-                                    <button id="btn_create_software" data-item_id="<?= $data_company["id"] ?>" type="button" class="form-control btn btn-primary btn-lg px-5 "><?= lang('Access.btn_software_id')?></button>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button id="btn_get_software" data-item_id="<?= $data_company["id"] ?>" type="button" class="form-control btn btn-success btn-lg px-5 "><?= lang('Access.btn_get_software_id')?></button>
+                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button id="btn_create_software" data-item_id="<?= $data_company["id"] ?>" type="button" class="form-control btn btn-primary btn-lg px-5 "><?= lang('Access.btn_software_id')?></button>
+                                        
+                                    </div>
                                 </div>
+                                
+                                <div class="row g-3 responsive">
+
+                                    <div class="col table-responsive">
+                                    <table id="table_software" class="table table-striped">
+
+                                        <thead>
+                                            <tr><th>ID</th><th>PIN</th></tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+
+                                    </table>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -171,6 +195,8 @@
                                 <br>
                                 <div class="col-12">
                                     <button id="btn_create_certificate" data-item_id="<?= $data_company["id"] ?>" type="button" class="form-control btn btn-primary btn-lg px-5 "><?= lang('Access.btn_certified')?></button>
+                                    <button id="btn_get_certificate" data-item_id="<?= $data_company["id"] ?>" type="button" class="form-control btn btn-success btn-lg px-5 "><?= lang('Access.btn_get_certified')?></button>
+                                     
                                 </div>
                             </div>
 

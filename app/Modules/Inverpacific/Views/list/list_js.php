@@ -147,78 +147,7 @@
             }
         });
     }
-    
-    /**
-    * se agregan eventos a los botones de las tablas
-    *
-    */
-    function event_add_list(){
-        $(".ts_btn_page").unbind();
-        $(".ts_btn_actions").unbind();
-        $(".ts_col_table").unbind();        
-
-        $(".ts_btn_page").on('click',function () {
-            page = $(this).attr("data-page");
-            select_list();
-        });
-
-        $(".ts_col_table").on('click',function () {
-            id = $(this).attr("data-id");
-
-            if(list_id==1){
-                role_view(id);
-            }
-            if(list_id==2){
-                user_view(id);
-            }
-            if(list_id==3){
-                branch_view(id);
-            }
-
-        });
-
-        $('.ts_btn_actions').on('click',function () {
-            var id=$(this).attr("data-id");
-            
-            if(list_id=='A' || list_id<=20){
-                form_business_sheet(id);
-            }
-              
-            if(list_id==100){
-                frm_thirds(id);
-            }
-            
-        });
         
-        $('.ts_btn_attachments').on('click',function () {
-            var id=$(this).attr("data-id");            
-            //if(list_id==1){
-                attachments_draw(id);
-            //}
-        });
-        
-        $('.ts_btn_advance').on('click',function () {
-            var id=$(this).attr("data-id");
-            sheet_advance(id);
-        });
-        
-        $('.ts_btn_back').on('click',function () {
-            var id=$(this).attr("data-id");
-            sheet_back(id);
-        });
-        
-    }
-    
-    function events_attachments_draw(){
-        $(".ts_btn_upload").unbind();        
-
-        $(".ts_btn_upload").on('click',function () {
-            var id = $(this).attr("data-id");
-            var business_sheet_id = $(this).attr("data-business_sheet_id");
-            frm_upload_file(business_sheet_id,id);
-        });
-    }
-    
     function frm_upload_file(business_sheet_id,id){
         $('#modal_md').modal("show");
         var urlControllerDraw ='<?= base_url('inverpacific/frm_upload_file')?>';
@@ -327,8 +256,17 @@
             cancelButtonText: '<?php echo lang('Ts5.confirm_button_cancel')?>'
         }).then((result) => {
             if (result.isConfirmed) {
+                if(form_id == '100'){
+                    save_third(id);
+                }
                 if(form_id == '1'){
                     save_business_sheet(id);
+                }
+                if(form_id == '2'){                    
+                    save_reject(id);
+                }
+                if(form_id == '3'){                    
+                    archive_sheet(id);
                 }
             }else{
 
@@ -337,6 +275,130 @@
         });
         
         
+        
+    }
+    
+    function uploads_list(id){
+        $('#modal_xl').modal("show");
+        var urlControllerDraw ='<?= base_url('inverpacific/uploads_list')?>';
+        var form_data = new FormData();
+            form_data.append('id',id);
+            
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#modal_xl_body').html(data);
+               
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+    }
+    
+    function events_attachments_draw(){
+        $(".ts_btn_upload").unbind();        
+
+        $(".ts_btn_upload").on('click',function () {
+            var id = $(this).attr("data-id");
+            var business_sheet_id = $(this).attr("data-business_sheet_id");
+            frm_upload_file(business_sheet_id,id);
+        });
+    }
+    
+    
+    /**
+    * se agregan eventos a los botones de las tablas
+    *
+    */
+    function event_add_list(){
+        $(".ts_btn_page").unbind();
+        $(".ts_btn_actions").unbind();
+        
+        $(".ts_btn_page").on('click',function () {
+            page = $(this).attr("data-page");
+            select_list();
+        });
+
+        
+        $('.ts_btn_actions').on('click',function () {
+            var id=$(this).attr("data-id");
+            
+            if(list_id==1){
+                form_business_sheet(id);
+            }
+            if(list_id==2){
+                form_payment_start_date(id);
+            }
+              
+            if(list_id==100){
+                frm_thirds(id);
+            }
+            
+        });
+        
+        $(".ts_btn_attachments").unbind();
+        $('.ts_btn_attachments').on('click',function () {
+            var id=$(this).attr("data-id");            
+            
+            attachments_draw(id);
+           
+        });
+        
+        $(".ts_btn_advance").unbind();
+        $('.ts_btn_advance').on('click',function () {
+            var id=$(this).attr("data-id");
+            sheet_advance(id);
+        });
+        $(".ts_btn_back").unbind();
+        $('.ts_btn_back').on('click',function () {
+            var id=$(this).attr("data-id");
+            sheet_back(id);
+        });
+        
+        $(".ts_btn_reject").unbind();
+        $('.ts_btn_reject').on('click',function () {
+            var id=$(this).attr("data-id");
+            frm_reject(id);
+        });
+        
+        $(".ts_btn_uploads").unbind();
+        $('.ts_btn_uploads').on('click',function () {
+            var id=$(this).attr("data-id");
+            uploads_list(id);
+        });
+        
+        $(".ts_btn_trash").unbind();
+        $('.ts_btn_trash').on('click',function () {
+            var id=$(this).attr("data-id");
+            confirm_save_business_sheet(id,3);
+        });
         
     }
     

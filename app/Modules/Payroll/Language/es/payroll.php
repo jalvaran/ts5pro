@@ -1,0 +1,46 @@
+<?php
+return [
+    "admin_title" => "Administración de Nómina",
+    "module_name" => "Nómina",
+    "employee_form_title" => "Crear o Editar un Empleado",
+    "contratual_data" => "Datos Contractuales",
+    "personal_data" => "Datos Personales",
+    
+    "documents_title" => "Documentos de Nómina",
+    "general_documents"=>"Documentos Generales",
+    "individual_documents"=>"Documentos Individuales",
+    "send_documents"=>"Documentos Enviados",
+    "error_documents"=>"Documentos En Error",
+    
+    "general_document_form_title" => "Crear o Editar un documento general de nómina",
+    "available_employees" => "Empleados Disponibles",
+    "added_employees" => "Empleados Agregados",
+    "title_employees_add"=>"Agregar Empleados a este documento",
+    "btn_title_employees"=>"Asociar Empleados",
+    "add_employees_title"=>"Agregar Empleados a esta nómina",
+    "btn_add_employees_all"=>"Agregar todos",
+    "btn_delete_employees_all"=>"Quitar todos",
+    "btn_title_generate"=>"Generar Documentos Individuales",
+    "btn_title_novelties"=>"Reportar novedades",
+    "btn_title_report"=>"Reportar Documento",
+    "btn_title_view"=>"Ver Documento",
+    "btn_title_code"=>"Ver Código",
+    "creating_individual_documents"=>"Creando documentos individuales",
+    "reporting_individual_documents"=>"Reportando ésta nómina electrónica",
+    "error1"=>"El zip_key está vacío",
+    "error2"=>"Éste documento ya fué reportado y está OK",
+    "successful_query"=>"Consulta completa",
+    "document_report_ok"=>"Documento reportado correctamente",
+    "status_zip_key"=>"Consultar estado por el zip_key",
+    "consulting_document"=>"Consultando documento",
+    "novelties_add_title"=>"Agregar Novedades a la nómina No. ",
+    "earns"=>"Devengados",
+    "deductions"=>"Deducciones",
+    "noventlies_sumary_title"=>"Resumen de Novedades agregadas a este documento",
+    "payroll_total"=>"Total de la Nómina",
+    "notes"=>"Notas de Ajuste",
+    "delete"=>"Realizar Nota de Ajuste",
+    "notes_form_title"=>"Realizar una nota de ajuste para la nomina individual: "
+    
+    
+];

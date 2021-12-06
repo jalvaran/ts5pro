@@ -60,10 +60,13 @@
             var model=($(this).attr("data-model"));
             var data_table=($(this).attr("data-data_table"));
             var labels=($(this).attr("data-labels"));
+            
+            
             var form_data = new FormData();
                 form_data.append('data_table',data_table);
                 form_data.append('model',model);
                 form_data.append('labels',labels);
+                //form_data.append('q',q);
 
             $('#'+select_id).select2({
                 dropdownParent: $('#modal_xl'),

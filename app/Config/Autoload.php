@@ -48,6 +48,7 @@ class Autoload extends AutoloadConfig
         'Admin' => APPPATH . 'Modules/Admin',
         'Accounting' => APPPATH . 'Modules/Accounting',
         'Inverpacific' => APPPATH . 'Modules/Inverpacific',
+        'Payroll' => APPPATH . 'Modules/Payroll',
     ];
 
     /**

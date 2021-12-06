@@ -950,6 +950,139 @@
         });//Fin peticion ajax
     }
 
+    function get_software(urlControllerProcess,item_id){
+
+
+        var btnSave = $("#btn_get_software");
+
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.get_numeration')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                        
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+
+    
+    function get_certificates(urlControllerProcess,item_id){
+
+
+        var btnSave = $("#btn_get_certificate");
+
+        var form_data = new FormData();
+
+        form_data.append('item_id',item_id);
+
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.get_numeration')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+                        
+                    }else{
+                        toastr.error(data.msg);
+                        $('#'+div_messages).html("<code>"+JSON.stringify(data.msg_api)+"</code>");
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });//Fin peticion ajax
+    }
+    
     /**
      * agrega los eventos a los botones de la vista configuracion
      */
@@ -1011,6 +1144,18 @@
             var item_id=$(this).attr("data-item_id");
 
             get_resolutions(item_id);
+        });
+        
+        $('#btn_get_software').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+            var controller='<?php echo base_url('/access/companies/get_software') ?>'+'/'+item_id;
+            get_software(controller,item_id);
+        });
+        
+        $('#btn_get_certificate').on('click',function () {
+            var item_id=$(this).attr("data-item_id");
+            var controller='<?php echo base_url('/access/companies/get_certificates') ?>'+'/'+item_id;
+            get_software(controller,item_id);
         });
 
     }

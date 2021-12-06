@@ -64,6 +64,8 @@ $routes->group("access", [
         $subroutes->add("companies/create_resolution/(:any)", "CompaniesProcess::create_resolution/$1");
         $subroutes->add("companies/delete_resolution/(:any)/(:any)", "CompaniesProcess::delete_resolution/$1/$2");
         $subroutes->add("companies/get_resolutions/(:any)", "CompaniesProcess::get_resolutions/$1");
+        $subroutes->add("companies/get_software/(:any)", "CompaniesProcess::get_software/$1");
+        $subroutes->add("companies/get_certificates/(:any)", "CompaniesProcess::get_certificates/$1");
 
         $subroutes->add("users", "UsersDraw::index");
         $subroutes->add("users/list/(:any)", "UsersDraw::home/$1");

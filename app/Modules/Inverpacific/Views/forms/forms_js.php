@@ -856,5 +856,240 @@
         
     }
     
+    function frm_reject(id){
+        
+        $('#modal_md').modal("show");
+        
+        $(".ts_btn_save_modals").attr("data-form_id",2);        
+        $(".ts_btn_save_modals").attr("data-id",id);
+        
+        var urlControllerDraw ='<?= base_url('inverpacific/frm_reject')?>';
+        var form_data = new FormData();
+            form_data.append('id',id);
+                        
+        $.ajax({
+            url: urlControllerDraw,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('fields.loading')?>');
+
+            },
+            complete: function(){
+
+            },
+            success: function(data){
+                hide_spinner();
+                $('#modal_md_body').html(data);
+                
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+        
+    }
+    
+    
+    function save_reject(id){
+                
+        var urlControllerProcess='<?php echo base_url('/inverpacific/save_reject') ?>';
+        var btnSave = $(".ts_btn_save_modals");
+        var data_form_serialized=$('.ts_input').serialize();        
+        var form_data = new FormData();
+
+            form_data.append('id',id);
+            form_data.append('data_form_serialized',data_form_serialized);
+        
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);
+                        $('#modal_md').modal("hide");
+                        
+                        select_list();
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+        
+    }
+    
+    
+    function archive_sheet(id){
+                
+        var urlControllerProcess='<?php echo base_url('/inverpacific/archive_sheet') ?>';
+        var btnSave = $(".ts_btn_trash");
+             
+        var form_data = new FormData();
+            form_data.append('id',id);            
+        
+        $.ajax({
+            url: urlControllerProcess,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.saving')?>');
+                btnSave.attr("disabled","disabled");
+
+            },
+            success: function(data){
+
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                if(typeof(data)=='object'){
+                    if(data.status==1){// el controlador contesta 1 si se realiza el proceso sin novedad
+                        toastr.success(data.msg);                        
+                        select_list();
+                    }else{
+                        toastr.error(data.msg);
+
+                        if(data.object_id){
+                            error_mark(data.object_id)
+                        }
+
+                    }
+                }else{
+                    alert(data);
+                    $('#'+div_messages).html(data);
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                btnSave.removeAttr("disabled");
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+        
+    }
+    
+    
+    function form_payment_start_date(id=''){
+        $('#modal_md').modal("show");
+        
+        var Controller='<?php echo base_url('/inverpacific/form_payment_start_date') ?>';
+        $(".ts_btn_save_modals").attr("data-form_id",1);        
+        $(".ts_btn_save_modals").attr("data-id",id);
+        var form_data = new FormData();        
+        form_data.append('id',id);        
+
+        $.ajax({
+            url: Controller,
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            beforeSend: function() {
+                show_spinner('<?=lang('msg.loading')?>');
+            },
+            success: function(data){
+
+                hide_spinner();                
+                $('.ts_modal_body').html('');
+                $('#modal_md_body').html(data);
+                
+                form_business_sheet_events();
+                
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                hide_spinner();
+                
+                var code_error=xhr.status;
+                if(code_error==0){
+                    alert('No connect, verify Network.');
+                }else if(code_error==404){
+                    alert('Page not found [404]');
+                }else if(code_error==500){
+                    alert(xhr.responseText+' '+thrownError);
+                }else{
+                    alert(code_error +' '+xhr.responseText+' '+thrownError);
+                }
+
+
+            }
+        });
+   
+    
+   }
+    
 </script>
 

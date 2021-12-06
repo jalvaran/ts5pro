@@ -26,5 +26,18 @@ return [
     "error_4"=>"No hay un estado inferior",
     "status_advanced"=>"Estado Avanzado",
     "status_returned"=>"Estado Devuelto",
+    "reject_title"=>"Concepto por el cual rechaza el negocio",
+    "payment_plan"=>"PLAN DE PAGOS",
+    
+    "expiration"=>"Vencimiento",
+    "months"=>"Meses",
+    "capital_balance"=>"Saldo capital",
+    "capital_payment"=>"Abono capital",
+    "interest"=>"Interés",
+    "fee"=>"Cuota",
+    "extra_fee"=>"Cuota extra",
+    "total"=>"Total",
+    "interest_balance"=>"Saldo interés",
+    
     
 ];

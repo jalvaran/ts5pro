@@ -33,9 +33,9 @@ class Database extends Config
         
         public $techno = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'techno',
-		'password' => 'techno',
+		'hostname' => '35.188.53.194',
+		'username' => 'jalvaran',
+		'password' => 'pirlo1985',
 		'database' => 'techno_ts5_pro',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
@@ -53,9 +53,9 @@ class Database extends Config
         
         public $techno_client = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'techno',
-		'password' => 'techno',
+		'hostname' => '35.188.53.194',
+		'username' => 'jalvaran',
+		'password' => 'pirlo1985',
 		'database' => DB_CLIENT_TS,
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',

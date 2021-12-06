@@ -137,41 +137,76 @@ class InverPacificDraw extends BaseController
                 $permission_id='61494b3150ea6632631526'; 
                 $data["actions"]["attachments"]=1;
                 $data["actions"]["advance"]=1;
-                
+                $data["actions"]["uploads"]=1;
+                $data["actions"]["trash"]=1;
+                $data["actions"]["edit"]=1;
             break;
             case 2: //Listar el historial de las hojas de negocio en estado de analisis
                 $permission_id='61495079796f2594150933'; 
+                $data["actions"]["edit"]=1;
+                $data["actions"]["uploads"]=1;
+                $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
+                $data["actions"]["back"]=1;
+                $data["actions"]["reject"]=1;
+                $data["actions"]["liquidator"]=1;
+            break;
+            case 3: //Listar el historial de las hojas de negocio en estado pre aprobado
+                $permission_id='61494bc55c2e3827172881';
                 $data["actions"]["uploads"]=1;
                 $data["actions"]["attachments"]=1;
                 $data["actions"]["advance"]=1;
                 $data["actions"]["back"]=1;
             break;
-            case 3: //Listar el historial de las hojas de negocio en estado pre aprobado
-                $permission_id='61494bc55c2e3827172881'; 
-            break;
-            case 4: //Listar el historial de las hojas de negocio en estado pre aprobado negado
-                $permission_id='61494c45d60d3090342990'; 
-            break;
-            case 5: //Listar el historial de las hojas de negocio en estado APROBADO
+            
+            case 4: //Listar el historial de las hojas de negocio en estado APROBADO
                 $permission_id='61494ca3c94e1534968211'; 
+                $data["actions"]["uploads"]=1;
+                $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
+                $data["actions"]["back"]=1;
             break;
-            case 6: //Listar el historial de las hojas de negocio en estado facturado
+            case 5: //Listar el historial de las hojas de negocio en estado facturado
                 $permission_id='61494d51dc110940219084'; 
+                $data["actions"]["uploads"]=1;
+                $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
+                $data["actions"]["back"]=1;
             break;
-            case 7: //Listar el historial de las hojas de negocio en estado documentos generados
-                $permission_id='61494da5de2c8189330103'; 
+            case 6: //Listar el historial de las hojas de negocio en estado documentos generados
+                $permission_id='61494da5de2c8189330103';
+                $data["actions"]["uploads"]=1;
+                $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
+                $data["actions"]["back"]=1;
             break;
-            case 8: //Listar el historial de las hojas de negocio en estado documentos firmados
-                $permission_id='61494e5303d43932249969'; 
+            case 7: //Listar el historial de las hojas de negocio en estado documentos firmados
+                $permission_id='61494e5303d43932249969';
+                $data["actions"]["uploads"]=1;
+                $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
+                $data["actions"]["back"]=1;
             break;
-            case 9: //Listar el historial de las hojas de negocio en estado a la espera de documentos oficiales
-                $permission_id='6149523eb5fe5302607425'; 
+            case 8: //Listar el historial de las hojas de negocio en estado a la espera de documentos oficiales
+                $permission_id='6149523eb5fe5302607425';
+                $data["actions"]["uploads"]=1;
+                $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
+                $data["actions"]["back"]=1;
             break;
-            case 10: //Listar el historial de las hojas de negocio en estado para entrega
-                $permission_id='6149536021af6056488420'; 
+            case 9: //Listar el historial de las hojas de negocio en estado para entrega
+                $permission_id='6149536021af6056488420';
+                $data["actions"]["uploads"]=1;
+                $data["actions"]["attachments"]=1;
+                $data["actions"]["advance"]=1;
+                $data["actions"]["back"]=1;
             break;
-            case 11: //Listar el historial de las hojas de negocio en estado entregado
-                $permission_id='614953c4736a5433999033'; 
+            case 10: //Listar el historial de las hojas de negocio en estado entregado
+                $permission_id='614953c4736a5433999033';
+                $data["actions"]["uploads"]=1;
+            break;
+            case 11: //Listar el historial de las hojas de negocio en estado pre aprobado negado
+                $permission_id='61494c45d60d3090342990'; 
             break;
             case 12: //Listar el historial de las hojas de negocio en estado archivado por comercial
                 $permission_id='61495412c072e613111003'; 
@@ -206,7 +241,10 @@ class InverPacificDraw extends BaseController
         $data["cols"][$i++]=lang("fields.fee_value_monthly");
         $data["cols"][$i++]=lang("fields.observations");
         $data["cols"][$i++]=lang("fields.author_name");
+        $data["cols"][$i++]=lang("fields.concept_reject");
         $data["cols"][$i++]=lang("fields.status");
+        
+        
         
         $page=$request->getVar('page');
         $search=$request->getVar('search');
@@ -224,6 +262,7 @@ class InverPacificDraw extends BaseController
                         'fee_value_monthly',
                         'observations',
                         'author_name', 
+                        'concept_reject',
                         'status', 
                         
             
@@ -231,28 +270,37 @@ class InverPacificDraw extends BaseController
         
         $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');                
         $model->select($fields);
+        if($list_id=='1'){
+            $model->where('author',$user_id);            
+        }
         if($list_id<>'A'){
-            $model->where('author',$user_id);
             $model->where('status',$list_id); 
-        }        
-        //$model->where('author',$user_id);   //Por si se quiere que solo se vean los negocios del mismo usuario
+        }
         $recordsTotal = $model->countAllResults(false);
         
         $z=0;
-       
+        
         if($search<>''){
+            $condition=" (third_identification='$search' or third_name like '%$search%') ";
+            $model->where($condition);
+            
+            /*
             foreach ($fields as $field){
 
                 if($z==0){
                     $z=1;
                     $model->like($field, $search);
+                    
                 }else{
                     $model->orLike($field, $search);
+                    
                 }
 
             }
+             * 
+             */
         }
-         
+        
         
         $recordsFiltered = $model->countAllResults(false);
         $totalPages= ceil($recordsFiltered/$limit);
@@ -277,7 +325,7 @@ class InverPacificDraw extends BaseController
         $data["previous_page"]=$previous_page;
         $data["next_page"]=$next_page;
 
-        $data["actions"]["edit"]=1;
+        
         $data["actions"]["pdf"]=1;
         
         $data["data"]=$response;
@@ -537,6 +585,126 @@ class InverPacificDraw extends BaseController
             echo('file no found');
         }
         
+    }
+    
+    /**
+     * Formulario para rechazar una hoja de negocios
+     * @return type
+     */
+    public function frm_reject() {
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='61703c5ab6f01173757427';  
+        $module_id=$this->module_id;      
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+        }
+        $data["div_class"]="col-md-12";
+        $data["id"]="concept_reject";
+        $data["label"]=lang('creditmoto.reject_title');
+        $data["icon"]="fa fa-comment";
+        $data["type"]="text";
+        $data["placeholder"]=lang('fields.concept_reject');
+        $data["value"]="";
+        
+        return (view($this->views_path."/frm_input_textarea",$data));
+    }
+    
+    /**
+     * Visualiza los adjuntos de una hoja de negocio
+     * @return type
+     */
+    public function uploads_list() {
+        $company_id=$this->session->get('company_id');
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $permission_id='61703c5ab6f01173757427';  
+        $module_id=$this->module_id;      
+
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+        }
+        
+        $request = service('request');
+        $id=$request->getVar('id');
+        $model=model('App\Modules\Inverpacific\Models\AttachmentsView');
+        
+        $data["data"]=$model->get_List($id);
+        
+        return (view($this->views_path_module.'/list/uploads_list',$data));
+    }
+    
+    /**
+     * Dibuja el formulario para establecer la fecha de inicio de los pagos de la hoja de trabajo
+     */
+    public function form_payment_start_date() {
+        $request = service('request');
+        $id=$request->getVar('id');
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+        
+        $module_id=$this->module_id;
+        $model=model('App\Modules\Inverpacific\Models\BusinessSheetsView');
+        $permission_id='6156159284c77599840464';           //Permiso para Editar singular Ver en tabla access_control_permissions
+        $permission_id_all='615615ad6efa6294907733';       //Permiso para Editar plural Ver en tabla access_control_permissions
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $p_all=$mUsers->has_Permission($user_id,$permission_id_all,$company_id,$module_id);
+        $p_single=$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id);
+        $authority=$model->get_Authority($id,$user_id);
+
+        if(!$p_all and !($p_single and $authority)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            return (view($this->views_path."\alert_error",$data_error));
+
+        }
+        $data_sheet=$model->select('payment_start_date,payment_day_month')->where('id',$id)->first();
+        
+        $data["div_class"]="col-md-12";
+        $data["id"]="payment_start_date";
+        $data["label"]=lang('fields.payment_start_date');
+        $data["icon"]="fa fa-calendar";
+        $data["type"]="date";
+        $data["class"]="ts_edit_sheet";
+        $data["data_input"]='data-business_sheet_id="'.$id.'"';
+        $data["placeholder"]=lang('fields.payment_start_date');
+        $data["value"]=$data_sheet["payment_start_date"];
+        
+        $html=(view($this->views_path."/frm_input",$data));
+        
+        $data["div_class"]="col-md-12";
+        $data["id"]="payment_day_month";
+        $data["label"]=lang('fields.payment_day_month');
+        $data["icon"]="fa fa-calendar-check";        
+        $data["class"]="ts_edit_sheet";
+        $data["data_input"]='data-business_sheet_id="'.$id.'"';
+        $data["placeholder"]=lang('fields.payment_day_month');
+        $data["value"]=$data_sheet["payment_day_month"];
+        
+        $data["options"][0]["value"]='0';
+        $data["options"][0]["text"]="Seleccione un día de pago";
+        $data["options"][1]["value"]=1;
+        $data["options"][1]["text"]="día 1 de cada mes";
+        $data["options"][2]["value"]=15;
+        $data["options"][2]["text"]="día 15 de cada mes";
+        
+        $payment_day=$data_sheet["payment_day_month"];
+        
+        if($payment_day==1){
+            $data["options"][1]["selected"]=1;
+        }
+        if($payment_day==15){
+            $data["options"][2]["selected"]=1;
+        }
+        $html.=(view($this->views_path."/frm_select",$data));
+        
+        return($html);
     }
     
 }

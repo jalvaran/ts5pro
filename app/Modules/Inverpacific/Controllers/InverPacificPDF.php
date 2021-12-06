@@ -98,5 +98,38 @@ class InverPacificPDF extends BaseController
 
     }
     
+    /**
+     * Genera el pdf para ver el liquidador de una hoja de negocios
+     * @param $id  id de la hoja de negocio
+     * @return 
+     */
+    function business_sheet_pdf_liquidator($id) {
+            
+        
+        if (!$this->session->get_LoggedIn()) {
+            return (redirect()->to(base_url('/ts5/signin')));
+        }
+        
+        $mUsers=model('App\Modules\Access\Models\Users');
+        $user_id=$this->session->get('user');
+        $company_id=$this->session->get('company_id');
+        $permission_id='6165a33a895bd105689695';  //VER PDF
+        $module_id=$this->module_id;      
+        $html="";
+        if(!$mUsers->has_Permission($user_id,$permission_id,$company_id,$module_id)){
+            $data_error["error_title"]=lang('Access.access_view_error_title');
+            $data_error["msg_error"]=lang('Access.access_view_error');
+            $html.=view($this->views_path."\alert_error",$data_error);
+            return($html);
+        }
+        $this->response->setHeader('Content-Type', 'application/pdf');
+        
+        $pdf=new Creditmoto_pdf_class();
+            
+        $pdf->business_sheet_pdf_liquidator($id);
+        
+
+    }
+    
 
 }

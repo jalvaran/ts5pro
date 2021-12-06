@@ -99,6 +99,18 @@ class BusinessSheets extends Model
         'fosiga',
         'simit',
         'runt',
+        'payment_start_date',
+        'payment_day_month',
+        'concept_reject',
+        'author_reject',
+        'reject_date',
+        
+        'author_pre_approved',
+        'pre_approved_date',
+        
+        'author_approved',
+        'approved_date',
+        
         'author',
         
         'status',

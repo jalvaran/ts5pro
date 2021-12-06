@@ -45,6 +45,7 @@ class Thirds extends Model
 
     protected $allowedFields = [
         'id',
+        'type_third',
         'type_organization_id',
         'type_regime_id',
         'type_liabilitie_id',

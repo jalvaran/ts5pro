@@ -1,0 +1,20 @@
+mysql
+user root
+clave root
+
+escritorio remoto
+
+181.52.244.112:3390
+usuario: area\administrador
+clave: Intel2018
+
+181.52.244.112:82/ts5
+
+
+anydesk
+
+692155312
+Soporte2021
+
+Clave PC
+Intel2018

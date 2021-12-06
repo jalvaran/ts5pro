@@ -565,6 +565,74 @@ class ElectronicBill extends Ts5_class{
 
         return($response);
     }
+    
+    /**
+     * Obtiene los software creados en el api
+     * @param type $data_company
+     * @param type $item_id
+     * @param type $user_id
+     * @return type
+     */
+    public function get_software($data_company,$item_id,$user_id){
+
+        $end_point_id=8;//end point para obtener los software
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=$this->api_id;
+        $token_api=$data_company["token_api_soenac"];
+        $json="";
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=$data_endpoint["name"];
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+    
+    public function get_certificate($data_company,$item_id,$user_id){
+
+        $end_point_id=10;//end point para obtener los software
+        $process_id=$this->getUniqueId("",true);
+        $mApiResponses=model('App\Modules\TS5\Models\AppAppsResponses');
+        $mApiEndPoints=model('App\Modules\TS5\Models\AppAppsEndPoints');
+
+        $mApi=model('App\Modules\TS5\Models\AppApps');
+        $api_id=$this->api_id;
+        $token_api=$data_company["token_api_soenac"];
+        $json="";
+
+        $url=$mApi->get_Url($api_id);
+        $data_endpoint=$mApiEndPoints->get_EndPoint($end_point_id);
+
+        $end_point=$data_endpoint["name"];
+        $method=$data_endpoint["method"];
+        $url=$url.$end_point;
+
+        $response=$this->curl($method,$url,$token_api,$json);
+        $data_response["id"]=$process_id;
+        $data_response["app_apps_end_point_id"]=$end_point_id;
+        $data_response["process_item_id"]=$item_id;
+        $data_response["response"]=$response;
+        $data_response["author"]=$user_id;
+        $mApiResponses->insert($data_response);
+
+        return($response);
+    }
+    
 
 }
 

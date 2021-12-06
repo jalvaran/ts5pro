@@ -39,7 +39,7 @@
                                 if(isset($actions["back"])){                                    
                                     print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_back').'" class="btn btn-white ms-2 ts_btn_back" ><li class="fa fa-reply text-dark"></li></button>');
                                 }
-                                if(isset($actions["edit"]) and $data_col["status"]==1){
+                                if(isset($actions["edit"])){
                                     
                                     print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_edit').'" class="btn btn-white ms-2 ts_btn_actions" ><li class="fa fa-edit text-primary"></li></button>');
                                 }
@@ -47,12 +47,22 @@
                                     
                                     print('<a href="'.base_url('inverpacific/business_sheet_pdf/'.$id).'" target="_blank" data-id="'.$id.'" title="'.lang('msg.btn_title_pdf').'" class="btn btn-white ms-2 ts_btn_pdf" ><li class="fa fa-file-pdf text-danger"></li></a>');
                                 }
+                                if(isset($actions["liquidator"])){
+                                    print('<a href="'.base_url('inverpacific/business_sheet_pdf_liquidator/'.$id).'" target="_blank" data-id="'.$id.'" title="'.lang('msg.btn_title_liquidator').'" class="btn btn-white ms-2 ts_btn_liquidator" ><li class="fa fa-calendar text-primary"></li></a>');
+                                    
+                                }
                                 if(isset($actions["attachments"])){
                                     
                                     print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_attachments').'" class="btn btn-white ms-2 ts_btn_attachments" ><li class="fa fa-upload text-success"></li></button>');
                                 }
                                 if(isset($actions["uploads"])){                                    
                                     print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_uploads').'" class="btn btn-white ms-2 ts_btn_uploads" ><li class="fa fa-paperclip text-primary"></li></button>');
+                                }
+                                if(isset($actions["reject"])){                                    
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_reject').'" class="btn btn-white ms-2 ts_btn_reject" ><li class="fa fa-times text-danger"></li></button>');
+                                }
+                                if(isset($actions["trash"])){                                    
+                                    print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_trash').'" class="btn btn-white ms-2 ts_btn_trash" ><li class="fa fa-trash text-danger"></li></button>');
                                 }
                                 if(isset($actions["advance"])){                                    
                                     print('<button data-id="'.$id.'" title="'.lang('msg.btn_title_advance').'" class="btn btn-white ms-2 ts_btn_advance" ><li class="fa fa-share text-dark"></li></button>');
@@ -67,9 +77,9 @@
                                 $decimals=2;
                             }                           
                             
-                            print('<td class="ts_col_table text-dark" style="cursor:pointer" data-id="'.$id.'" align="right"><span>'.number_format($value_col,$decimals).'</span></td>');
+                            print('<td class="text-dark" data-id="'.$id.'" align="right"><span>'.number_format($value_col,$decimals).'</span></td>');
                         }else{
-                            print('<td class="ts_col_table" style="cursor:pointer;" data-id="'.$id.'">'.$value_col.'</td>');
+                            print('<td  data-id="'.$id.'">'.$value_col.'</td>');
                         }
                         
                     }

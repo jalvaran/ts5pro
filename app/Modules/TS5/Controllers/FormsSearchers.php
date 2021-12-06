@@ -116,12 +116,12 @@ class FormsSearchers extends BaseController
         $text="CONCAT(name,' || ',id)";
         $model_class=model('App\Modules\Access\Models\TypeDocumentsIdentifications');
         $model_class->select("id,{$text} as text");
-        
+        $model_class->where('id<=10');
         $k=0;
         if($key<>''){
             
-            $model_class->like("name",$key);
-            $model_class->orWhere("id",$key);
+            $model_class->where("name like '%$key%' or id='$key' ");
+            
         }
         
         $results=$model_class->orderBy('id ASC')->findAll(100);
