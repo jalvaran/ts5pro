@@ -33,7 +33,7 @@ class Database extends Config
         
         public $techno = [
 		'DSN'      => '',
-		'hostname' => '35.188.53.194',
+		'hostname' => 'localhost',
 		'username' => 'jalvaran',
 		'password' => 'pirlo1985',
 		'database' => 'techno_ts5_pro',
@@ -53,7 +53,7 @@ class Database extends Config
         
         public $techno_client = [
 		'DSN'      => '',
-		'hostname' => '35.188.53.194',
+		'hostname' => 'localhost',
 		'username' => 'jalvaran',
 		'password' => 'pirlo1985',
 		'database' => DB_CLIENT_TS,

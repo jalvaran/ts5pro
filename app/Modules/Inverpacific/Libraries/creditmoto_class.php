@@ -54,6 +54,7 @@ class Creditmoto_class{
         $mSeverals=model('App\Modules\Inverpacific\Models\BusinessSheetSeveralsAdds');
         $mParameters=model('App\Modules\Inverpacific\Models\Parameters');
         $mFinalcials=model('App\Modules\Inverpacific\Models\BusinessSheetFinancials');
+        $data=[];
         $data_sheet=$mSheet->where('id',$business_sheet_id)->first();
         if(is_array($data_sheet)){
             if($data_sheet["motorcycle_id"]<>''){
@@ -108,7 +109,7 @@ class Creditmoto_class{
         
         
         
-        if(is_array($data)){
+        if(isset($data["tax_percent_value"])){
             $mSheet->update($business_sheet_id,$data);
         }
         
@@ -144,7 +145,25 @@ class Creditmoto_class{
      */
     public function sheet_values_validate($data_sheet) {
         $validation=1;
-        $excluid=array("type_of_sale","invoice", "sticker", "motor_number", "responsible_in_financial", "deleted_at", "backed_at");
+        $excluid=array("type_of_sale",
+                        "invoice", 
+                        "sticker", 
+                        "motor_number", 
+                        "responsible_in_financial", 
+            
+                        "concept_reject",
+                        "author_reject",
+                        "reject_date",
+                        "author_pre_approved",
+                        "pre_approved_date",
+                        "author_approved",
+                        "approved_date",
+                        "payment_start_date",
+                        "payment_day_month",
+                        
+                        
+                        "deleted_at", 
+                        "backed_at");
         foreach ($data_sheet as $key => $value) {
             if(!in_array($key, $excluid)){
                 
